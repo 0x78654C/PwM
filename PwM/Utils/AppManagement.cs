@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security;
 using System.Web.Script.Serialization;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace PwM.Utils
@@ -100,8 +101,8 @@ namespace PwM.Utils
                     { "password", accountPassword },
                 };
             s_serializer = new JavaScriptSerializer();
-            string encryptdata = Encryption.AES.Encrypt(decryptVault + "" + s_serializer.Serialize(keyValues), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
-            vaultSecure = Encryption.PasswordValidator.StringToSecureString(decryptVault + "" + s_serializer.Serialize(keyValues));
+            string encryptdata = Encryption.AES.Encrypt(decryptVault + "\n" + s_serializer.Serialize(keyValues), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
+            vaultSecure = Encryption.PasswordValidator.StringToSecureString(decryptVault + "\n" + s_serializer.Serialize(keyValues));
             if (File.Exists(pathToVault))
             {
                 File.WriteAllText(pathToVault, encryptdata);
@@ -171,8 +172,9 @@ namespace PwM.Utils
                         }
                     }
                 }
-                string encryptdata = Encryption.AES.Encrypt(string.Join("", listApps), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
-                vaultSecure = Encryption.PasswordValidator.StringToSecureString(string.Join("", listApps));
+                string encryptdata = Encryption.AES.Encrypt(string.Join("\n", listApps), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
+                vaultSecure = Encryption.PasswordValidator.StringToSecureString(string.Join("\n", listApps));
+
                 listApps.Clear();
                 if (File.Exists(pathToVault))
                 {
@@ -260,8 +262,8 @@ namespace PwM.Utils
                         }
                     }
                 }
-                string encryptdata = Encryption.AES.Encrypt(string.Join("", listApps), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
-                vaultSecure = Encryption.PasswordValidator.StringToSecureString(string.Join("", listApps));
+                string encryptdata = Encryption.AES.Encrypt(string.Join("\n", listApps), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
+                vaultSecure = Encryption.PasswordValidator.StringToSecureString(string.Join("\n", listApps));
                 listApps.Clear();
                 if (File.Exists(pathToVault))
                 {
@@ -295,18 +297,41 @@ namespace PwM.Utils
             selectedItem = selectedItem.Replace("{ Application = ", string.Empty);
             selectedItem = selectedItem.Replace(", Account = ", "|");
             var parsedData = selectedItem.Split('|');
-            var vaultToLines = Encryption.PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
-            foreach (var line in vaultToLines)
+            var vault = Encryption.PasswordValidator.ConvertSecureStringToString(vaultSecure);
+            if (CountLines(vault) >= 2)
             {
-                s_serializer = new JavaScriptSerializer();
-                var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
-                if (line.Contains(parsedData[0]) && line.Contains(parsedData[1]) && line.Length > 0)
+                var vaultToLines = Encryption.PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
+                foreach (var line in vaultToLines)
                 {
-                    tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
+                    s_serializer = new JavaScriptSerializer();
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
+                        if (line.Contains(parsedData[0]) && line.Contains(parsedData[1]))
+                        {
+                            tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
+                        }
+                        else
+                        {
+                            tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                        }
+                    }
                 }
-                else
+            }
+            else
+            {
+                if (!string.IsNullOrEmpty(vault))
                 {
-                    tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                    s_serializer = new JavaScriptSerializer();
+                    var outJson = s_serializer.Deserialize<Dictionary<string, string>>(vault);
+                    if (vault.Contains(parsedData[0]) && vault.Contains(parsedData[1]))
+                    {
+                        tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
+                    }
+                    else
+                    {
+                        tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                    }
                 }
             }
             listView.Items.Clear();
@@ -315,6 +340,23 @@ namespace PwM.Utils
                 listView.Items.Add(item);
             }
             tempListView.Items.Clear();
+        }
+
+        /// <summary>
+        /// Count lines in vault file.
+        /// </summary>
+        /// <param name="vaultData"></param>
+        /// <returns></returns>
+        private static int CountLines(string vaultData)
+        {
+            var vaultToLines = vaultData.Split(new[] { '\r', '\n' });
+            int count = 0;
+            foreach (var line in vaultToLines)
+            {
+                if (!string.IsNullOrEmpty(line))
+                    count++;
+            }
+            return count;
         }
 
         /// <summary>
@@ -333,19 +375,17 @@ namespace PwM.Utils
             else
             {
                 string selectedItem = listView.SelectedItem.ToString();
-                selectedItem = selectedItem.Replace($", Password = {passMask} " + "}", string.Empty);
-                selectedItem = selectedItem.Replace("{ Application = ", string.Empty);
-                selectedItem = selectedItem.Replace(", Account = ", "|");
-                var parsedData = selectedItem.Split('|');
+                string application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
+                string account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
                 var vaultToLines = Encryption.PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
                 foreach (var line in vaultToLines)
                 {
                     s_serializer = new JavaScriptSerializer();
                     var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
-                    if (line.Contains(parsedData[0]) && line.Contains(parsedData[1]) && line.Length > 0)
+                    if (line.Contains(application) && line.Contains(account) && line.Length > 0)
                     {
                         outPass = outJson["password"];
-                        Notification.ShowNotificationInfo("green", $"Password for {parsedData[1]} is copied to clipboard!");
+                        Notification.ShowNotificationInfo("green", $"Password for {account} is copied to clipboard!");
                     }
                 }
             }
