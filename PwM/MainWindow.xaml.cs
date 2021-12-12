@@ -93,7 +93,7 @@ namespace PwM
             }
             catch (Exception e)
             {
-                Utils.Notification.ShowNotificationInfo("red", e.ToString()); //TODO: change to e.Message when done testing.
+                Utils.Notification.ShowNotificationInfo("red", e.Message);
             }
         }
 
@@ -112,7 +112,7 @@ namespace PwM
                 return;
             }
             string readEncData = File.ReadAllText(pathToVault);
-           // string decryptVault = Encryption.AES.Decrypt(readEncData, password.Password);
+            // string decryptVault = Encryption.AES.Decrypt(readEncData, password.Password);
             string decryptVault = Encryption.AES.Decrypt(readEncData, password.Password);
             if (decryptVault.Contains("Error decrypting"))
             {
@@ -382,7 +382,7 @@ namespace PwM
                 listViewItem.Background = (Brush)converter.ConvertFromString("#6f2be3");
             }
         }
-      
+
 
         /// <summary>
         /// Acceptin only custom characters
@@ -467,6 +467,15 @@ namespace PwM
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void vaultList_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            OpenVault();
+        }
+
+
+        /// <summary>
+        /// Open selected vault from vault list.
+        /// </summary>
+        private void OpenVault()
         {
             var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
@@ -652,6 +661,12 @@ namespace PwM
             Utils.AppManagement.ShowPassword(appList);
         }
 
+
+        /// <summary>
+        /// Check if PC enters sleep or hibernate mode and lock vault.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
             switch (e.Mode)
@@ -662,11 +677,30 @@ namespace PwM
             }
         }
 
+        /// <summary>
+        /// Check if lock screen and close vault.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
                 VaultClose();
+            }
+        }
+
+
+        /// <summary>
+        /// Enter key event for open vault.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void vaultList_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                OpenVault();
             }
         }
     }
