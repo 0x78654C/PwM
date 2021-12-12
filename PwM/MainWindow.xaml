@@ -91,7 +91,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                 </Style>
                             </adorners:Watermark.TextStyle>
                         </TextBox>
-                        <PasswordBox Background="#f3f5f2" Foreground="Black" FontSize="14"  adorners:Watermark.Text =" Enter Vault Password" Name="addVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="20,116,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="addVPassword_PasswordChanged"  >
+                        <PasswordBox Background="#f3f5f2" Foreground="Black" FontSize="14"  adorners:Watermark.Text ="Enter Master Password " Name="addVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="20,116,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="addVPassword_PasswordChanged"  >
                             <adorners:Watermark.TextStyle>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Opacity" Value="0.5" />
@@ -100,7 +100,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                 </Style>
                             </adorners:Watermark.TextStyle>
                         </PasswordBox>
-                        <PasswordBox Background="#f3f5f2" Foreground="Black" FontSize="14"  adorners:Watermark.Text =" Confirm Vault Password" Name="confirmVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="20,151,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="confirmVPassword_PasswordChanged"  >
+                        <PasswordBox Background="#f3f5f2" Foreground="Black" FontSize="14"  adorners:Watermark.Text ="Confirm Master Password " Name="confirmVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="20,151,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="confirmVPassword_PasswordChanged"  >
                             <adorners:Watermark.TextStyle>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Opacity" Value="0.5" />
@@ -112,7 +112,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <Label Content="_____________________________________________________________________________" HorizontalAlignment="Center" Margin="7,50,635,0" VerticalAlignment="Top" Height="26" Width="205" Foreground="Red" />
                         <Label Content="Create Vault" HorizontalAlignment="Left" Margin="7,46,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14"/>
                         <Button Name="createBTN" Style="{DynamicResource RoundCorner2}" Content="Create"  Margin="61,199,692,429"  Width="94" Height="37" Foreground="#FFE1DDEE" Click="saveBTN_Click" IsEnabled="False"/>
-                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="443,81,22,0" VerticalAlignment="Top" Width="382" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" >
+                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="443,81,22,0" VerticalAlignment="Top" Width="382" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" >
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="Vault Name" Width="188" DisplayMemberBinding="{Binding Name}"/>
@@ -133,7 +133,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                 </Style>
                             </adorners:Watermark.TextStyle>
                         </TextBox>
-                        <PasswordBox Background="#f3f5f2" Foreground="Black" FontSize="14"  adorners:Watermark.Text =" Enter Vault Password" Name="delVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="20,483,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="delVPassword_PasswordChanged"  >
+                        <PasswordBox Background="#f3f5f2" Foreground="Black" FontSize="14"  adorners:Watermark.Text ="Enter Master Password " Name="delVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="20,483,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="delVPassword_PasswordChanged"  >
                             <adorners:Watermark.TextStyle>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Opacity" Value="0.5" />

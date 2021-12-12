@@ -85,6 +85,7 @@
       <DependentUpon>PopMessage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AppManagement.cs" />
+    <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GlobalVariables.cs" />
     <Compile Include="Utils\Notification.cs" />
     <Compile Include="Utils\ScreenSaverDetect.cs" />
