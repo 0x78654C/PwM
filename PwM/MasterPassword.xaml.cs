@@ -65,5 +65,22 @@ namespace PwM
         {
             this.Close();
         }
+
+        /// <summary>
+        /// Show/hide master password from passwordbox using a textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowHideMasterPassword(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                Utils.TextPassBoxChanges.ShowPassword(masterPasswordPWD, ShowMasterPassword);
+            }
+            else if (e.ButtonState == MouseButtonState.Released)
+            {
+                Utils.TextPassBoxChanges.HidePassword(masterPasswordPWD, ShowMasterPassword);
+            }
+        }
     }
 }
