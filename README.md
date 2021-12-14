@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/0x78654C/PwM/blob/main/Media/logo.png" width=200>
+  <img src="https://github.com/0x78654C/PwM/blob/main/Media/logo.png" width=150>
 </p>
 
 # PwM
