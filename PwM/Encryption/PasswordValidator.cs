@@ -3,6 +3,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
+
 namespace PwM.Encryption
 {
     public static class PasswordValidator
@@ -92,6 +94,18 @@ namespace PwM.Encryption
                 secureString.AppendChar(c);
             }
             return secureString;
+        }
+
+        /// <summary>
+        /// Password generator for new added applicaiton accounts.
+        /// </summary>
+        /// <param name="passwordBox"></param>
+        public static void GeneratePassword(PasswordBox passwordBox)
+        {
+            PasswordGenerator passwordGenerator = new PasswordGenerator();
+            passwordGenerator.Minimum = 20;
+            passwordGenerator.Maximum = 20;
+            passwordBox.Password =  passwordGenerator.Generate();
         }
     }
 }
