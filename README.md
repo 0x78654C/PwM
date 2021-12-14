@@ -26,15 +26,11 @@ Disclaimer: Use it at your own risk. I don't take any responsibility if password
 
 ## Samples
 
-* Using the Password Manager: 
-
 ![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1v.jpg?raw=true)
 
-* Using hex command: 
 
 ![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1.jpg?raw=true)
 
-* Using NeoVim in xTerminal:
 
 ![alt text](https://github.com/0x78654C/PwM/blob/main/Media/2.jpg?raw=true)
 
