@@ -31,5 +31,5 @@ The Passwowrd Manager generates a vault file for every user logged in system. Yo
 ![alt text](https://github.com/0x78654C/PwM/blob/main/Media/2.jpg?raw=true)
 
 ```diff
-Disclaimer: Use it at your own risk. I don't take any responsibility if password was leaked, cracked or any other form of extraction.
+- Disclaimer: Use it at your own risk. I don't take any responsibility if password was leaked, cracked or any other form of extraction.
 ```
