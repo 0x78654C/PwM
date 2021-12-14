@@ -391,5 +391,11 @@ namespace PwM.Utils
             }
             return outPass;
         }
+
+        public static void generatoP()
+        {
+            Encryption.PasswordGenerator passwordGenerator = new Encryption.PasswordGenerator();
+            passwordGenerator.Generate();
+        }
     }
 }
