@@ -483,6 +483,7 @@ namespace PwM
                 string vaultName = vaultList.SelectedItem.ToString();
                 vaultName = vaultName.Split(',')[0].Replace("{ Name = ", "");
                 var masterPassword = LoadMasterPassword(vaultName);
+                VaultClose();
                 if (masterPassword != null && masterPassword.Length > 0)
                 {
                     if (Utils.AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword))
@@ -701,6 +702,96 @@ namespace PwM
             if (e.Key == Key.Enter)
             {
                 OpenVault();
+            }
+        }
+
+        /// <summary>
+        /// Password generator for new added applicaiton accounts.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GeneratePassAcc_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Encryption.PasswordValidator.GeneratePassword(accPasswordBox);
+        }
+
+        /// <summary>
+        /// Password generator for updated accounts password.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GenerateNewPassAcc_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Encryption.PasswordValidator.GeneratePassword(newPassAccBox);
+        }
+
+        /// <summary>
+        /// Show/hide master password from add new application account passwordbox using a textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowHidePassword(object sender, MouseButtonEventArgs e)
+        {
+            if(e.ButtonState == MouseButtonState.Pressed)
+            {
+                Utils.TextPassBoxChanges.ShowPassword(accPasswordBox, PasswordShow);
+            }
+            else if (e.ButtonState==MouseButtonState.Released)
+            {
+                Utils.TextPassBoxChanges.HidePassword(accPasswordBox, PasswordShow);
+            }
+        }
+
+        /// <summary>
+        /// Show/hide master password from update account passwordbox using a textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowHideNewPassword(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                Utils.TextPassBoxChanges.ShowPassword(newPassAccBox, NewPasswordShow);
+            }
+            else if (e.ButtonState == MouseButtonState.Released)
+            {
+                Utils.TextPassBoxChanges.HidePassword(newPassAccBox, NewPasswordShow);
+            }
+        }
+
+        /// <summary>
+        /// Show/hide master password from create vault passwordbox using a textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowVaultPassword(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                Utils.TextPassBoxChanges.ShowPassword(addVPassword, vaultMassterPass);
+                Utils.TextPassBoxChanges.ShowPassword(confirmVPassword, vaultConfirmMassterPass);
+            }
+            else if (e.ButtonState == MouseButtonState.Released)
+            {
+                Utils.TextPassBoxChanges.HidePassword(addVPassword, vaultMassterPass);
+                Utils.TextPassBoxChanges.HidePassword(confirmVPassword, vaultConfirmMassterPass);
+            }
+        }
+
+        /// <summary>
+        /// Show/hide master password from delete vault passwordbox using a textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowDelVaultPassword(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                Utils.TextPassBoxChanges.ShowPassword(delVPassword, vaultDeletePassword);
+            }
+            else if (e.ButtonState == MouseButtonState.Released)
+            {
+                Utils.TextPassBoxChanges.HidePassword(delVPassword, vaultDeletePassword);
             }
         }
     }
