@@ -65,5 +65,30 @@ namespace PwM.Utils
             applicaiton.Clear();
             account.Clear();
         }
+        /// <summary>
+        /// Hide password from password box and show in text box.
+        /// </summary>
+        /// <param name="passwordBox"></param>
+        /// <param name="textBox"></param>
+        public static void ShowPassword(PasswordBox passwordBox, TextBox textBox)
+        {
+            passwordBox.Visibility = System.Windows.Visibility.Collapsed;
+            textBox.Visibility = System.Windows.Visibility.Visible;
+            textBox.Text = passwordBox.Password;
+            //textBox.Focus();
+        }
+
+        /// <summary>
+        /// Hide password from text box and show in password box.
+        /// </summary>
+        /// <param name="passwordBox"></param>
+        /// <param name="textBox"></param>
+        public static void HidePassword(PasswordBox passwordBox, TextBox textBox)
+        {
+            passwordBox.Visibility = System.Windows.Visibility.Visible;
+            textBox.Visibility = System.Windows.Visibility.Collapsed;
+            textBox.Clear();
+            //  passwordBox.Focus();
+        }
     }
 }
