@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://github.com/0x78654C/PwM/blob/main/media/logo.png">
+  <img src="https://github.com/0x78654C/PwM/blob/main/Media/logo.png">
 </p>
 
 # PwM
@@ -20,13 +20,13 @@ Disclaimer: Use it at your own risk. I don't take any responsibility if password
 
 * Using the Password Manager: 
 
-![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1v.png?raw=true)
+![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1v.jpg?raw=true)
 
 * Using hex command: 
 
-![alt text](https://github.com/0x78654C/PwM/blob/main/media/1.png?raw=true)
+![alt text](https://github.com/0x78654C/PwM/blob/main/media/1.jpg?raw=true)
 
 * Using NeoVim in xTerminal:
 
-![alt text](https://github.com/0x78654C/PwM/blob/main/media/2.png?raw=true)
+![alt text](https://github.com/0x78654C/PwM/blob/main/media/2.jpg?raw=true)
 
