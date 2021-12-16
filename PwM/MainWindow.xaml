@@ -38,28 +38,6 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 </Setter.Value>
             </Setter>
         </Style>
-        <ControlTemplate x:Key="TextBoxBaseControlTemplate" TargetType="{x:Type TextBoxBase}">
-            <Border Background="{TemplateBinding Background}" 
-                x:Name="Bd" BorderBrush="Black"
-                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10">
-                <ScrollViewer x:Name="PART_ContentHost"/>
-            </Border>
-            <ControlTemplate.Triggers>
-                <Trigger Property="IsEnabled" Value="False">
-                    <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" TargetName="Bd"/>
-                    <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
-                </Trigger>
-                <Trigger Property="Width" Value="Auto">
-                    <Setter Property="MinWidth" Value="100"/>
-                </Trigger>
-                <Trigger Property="Height" Value="Auto">
-                    <Setter Property="MinHeight" Value="20"/>
-                </Trigger>
-
-            </ControlTemplate.Triggers>
-
-        </ControlTemplate>
-
     </Window.Resources>
 
     <Border BorderThickness="1,1,1,1" Background="White" BorderBrush="#690fc2">
@@ -301,7 +279,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <Label Content="_______________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" Margin="276,29,10,0" VerticalAlignment="Top" Height="26" Width="561" Foreground="Red" />
                         <Label Content="Applications list for: " HorizontalAlignment="Left" Margin="276,22,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold"/>
                         <TextBlock Name="appListVaultLVL"  Text="vault" HorizontalAlignment="Left" Margin="420,27,0,0" VerticalAlignment="Top" Foreground="Green" FontSize="14" FontWeight="Bold"/>
-                      </Grid>
+                    </Grid>
                 </TabItem>
             </TabControl>
             <Grid VerticalAlignment="Top" Height="50" Background="#f3f5f2" >
@@ -322,11 +300,10 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 <materialDesign:PackIcon Kind="Key" Margin="503,9,0,0" Width="31" Height="33" Foreground="Black" RenderTransformOrigin="1.547,0.52"/>
 
             </Grid>
-            <Grid x:Name="GridMenu" HorizontalAlignment="Left"  Width="220">
+            <Grid x:Name="GridMenu" HorizontalAlignment="Left"  Width="221">
                 <Grid.Background>
                     <ImageBrush ImageSource="F:\twitch\Projects\PwM\PwM\Resources\Menu.jpg"/>
                 </Grid.Background>
-
                 <ListViewItem  Name="homeListVI" ToolTip="Home" Height="39" Foreground="#FFDCDCDC" FontSize="18" PreviewMouseDown="Home_PreviewMouseDown" Margin="0,88,0,576">
                     <StackPanel Orientation="Horizontal" >
                         <materialDesign:PackIcon Name="homeIcon" Kind="Home" Margin="9" Width="18" Height="18" VerticalAlignment="Center"/>
@@ -344,8 +321,9 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <materialDesign:PackIcon Name="vaultIcon" Kind="Lock" Margin="9" Width="18" Height="18" VerticalAlignment="Center"/>
                         <TextBlock Name="vaultTXT" Text="Vaults" VerticalAlignment="Center"/>
                     </StackPanel>
+
                 </ListViewItem>
-                <Label Name="versionLabel" Content="v1.0" HorizontalAlignment="Left" Foreground="#FFDCDCDC" FontSize="12" Margin="188,679,0,-2" VerticalAlignment="Top"/>
+                <Label Name="versionLabel" Content="v1.0" HorizontalAlignment="Left" Foreground="#FFDCDCDC" FontSize="12" Margin="188,679,0,-2"  VerticalAlignment="Top"/>
             </Grid>
         </Grid>
     </Border>
