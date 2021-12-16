@@ -306,7 +306,7 @@ namespace PwM.Utils
                     if (!string.IsNullOrEmpty(line))
                     {
                         var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
-                        if (outJson["site/application"]==parsedData[0] && outJson["account"]==parsedData[1])
+                        if (outJson["site/application"] == parsedData[0] && outJson["account"] == parsedData[1])
                         {
                             tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
                         }
@@ -323,7 +323,7 @@ namespace PwM.Utils
                 {
                     s_serializer = new JavaScriptSerializer();
                     var outJson = s_serializer.Deserialize<Dictionary<string, string>>(vault);
-                    if (vault.Contains(parsedData[0]) && vault.Contains(parsedData[1]))
+                    if (outJson["site/application"] == parsedData[0] && outJson["account"] == parsedData[1])
                     {
                         tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
                     }
@@ -368,7 +368,7 @@ namespace PwM.Utils
             string outPass = string.Empty;
             if (listView.SelectedItem == null)
             {
-                Notification.ShowNotificationInfo("orange", "You must select an application line to show the account password!");
+                Notification.ShowNotificationInfo("orange", "You must select an application line to copy account password!");
                 outPass = "itemerror";
             }
             else
@@ -380,11 +380,14 @@ namespace PwM.Utils
                 foreach (var line in vaultToLines)
                 {
                     s_serializer = new JavaScriptSerializer();
-                    var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
-                    if (line.Contains(application) && line.Contains(account) && line.Length > 0)
+                    if (line.Length > 0)
                     {
-                        outPass = outJson["password"];
-                        Notification.ShowNotificationInfo("green", $"Password for {account} is copied to clipboard!");
+                        var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
+                        if (outJson["site/application"] == application && outJson["account"] == account)
+                        {
+                            outPass = outJson["password"];
+                            Notification.ShowNotificationInfo("green", $"Password for {account} is copied to clipboard!");
+                        }
                     }
                 }
             }
