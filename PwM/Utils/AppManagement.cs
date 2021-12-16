@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security;
 using System.Web.Script.Serialization;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace PwM.Utils
@@ -307,7 +306,7 @@ namespace PwM.Utils
                     if (!string.IsNullOrEmpty(line))
                     {
                         var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
-                        if (line.Contains(parsedData[0]) && line.Contains(parsedData[1]))
+                        if (outJson["site/application"]==parsedData[0] && outJson["account"]==parsedData[1])
                         {
                             tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
                         }
