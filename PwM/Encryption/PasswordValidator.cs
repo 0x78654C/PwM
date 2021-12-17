@@ -102,10 +102,7 @@ namespace PwM.Encryption
         /// <param name="passwordBox"></param>
         public static void GeneratePassword(PasswordBox passwordBox)
         {
-            PasswordGenerator passwordGenerator = new PasswordGenerator();
-            passwordGenerator.Minimum = 20;
-            passwordGenerator.Maximum = 20;
-            passwordBox.Password =  passwordGenerator.Generate();
+            passwordBox.Password =  PasswordGenerator.GeneratePassword(20);
         }
     }
 }
