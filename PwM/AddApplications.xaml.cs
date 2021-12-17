@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+
 
 namespace PwM
 {
@@ -25,6 +16,20 @@ namespace PwM
         }
 
         /// <summary>
+        /// Add application button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void addAppBTN_Click(object sender, RoutedEventArgs e)
+        {
+            Utils.GlobalVariables.applicationName = appNameTXT.Text;
+            Utils.GlobalVariables.accountName = accountNameTXT.Text;
+            Utils.GlobalVariables.accountPassword = accPasswordBox.Password;
+            Utils.TextPassBoxChanges.ClearTextPassBox(appNameTXT, accountNameTXT, accPasswordBox);
+            this.Close();
+        }
+
+        /// <summary>
         /// Mouse window drag function
         /// </summary>
         /// <param name="sender"></param>
@@ -35,6 +40,15 @@ namespace PwM
                 this.DragMove();
         }
 
+        /// <summary>
+        /// Close button label.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            this.Close();
+        }
 
         /// <summary>
         /// Label button function for minimiza window
@@ -45,5 +59,49 @@ namespace PwM
         {
             WindowState = WindowState.Minimized;
         }
+
+        /// <summary>
+        /// Show/hide master password from add new application account passwordbox using a textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowHidePassword(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                Utils.TextPassBoxChanges.ShowPassword(accPasswordBox, PasswordShow);
+            }
+            else if (e.ButtonState == MouseButtonState.Released)
+            {
+                Utils.TextPassBoxChanges.HidePassword(accPasswordBox, PasswordShow);
+            }
+        }
+
+        /// <summary>
+        /// Password generator for new added applicaiton accounts.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void GeneratePassAcc_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Encryption.PasswordValidator.GeneratePassword(accPasswordBox);
+        }
+
+        // Password, text boxes length check and add application button enable .
+        private void appNameTXT_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Utils.TextPassBoxChanges.TextPassBoxChanged(appNameTXT, accountNameTXT, accPasswordBox, addAppBTN);
+        }
+
+        private void accountNameTXT_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            Utils.TextPassBoxChanges.TextPassBoxChanged(appNameTXT, accountNameTXT, accPasswordBox, addAppBTN);
+        }
+
+        private void accPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            Utils.TextPassBoxChanges.TextPassBoxChanged(appNameTXT, accountNameTXT, accPasswordBox, addAppBTN);
+        }
+        //-----------------------------
     }
 }
