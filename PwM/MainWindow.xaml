@@ -280,7 +280,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <Label Content="Applications list for: " HorizontalAlignment="Left" Margin="276,22,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold"/>
                         <TextBlock Name="appListVaultLVL"  Text="vault" HorizontalAlignment="Left" Margin="420,27,0,0" VerticalAlignment="Top" Foreground="Green" FontSize="14" FontWeight="Bold"/>
                         <materialDesign:PackIcon Name="AddAppIcon" ToolTip="Add Application" Foreground="#690fc2" Kind="Plus" Margin="283,580,0,59" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="AddAppIcon_PreviewMouseDown"/>
-                        <materialDesign:PackIcon x:Name="DelApp" ToolTip="Add Application" Foreground="#690fc2" Kind="Minus" Margin="313,580,0,59" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelAppIcon_PreviewMouseDown"/>
+                        <materialDesign:PackIcon x:Name="DelApp" ToolTip="Delete Application" Foreground="#690fc2" Kind="Minus" Margin="313,580,0,59" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelAppIcon_PreviewMouseDown"/>
                     </Grid>
                 </TabItem>
             </TabControl>
