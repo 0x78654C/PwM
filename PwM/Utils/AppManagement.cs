@@ -74,6 +74,15 @@ namespace PwM.Utils
         public static void AddApplication(ListView listView, string vaultName, string application, string accountName, string accountPassword, SecureString masterPassword)
         {
             string pathToVault = Path.Combine(Utils.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+
+            foreach(var item in listView.Items)
+            {
+               if(item.ToString().Contains(application) && item.ToString().Contains(accountName))
+                {
+                    Notification.ShowNotificationInfo("orange", $"Application {application} already contins {accountName} account!");
+                    return;
+                }    
+            }
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
