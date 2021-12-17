@@ -272,12 +272,15 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                 <ContextMenu HasDropShadow="False" StaysOpen="True" >
                                     <MenuItem Header="Copy to clipboard(15 seconds avaible)" Click="CopyToClipboard_Click" Tag="1" />
                                     <MenuItem Header="Show Password" Click="ShowPassword_Click" Tag="2" />
+                                    <MenuItem Header="Update Account Password" Click="UpdateAccountPass_Click" Tag="2" />
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
                         <Label Content="_______________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" Margin="276,29,10,0" VerticalAlignment="Top" Height="26" Width="561" Foreground="Red" />
                         <Label Content="Applications list for: " HorizontalAlignment="Left" Margin="276,22,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold"/>
                         <TextBlock Name="appListVaultLVL"  Text="vault" HorizontalAlignment="Left" Margin="420,27,0,0" VerticalAlignment="Top" Foreground="Green" FontSize="14" FontWeight="Bold"/>
+                        <materialDesign:PackIcon Name="AddAppIcon" ToolTip="Add Application" Foreground="#690fc2" Kind="Plus" Margin="283,580,0,59" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="AddAppIcon_PreviewMouseDown"/>
+                        <materialDesign:PackIcon x:Name="DelApp" ToolTip="Add Application" Foreground="#690fc2" Kind="Minus" Margin="313,580,0,59" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelAppIcon_PreviewMouseDown"/>
                     </Grid>
                 </TabItem>
             </TabControl>
