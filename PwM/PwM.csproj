@@ -92,6 +92,7 @@
       <DependentUpon>PopMessage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AppManagement.cs" />
+    <Compile Include="Utils\ClearVariables.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GlobalVariables.cs" />
     <Compile Include="Utils\MasterPasswordLoad.cs" />
