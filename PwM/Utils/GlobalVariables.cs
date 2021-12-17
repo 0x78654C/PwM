@@ -5,6 +5,10 @@ namespace PwM.Utils
     /* Global variables definitions class */
     public static class GlobalVariables
     {
+        public static string applicationName { get; set; }
+        public static string accountName { get; set; }
+        public static string accountPassword { get; set; }
+        public static string deleteConfirmation { get; set; }
         public static string vaultName { get; set; }
         public static string gridColor { get; set; }
         public static string messageData { get; set; }
