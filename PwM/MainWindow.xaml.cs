@@ -444,22 +444,7 @@ namespace PwM
             delBTN.IsEnabled = (delVPassword.Password.Length >= 12);
         }
 
-        /// <summary>
-        /// Load master password form MasterPassword form after confirmation.
-        /// </summary>
-        /// <param name="vaultName"></param>
-        /// <returns></returns>
-        private SecureString LoadMasterPassword(string vaultName)
-        {
-            SecureString password;
-            Utils.GlobalVariables.vaultName = vaultName;
-            MasterPassword masterPassword = new MasterPassword();
-            masterPassword.ShowDialog();
-            password = masterPassword.masterPassword;
-            masterPassword.masterPasswordPWD.Clear();
-            masterPassword.masterPassword = null;
-            return password;
-        }
+
 
         /// <summary>
         /// Decrypt vault buy double click on it and populate appList on Application tab and switch to it.
@@ -482,7 +467,7 @@ namespace PwM
             {
                 string vaultName = vaultList.SelectedItem.ToString();
                 vaultName = vaultName.Split(',')[0].Replace("{ Name = ", "");
-                var masterPassword = LoadMasterPassword(vaultName);
+                var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(vaultName);
                 VaultClose();
                 if (masterPassword != null && masterPassword.Length > 0)
                 {
@@ -550,7 +535,7 @@ namespace PwM
         /// <param name="e"></param>
         private void addAppBTN_Click(object sender, RoutedEventArgs e)
         {
-            var masterPassword = LoadMasterPassword(appListVaultLVL.Text);
+            var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
             if (masterPassword != null)
             {
                 Utils.AppManagement.AddApplication(appList, appListVaultLVL.Text, appNameTXT.Text, accountNameTXT.Text, accPasswordBox.Password, masterPassword);
@@ -576,7 +561,7 @@ namespace PwM
         //-----------------------------
         private void delAppBTN_Click(object sender, RoutedEventArgs e)
         {
-            var masterPassword = LoadMasterPassword(appListVaultLVL.Text);
+            var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
             if (masterPassword != null)
             {
                 Utils.AppManagement.DeleteApplicaiton(appList, appListVaultLVL.Text, appDeleteTXT.Text, accDeleteTXT.Text, masterPassword);
@@ -602,7 +587,7 @@ namespace PwM
         /// <param name="e"></param>
         private void updateAccPassBTN_Click(object sender, RoutedEventArgs e)
         {
-            var masterPassword = LoadMasterPassword(appListVaultLVL.Text);
+            var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
             if (masterPassword != null)
             {
                 Utils.AppManagement.UpdateAccount(appList, appListVaultLVL.Text, appNameUTXT.Text, accNameUTXT.Text, newPassAccBox.Password, masterPassword);
@@ -610,7 +595,7 @@ namespace PwM
             }
         }
 
-        // Password, text boxes length check and add application button enable for 
+        // Password, text boxes length check and update application button enable for 
         private void appNameUTXT_TextChanged(object sender, TextChangedEventArgs e)
         {
             Utils.TextPassBoxChanges.TextPassBoxChanged(appNameUTXT, accNameUTXT, newPassAccBox, updateAccPassBTN);
@@ -732,11 +717,11 @@ namespace PwM
         /// <param name="e"></param>
         private void ShowHidePassword(object sender, MouseButtonEventArgs e)
         {
-            if(e.ButtonState == MouseButtonState.Pressed)
+            if (e.ButtonState == MouseButtonState.Pressed)
             {
                 Utils.TextPassBoxChanges.ShowPassword(accPasswordBox, PasswordShow);
             }
-            else if (e.ButtonState==MouseButtonState.Released)
+            else if (e.ButtonState == MouseButtonState.Released)
             {
                 Utils.TextPassBoxChanges.HidePassword(accPasswordBox, PasswordShow);
             }
@@ -793,6 +778,49 @@ namespace PwM
             {
                 Utils.TextPassBoxChanges.HidePassword(delVPassword, vaultDeletePassword);
             }
+        }
+
+        /// <summary>
+        /// Update account password event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void UpdateAccountPass_Click(object sender, RoutedEventArgs e)
+        {
+      
+        }
+
+        /// <summary>
+        /// Add new applicaiton icon event (+).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void AddAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            AddApplications addApplications = new AddApplications();
+            addApplications.ShowDialog();
+            var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
+            if (masterPassword != null)
+            {
+                Utils.AppManagement.AddApplication(appList, appListVaultLVL.Text, Utils.GlobalVariables.applicationName, Utils.GlobalVariables.accountName, Utils.GlobalVariables.accountPassword, masterPassword);
+                Utils.GlobalVariables.applicationName = "";
+                Utils.GlobalVariables.accountName = "";
+                Utils.GlobalVariables.accountPassword = "";
+            }
+            else
+            {
+                addApplications.ShowDialog();
+            }
+        }
+
+        /// <summary>
+        /// Delete applicaiton icon event (-).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DelAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Utils.AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
         }
     }
 }

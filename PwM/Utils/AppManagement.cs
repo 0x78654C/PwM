@@ -32,6 +32,11 @@ namespace PwM.Utils
                     Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
                     return false;
                 }
+                if (masterPassword == null)
+                {
+                    Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                    return false;
+                }
                 string readVault = File.ReadAllText(pathToVault);
                 string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
                 if (decryptVault.Contains("Error decrypting"))
@@ -88,6 +93,11 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
                 return;
             }
+            if (masterPassword == null)
+            {
+                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                return;
+            }
             string readVault = File.ReadAllText(pathToVault);
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
@@ -134,6 +144,11 @@ namespace PwM.Utils
             List<string> listApps = new List<string>();
             bool accountCheck = false;
             string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            if (masterPassword == null)
+            {
+                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                return;
+            }
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
@@ -216,6 +231,11 @@ namespace PwM.Utils
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
+                return;
+            }
+            if (masterPassword == null)
+            {
+                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
                 return;
             }
             string readVault = File.ReadAllText(pathToVault);
@@ -401,6 +421,38 @@ namespace PwM.Utils
                 }
             }
             return outPass;
+        }
+
+        /// <summary>
+        /// Delete vault from selected item.
+        /// </summary>
+        /// <param name="listView"></param>
+        /// <param name="vaultName"></param>
+        public static void DeleteSelectedItem(ListView listView, string vaultName)
+        {
+            if (listView.SelectedItem == null)
+            {
+                Notification.ShowNotificationInfo("orange", "You must select an application for delete!");
+                return;
+            }
+            else
+            {
+                string selectedItem = listView.SelectedItem.ToString();
+                string application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
+                string account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
+                GlobalVariables.applicationName = application;
+                GlobalVariables.accountName = account;
+                DelApplications delApplications = new DelApplications();
+                delApplications.ShowDialog();
+                if (GlobalVariables.deleteConfirmation == "yes")
+                {
+                    var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
+                    DeleteApplicaiton(listView, vaultName, application, account, masterPassword);
+                    GlobalVariables.applicationName = "";
+                    GlobalVariables.accountName = "";
+                    GlobalVariables.deleteConfirmation = "";
+                }
+            }
         }
     }
 }
