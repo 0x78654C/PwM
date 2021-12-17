@@ -96,6 +96,7 @@ namespace PwM.Utils
             if (masterPassword == null)
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                ClearVariables.VariablesClear();
                 return;
             }
             string readVault = File.ReadAllText(pathToVault);
@@ -147,6 +148,7 @@ namespace PwM.Utils
             if (masterPassword == null)
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                ClearVariables.VariablesClear();
                 return;
             }
             if (!File.Exists(pathToVault))
@@ -236,6 +238,7 @@ namespace PwM.Utils
             if (masterPassword == null)
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                ClearVariables.VariablesClear();
                 return;
             }
             string readVault = File.ReadAllText(pathToVault);
@@ -440,17 +443,14 @@ namespace PwM.Utils
                 string selectedItem = listView.SelectedItem.ToString();
                 string application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
                 string account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
-                GlobalVariables.applicationName = application;
-                GlobalVariables.accountName = account;
+                Utils.ClearVariables.VariablesClear();
                 DelApplications delApplications = new DelApplications();
                 delApplications.ShowDialog();
                 if (GlobalVariables.deleteConfirmation == "yes")
                 {
                     var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                     DeleteApplicaiton(listView, vaultName, application, account, masterPassword);
-                    GlobalVariables.applicationName = "";
-                    GlobalVariables.accountName = "";
-                    GlobalVariables.deleteConfirmation = "";
+                    Utils.ClearVariables.VariablesClear();
                 }
             }
         }
