@@ -45,7 +45,7 @@ namespace PwM.Encryption
                     (useNumbers && !password.Any(e => Numbers.Contains(e))) ||
                 (useUpper && !password.Any(e => Alphabet.ToUpper().Contains(e))))
             {
-                return GeneratePassword(collection, attempt + 1, length, useUpper, useUpper, useSymbols);
+                return GeneratePassword(collection, attempt + 1, length, useUpper, useUpper, useSymbols,useNumbers);
             }
             return password;
         }
