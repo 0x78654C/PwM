@@ -84,6 +84,9 @@
     <Compile Include="AddApplications.xaml.cs">
       <DependentUpon>AddApplications.xaml</DependentUpon>
     </Compile>
+    <Compile Include="DelApplications.xaml.cs">
+      <DependentUpon>DelApplications.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Encryption\PaswordGenerator.cs" />
     <Compile Include="PopMessage.xaml.cs">
       <DependentUpon>PopMessage.xaml</DependentUpon>
@@ -91,10 +94,15 @@
     <Compile Include="Utils\AppManagement.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GlobalVariables.cs" />
+    <Compile Include="Utils\MasterPasswordLoad.cs" />
     <Compile Include="Utils\Notification.cs" />
     <Compile Include="Utils\ScreenSaverDetect.cs" />
     <Compile Include="Utils\TextPassBoxChanges.cs" />
     <Page Include="AddApplications.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DelApplications.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
