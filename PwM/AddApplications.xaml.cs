@@ -25,6 +25,7 @@ namespace PwM
             Utils.GlobalVariables.applicationName = appNameTXT.Text;
             Utils.GlobalVariables.accountName = accountNameTXT.Text;
             Utils.GlobalVariables.accountPassword = accPasswordBox.Password;
+            Utils.GlobalVariables.closeAppConfirmation = "";
             Utils.TextPassBoxChanges.ClearTextPassBox(appNameTXT, accountNameTXT, accPasswordBox);
             this.Close();
         }
@@ -47,6 +48,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            Utils.GlobalVariables.closeAppConfirmation = "yes";
             this.Close();
         }
 

@@ -787,7 +787,7 @@ namespace PwM
         /// <param name="e"></param>
         private void UpdateAccountPass_Click(object sender, RoutedEventArgs e)
         {
-      
+
         }
 
         /// <summary>
@@ -799,17 +799,11 @@ namespace PwM
         {
             AddApplications addApplications = new AddApplications();
             addApplications.ShowDialog();
-            var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
-            if (masterPassword != null)
+            if (Utils.GlobalVariables.closeAppConfirmation != "yes")
             {
+                var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
                 Utils.AppManagement.AddApplication(appList, appListVaultLVL.Text, Utils.GlobalVariables.applicationName, Utils.GlobalVariables.accountName, Utils.GlobalVariables.accountPassword, masterPassword);
-                Utils.GlobalVariables.applicationName = "";
-                Utils.GlobalVariables.accountName = "";
-                Utils.GlobalVariables.accountPassword = "";
-            }
-            else
-            {
-                addApplications.ShowDialog();
+                Utils.ClearVariables.VariablesClear();
             }
         }
 
