@@ -6,7 +6,7 @@ using System.Text;
 namespace PwM.Encryption
 {
     // Cryptograhic password generator class.
-    // Credits to: https://www.codeproject.com/Articles/2393/A-C-Password-Generator
+    // Credits to: mkbmain
 
     public static class PasswordGenerator
     {
