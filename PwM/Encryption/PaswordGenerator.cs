@@ -16,13 +16,7 @@ namespace PwM.Encryption
         private static Random _random = new Random(Guid.NewGuid().GetHashCode());
 
         public static string GeneratePassword(int length = 16, bool useUpper = true, bool useLower = true,
-            bool useSymbols = true,bool useNumbers = true)
-        {
-            return GeneratePassword(0, length, useUpper, useLower, useSymbols,useNumbers);
-        }
-
-        private static string GeneratePassword(int attempt, int length = 16, bool useUpper = true, bool useLower = true,
-             bool useSymbols = true,bool useNumbers =true)
+            bool useSymbols = true, bool useNumbers = true)
         {
             if (length < 1)
             {
@@ -38,16 +32,23 @@ namespace PwM.Encryption
             collection += useNumbers ? Numbers : "";
             collection += useUpper ? Alphabet.ToUpper() : "";
             collection += useSymbols ? Symbols : "";
-            var password = string.Join("", Enumerable.Range(0, length).Select(t => collection[_random.Next(0, collection.Length)]));
+
+            return GeneratePassword(string.Join("", collection.OrderBy(r => Guid.NewGuid().GetHashCode())), 0, length, useUpper, useLower, useSymbols, useNumbers);
+        }
+
+        private static string GeneratePassword(string collection, int attempt, int length = 16, bool useUpper = true, bool useLower = true,
+             bool useSymbols = true, bool useNumbers = true)
+        {
+             var password = string.Join("", Enumerable.Range(0, length).Select(t => collection[_random.Next(0, collection.Length)]));
             if (length > 7 && attempt < 5 && (useLower && !password.Any(e => Alphabet.ToLower().Contains(e))) ||
                 (useSymbols && !password.Any(e => Symbols.Contains(e))) ||
                     (useNumbers && !password.Any(e => Numbers.Contains(e))) ||
                 (useUpper && !password.Any(e => Alphabet.ToUpper().Contains(e))))
             {
-                return GeneratePassword(attempt + 1, length, useUpper, useUpper, useSymbols);
+                return GeneratePassword(collection, attempt + 1, length, useUpper, useUpper, useSymbols);
             }
             return password;
         }
     }
 }
-    
+
