@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:PwM"        
         xmlns:materialDesign1="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="PwM - Password Manager" Icon="F:\twitch\Projects\PwM\PwM\Resources\Logo.ico" AllowsTransparency="True" Height="199.636" Width="388.087" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen" >
+        Title="PwM - Password Manager" Icon="pack://application:,,,/Resources/Logo.ico" AllowsTransparency="True" Height="199.636" Width="388.087" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen" >
     <Border BorderBrush="#690fc2" BorderThickness="1">
         <Grid Background="#f3f5f2" >
             <Grid Name="popGrid" VerticalAlignment="Top" Height="39" Background="#551cc7" >

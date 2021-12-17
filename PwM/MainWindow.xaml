@@ -7,8 +7,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         mc:Ignorable="d"
         Name="Pwm"
         xmlns:adorners="http://gu.se/Adorners"
-        
-        Title="PwM" Icon="F:\twitch\Projects\PwM\PwM\Resources\Logo.ico"  Height="704.594" Width="1074.808" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Visibility="Visible" MouseDown="Window_MouseDown" AllowsTransparency="True"  Background="Transparent" WindowStyle="None">
+        Title="PwM" Icon="pack://application:,,,/Resources/Logo.ico"  Height="704.594" Width="1074.808" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Visibility="Visible" MouseDown="Window_MouseDown" AllowsTransparency="True"  Background="Transparent" WindowStyle="None">
 
     <Window.Resources>
         <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
@@ -302,7 +301,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             </Grid>
             <Grid x:Name="GridMenu" HorizontalAlignment="Left"  Width="221">
                 <Grid.Background>
-                    <ImageBrush ImageSource="F:\twitch\Projects\PwM\PwM\Resources\Menu.jpg"/>
+                    <ImageBrush ImageSource="pack://application:,,,/Resources/Menu.jpg"/>
                 </Grid.Background>
                 <ListViewItem  Name="homeListVI" ToolTip="Home" Height="39" Foreground="#FFDCDCDC" FontSize="18" PreviewMouseDown="Home_PreviewMouseDown" Margin="0,88,0,576">
                     <StackPanel Orientation="Horizontal" >
