@@ -39,13 +39,13 @@ namespace PwM.Encryption
         private static string GeneratePassword(string collection, int attempt, int length = 16, bool useUpper = true, bool useLower = true,
              bool useSymbols = true, bool useNumbers = true)
         {
-             var password = string.Join("", Enumerable.Range(0, length).Select(t => collection[_random.Next(0, collection.Length)]));
+            var password = string.Join("", Enumerable.Range(0, length).Select(t => collection[_random.Next(0, collection.Length)]));
             if (length > 7 && attempt < 5 && (useLower && !password.Any(e => Alphabet.ToLower().Contains(e))) ||
                 (useSymbols && !password.Any(e => Symbols.Contains(e))) ||
                     (useNumbers && !password.Any(e => Numbers.Contains(e))) ||
                 (useUpper && !password.Any(e => Alphabet.ToUpper().Contains(e))))
             {
-                return GeneratePassword(collection, attempt + 1, length, useUpper, useUpper, useSymbols,useNumbers);
+                return GeneratePassword(collection, attempt + 1, length, useUpper, useUpper, useSymbols, useNumbers);
             }
             return password;
         }
