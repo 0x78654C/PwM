@@ -398,16 +398,10 @@ namespace PwM.Utils
         public static string CopyPassToClipBoard(ListView listView)
         {
             string outPass = string.Empty;
-            if (listView.SelectedItem == null)
+            string application = GetApplicationFromListView(listView);
+            string account = GetAccountFromListView(listView);
+            if (account.Length > 0 && application.Length > 0)
             {
-                Notification.ShowNotificationInfo("orange", "You must select an application line to copy account password!");
-                outPass = "itemerror";
-            }
-            else
-            {
-                string selectedItem = listView.SelectedItem.ToString();
-                string application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
-                string account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
                 var vaultToLines = Encryption.PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
                 foreach (var line in vaultToLines)
                 {
@@ -433,24 +427,72 @@ namespace PwM.Utils
         /// <param name="vaultName"></param>
         public static void DeleteSelectedItem(ListView listView, string vaultName)
         {
-            if (listView.SelectedItem == null)
+            string application = GetApplicationFromListView(listView);
+            string account = GetAccountFromListView(listView);
+            if (account.Length>0 && application.Length>0)
             {
-                Notification.ShowNotificationInfo("orange", "You must select an application for delete!");
-                return;
-            }
-            else
-            {
-                string selectedItem = listView.SelectedItem.ToString();
-                string application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
-                string account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
-                Utils.ClearVariables.VariablesClear();
+                GlobalVariables.accountName = account;
+                GlobalVariables.applicationName = application;
                 DelApplications delApplications = new DelApplications();
                 delApplications.ShowDialog();
                 if (GlobalVariables.deleteConfirmation == "yes")
                 {
                     var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                     DeleteApplicaiton(listView, vaultName, application, account, masterPassword);
-                    Utils.ClearVariables.VariablesClear();
+                    ClearVariables.VariablesClear();
+                }
+            }
+        }
+
+        private static string GetAccountFromListView(ListView listView)
+        {
+            string account = string.Empty;
+            if (listView.SelectedItem == null)
+            {
+                Notification.ShowNotificationInfo("orange", "You must select an application for delete!");
+                return account;
+            }
+            else
+            {
+                string selectedItem = listView.SelectedItem.ToString();
+                 account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
+            }
+            return account;
+        }
+
+        private static string GetApplicationFromListView(ListView listView)
+        {
+            string application = string.Empty;
+            if (listView.SelectedItem == null)
+            {
+                Notification.ShowNotificationInfo("orange", "You must select an application for delete!");
+                return application;
+            }
+            else
+            {
+                string selectedItem = listView.SelectedItem.ToString();
+                application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
+            }
+            return application;
+        }
+
+
+        public static void UpdateSelectedItemPassword(ListView listView,string vaultName)
+        {
+            string application = GetApplicationFromListView(listView);
+            string account = GetAccountFromListView(listView);
+            if (account.Length > 0 && application.Length > 0)
+            {
+                GlobalVariables.accountName = account;
+                GlobalVariables.applicationName = application;
+                UpdateApplication updateApplication = new UpdateApplication();
+                updateApplication.ShowDialog();
+                string newPassword = GlobalVariables.accountPassword;
+                if (newPassword != null)
+                {
+                    var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
+                    UpdateAccount(listView, vaultName, application, account, newPassword, masterPassword);
+                    ClearVariables.VariablesClear();
                 }
             }
         }
