@@ -1,0 +1,48 @@
+﻿<Window x:Class="PwM.UpdateApplication"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PwM"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:adorners="http://gu.se/Adorners"
+        mc:Ignorable="d"
+        Title="PwM - Password Manager" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="214.998" Width="235" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
+
+    <Border BorderBrush="#690fc2" BorderThickness="1">
+        <Grid Background="#f3f5f2" >
+            <Grid VerticalAlignment="Top" Height="39" Background="#551cc7" >
+                <TextBlock Text="Update Account Password" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="16" Margin="16,8,32,2" Width="185" RenderTransformOrigin="0.5,0.5"/>
+
+                <Label x:Name="closeLBL" Content="x" FontSize="20" Foreground="#f3f5f2" HorizontalAlignment="Right" Margin="0,0,3,-7" VerticalAlignment="Top" Height="46" PreviewMouseDown="closeLBL_PreviewMouseDown" FontFamily="Verdana" />
+
+            </Grid>
+            <TextBlock Text="Aplication:" Name="ApplicationTXT" TextAlignment="Center" HorizontalAlignment="Center" Foreground="Black" FontSize="13" Margin="28,61,140,132" Width="65" RenderTransformOrigin="0.5,0.5"/>
+            <TextBlock Text="Account:" Name="AccountTXT" TextAlignment="Center" HorizontalAlignment="Center" Foreground="Black" FontSize="13" Margin="38,92,140,101" Width="55" RenderTransformOrigin="0.5,0.5"/>
+
+            <materialDesign:PackIcon Name="GenerateNewPassAcc" ToolTip="Generate Password" Foreground="Gray" Kind="LockAdd" Margin="5,141,0,54" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="GenerateNewPassAcc_PreviewMouseDown"/>
+            <materialDesign:PackIcon x:Name="ShowNewPassword" ToolTip="Show Password (Right Click)" Foreground="Gray" Kind="Eye" Margin="210,141,0,54" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseRightButtonDown="ShowHideNewPassword" PreviewMouseRightButtonUp="ShowHideNewPassword"/>
+            <TextBox Background="#f3f5f2" Foreground="Black" FontSize="12" Visibility="Hidden" adorners:Watermark.Text ="New Account Password" VerticalContentAlignment="Center" TextAlignment="Center" x:Name="NewPasswordShow" HorizontalAlignment="Left" Height="30" Margin="29,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176">
+                <adorners:Watermark.TextStyle>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Opacity" Value="0.5" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </adorners:Watermark.TextStyle>
+            </TextBox>
+            <PasswordBox  Background="#f3f5f2" Foreground="Black" FontSize="14"  adorners:Watermark.Text ="New Account Password" Name="newPassAccBox" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="28,134,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="newPassAccBox_PasswordChanged">
+                <adorners:Watermark.TextStyle>
+                    <Style TargetType="{x:Type TextBlock}">
+                        <Setter Property="Opacity" Value="0.5" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                    </Style>
+                </adorners:Watermark.TextStyle>
+            </PasswordBox>
+            <Button Name="updateAccPassBTN" Style="{DynamicResource RoundCorner2}" Content="Update"  Margin="69,169,70,7"  Width="94" Height="37" Foreground="#FFE1DDEE" IsEnabled="False" Click="updateAccPassBTN_Click"/>
+            <TextBlock Text="account" x:Name="AccountNameTXT" TextAlignment="Left" HorizontalAlignment="Center" Foreground="#551cc7" FontSize="13" Margin="99,92,28,101" Width="106" RenderTransformOrigin="0.5,0.5"/>
+            <TextBlock Text="aplication" x:Name="ApplicationNameTXT" TextAlignment="Left" HorizontalAlignment="Center" Foreground="green" FontSize="13" Margin="99,61,5,132" Width="129" RenderTransformOrigin="0.5,0.5"/>
+        </Grid>
+    </Border>
+</Window>
