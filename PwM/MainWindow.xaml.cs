@@ -521,97 +521,11 @@ namespace PwM
             tabControl.SelectedIndex = 1;
             appListVI.Foreground = Brushes.Red;
             appListVI.IsEnabled = false;
-            Utils.TextPassBoxChanges.ClearTextPassBox(appDeleteTXT, accDeleteTXT);
-            Utils.TextPassBoxChanges.ClearTextPassBox(appNameTXT, accountNameTXT, accPasswordBox);
-            Utils.TextPassBoxChanges.ClearTextPassBox(appNameUTXT, accNameUTXT, newPassAccBox);
             Utils.AppManagement.vaultSecure = null;
             GC.Collect();
         }
 
-        /// <summary>
-        /// Add application button
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void addAppBTN_Click(object sender, RoutedEventArgs e)
-        {
-            var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
-            if (masterPassword != null)
-            {
-                Utils.AppManagement.AddApplication(appList, appListVaultLVL.Text, appNameTXT.Text, accountNameTXT.Text, accPasswordBox.Password, masterPassword);
-                Utils.TextPassBoxChanges.ClearTextPassBox(appNameTXT, accountNameTXT, accPasswordBox);
-            }
-        }
-
-        // Password, text boxes length check and add application button enable .
-        private void appNameTXT_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Utils.TextPassBoxChanges.TextPassBoxChanged(appNameTXT, accountNameTXT, accPasswordBox, addAppBTN);
-        }
-
-        private void accountNameTXT_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Utils.TextPassBoxChanges.TextPassBoxChanged(appNameTXT, accountNameTXT, accPasswordBox, addAppBTN);
-        }
-
-        private void accPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            Utils.TextPassBoxChanges.TextPassBoxChanged(appNameTXT, accountNameTXT, accPasswordBox, addAppBTN);
-        }
-        //-----------------------------
-        private void delAppBTN_Click(object sender, RoutedEventArgs e)
-        {
-            var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
-            if (masterPassword != null)
-            {
-                Utils.AppManagement.DeleteApplicaiton(appList, appListVaultLVL.Text, appDeleteTXT.Text, accDeleteTXT.Text, masterPassword);
-                Utils.TextPassBoxChanges.ClearTextPassBox(appDeleteTXT, accDeleteTXT);
-            }
-        }
-        // Password, text boxes length check and delete application button enable.
-        private void appDeleteTXT_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Utils.TextPassBoxChanges.TextPassBoxChanged(accDeleteTXT, appDeleteTXT, delAppBTN);
-        }
-
-        private void accDeleteTXT_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Utils.TextPassBoxChanges.TextPassBoxChanged(accDeleteTXT, appDeleteTXT, delAppBTN);
-        }
-        //----------------------------------------------
-
-        /// <summary>
-        /// Update account password from a applicaiton.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void updateAccPassBTN_Click(object sender, RoutedEventArgs e)
-        {
-            var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
-            if (masterPassword != null)
-            {
-                Utils.AppManagement.UpdateAccount(appList, appListVaultLVL.Text, appNameUTXT.Text, accNameUTXT.Text, newPassAccBox.Password, masterPassword);
-                Utils.TextPassBoxChanges.ClearTextPassBox(appNameUTXT, accNameUTXT, newPassAccBox);
-            }
-        }
-
-        // Password, text boxes length check and update application button enable for 
-        private void appNameUTXT_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Utils.TextPassBoxChanges.TextPassBoxChanged(appNameUTXT, accNameUTXT, newPassAccBox, updateAccPassBTN);
-        }
-
-        private void accNameUTXT_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            Utils.TextPassBoxChanges.TextPassBoxChanged(appNameUTXT, accNameUTXT, newPassAccBox, updateAccPassBTN);
-        }
-
-        private void newPassAccBox_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            Utils.TextPassBoxChanges.TextPassBoxChanged(appNameUTXT, accNameUTXT, newPassAccBox, updateAccPassBTN);
-        }
-        //----------------------------------------
-
+        
         /// <summary>
         /// Copy password from selected account for 15 seconds in clipboard. Right click context menu event.
         /// </summary>
@@ -691,60 +605,6 @@ namespace PwM
         }
 
         /// <summary>
-        /// Password generator for new added applicaiton accounts.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GeneratePassAcc_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Encryption.PasswordValidator.GeneratePassword(accPasswordBox);
-        }
-
-        /// <summary>
-        /// Password generator for updated accounts password.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void GenerateNewPassAcc_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Encryption.PasswordValidator.GeneratePassword(newPassAccBox);
-        }
-
-        /// <summary>
-        /// Show/hide master password from add new application account passwordbox using a textbox.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ShowHidePassword(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ButtonState == MouseButtonState.Pressed)
-            {
-                Utils.TextPassBoxChanges.ShowPassword(accPasswordBox, PasswordShow);
-            }
-            else if (e.ButtonState == MouseButtonState.Released)
-            {
-                Utils.TextPassBoxChanges.HidePassword(accPasswordBox, PasswordShow);
-            }
-        }
-
-        /// <summary>
-        /// Show/hide master password from update account passwordbox using a textbox.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ShowHideNewPassword(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ButtonState == MouseButtonState.Pressed)
-            {
-                Utils.TextPassBoxChanges.ShowPassword(newPassAccBox, NewPasswordShow);
-            }
-            else if (e.ButtonState == MouseButtonState.Released)
-            {
-                Utils.TextPassBoxChanges.HidePassword(newPassAccBox, NewPasswordShow);
-            }
-        }
-
-        /// <summary>
         /// Show/hide master password from create vault passwordbox using a textbox.
         /// </summary>
         /// <param name="sender"></param>
@@ -787,7 +647,7 @@ namespace PwM
         /// <param name="e"></param>
         private void UpdateAccountPass_Click(object sender, RoutedEventArgs e)
         {
-
+            Utils.AppManagement.UpdateSelectedItemPassword(appList, appListVaultLVL.Text);
         }
 
         /// <summary>
@@ -813,6 +673,11 @@ namespace PwM
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void DelAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Utils.AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
+        }
+
+        private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
             Utils.AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
         }
