@@ -156,9 +156,9 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <ListView Name="appList" GridViewColumnHeader.Click="AppListColumnHeaderClickedHandler" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="522" Margin="21,56,21,0" VerticalAlignment="Top" Width="805" Background="#f3f5f2" Foreground="#0d0300" FontSize="14">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Application" Width="268" DisplayMemberBinding="{Binding Application}"/>
-                                    <GridViewColumn Header="Account" Width="268" DisplayMemberBinding="{Binding Account}"/>
-                                    <GridViewColumn Header="Password" Width="268" DisplayMemberBinding="{Binding Password}"/>
+                                    <GridViewColumn Header="Application" Width="264" DisplayMemberBinding="{Binding Application}"/>
+                                    <GridViewColumn Header="Account" Width="264" DisplayMemberBinding="{Binding Account}"/>
+                                    <GridViewColumn Header="Password" Width="266" DisplayMemberBinding="{Binding Password}"/>
                                 </GridView>
                             </ListView.View>
                             <ListView.ContextMenu>
