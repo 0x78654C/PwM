@@ -444,6 +444,11 @@ namespace PwM.Utils
             }
         }
 
+        /// <summary>
+        /// Get account name from selected item in listview.
+        /// </summary>
+        /// <param name="listView"></param>
+        /// <returns></returns>
         private static string GetAccountFromListView(ListView listView)
         {
             string account = string.Empty;
@@ -459,6 +464,11 @@ namespace PwM.Utils
             }
             return account;
         }
+        /// <summary>
+        /// Get application name from selected item in listview.
+        /// </summary>
+        /// <param name="listView"></param>
+        /// <returns></returns>
 
         private static string GetApplicationFromListView(ListView listView)
         {
