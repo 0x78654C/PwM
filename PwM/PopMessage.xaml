@@ -10,16 +10,7 @@
     <Border BorderBrush="#690fc2" BorderThickness="1">
         <Grid Background="#f3f5f2" >
             <Grid Name="popGrid" VerticalAlignment="Top" Height="39" Background="#551cc7" >
-                <TextBlock Text="notification status" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="18" Margin="65,6,77,4" Width="246" RenderTransformOrigin="0.5,0.5">
-                    <TextBlock.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform/>
-                            <RotateTransform Angle="0.427"/>
-                            <TranslateTransform/>
-                        </TransformGroup>
-                    </TextBlock.RenderTransform>
-                </TextBlock>
+                <TextBlock Text="notification status" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="18" Margin="65,6,77,4" Width="246" RenderTransformOrigin="0.5,0.5"/>
             </Grid>
             <Button Name="confirmBTN" Foreground="#FFE1DDEE" Style="{DynamicResource RoundCorner2}"  Content="OK" HorizontalAlignment="Left" Margin="282,152,0,0" VerticalAlignment="Top" Width="100" Height="41" Click="confirmBTN_Click" IsDefault="True"/>
             <TextBox Name="notificationLBL" BorderThickness="0" Text="notificationArea" HorizontalAlignment="Left" Margin="21,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" Height="97" TextWrapping="Wrap" AcceptsReturn="True" RenderTransformOrigin="0.469,1.118" Width="341"/>

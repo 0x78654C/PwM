@@ -11,16 +11,8 @@
     <Border BorderBrush="#690fc2" BorderThickness="1">
         <Grid Background="#f3f5f2" >
             <Grid VerticalAlignment="Top" Height="39" Background="#551cc7" >
-                <TextBlock Text="Add Applications" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="18" Margin="31,5,23,5" Width="181" RenderTransformOrigin="0.5,0.5">
-                    <TextBlock.RenderTransform>
-                        <TransformGroup>
-                            <ScaleTransform/>
-                            <SkewTransform AngleY="0.008"/>
-                            <RotateTransform Angle="0.427"/>
-                            <TranslateTransform Y="-0.017"/>
-                        </TransformGroup>
-                    </TextBlock.RenderTransform>
-                </TextBlock>
+                <TextBlock Text="Add Applications" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="18" Margin="30,6,22,4" Width="181" RenderTransformOrigin="0.5,0.5"/>
+
                 <Label x:Name="closeLBL" Content="x" FontSize="20" Foreground="#f3f5f2" HorizontalAlignment="Right" Margin="0,0,3,-7" VerticalAlignment="Top" Height="46" PreviewMouseDown="closeLBL_PreviewMouseDown" FontFamily="Verdana" />
             </Grid>
             <TextBox Background="#f3f5f2" Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="Application Name" TextAlignment="Center" x:Name="appNameTXT" HorizontalAlignment="Left" Height="30" Margin="28,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" TextChanged="appNameTXT_TextChanged">
