@@ -91,6 +91,9 @@
     <Compile Include="PopMessage.xaml.cs">
       <DependentUpon>PopMessage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UpdateApplication.xaml.cs">
+      <DependentUpon>UpdateApplication.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\AppManagement.cs" />
     <Compile Include="Utils\ClearVariables.cs" />
     <Compile Include="Utils\Extensions.cs" />
@@ -137,6 +140,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="PopMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UpdateApplication.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
