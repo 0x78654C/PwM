@@ -59,96 +59,23 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 </TabItem>
                 <TabItem Name="vaultTab" Header="vaultTab">
                     <Grid Background="#f3f5f2">
-                        <TextBox Background="#f3f5f2" Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="Vault Name " TextAlignment="Center" Name="vaultNameTXT" HorizontalAlignment="Left" Height="30" Margin="20,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176">
-                            <adorners:Watermark.TextStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Opacity" Value="0.5" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </adorners:Watermark.TextStyle>
-                        </TextBox>
-                        <TextBox Background="#f3f5f2" Foreground="Black" Visibility="Hidden" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text ="Enter Master Password " TextAlignment="Center" Name="vaultMassterPass" HorizontalAlignment="Left" Height="30" Margin="20,116,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176">
-                            <adorners:Watermark.TextStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Opacity" Value="0.5" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </adorners:Watermark.TextStyle>
-                        </TextBox>
-                        <TextBox Background="#f3f5f2" Foreground="Black" Visibility="Hidden" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text ="Confirm Master Password " TextAlignment="Center" Name="vaultConfirmMassterPass" HorizontalAlignment="Left" Height="30" Margin="20,151,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176">
-                            <adorners:Watermark.TextStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Opacity" Value="0.5" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </adorners:Watermark.TextStyle>
-                        </TextBox>
-                        <materialDesign:PackIcon Name="ShowNewVaultPassword" ToolTip="Show Password (Right Click)" Foreground="Gray" Kind="Eye" Margin="204,157,0,490" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseRightButtonDown="ShowVaultPassword" PreviewMouseRightButtonUp="ShowVaultPassword"/>
-                        <PasswordBox Background="#f3f5f2" Foreground="Black" FontSize="14" adorners:Watermark.Text ="Enter Master Password " Name="addVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="20,116,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="addVPassword_PasswordChanged"  >
-                            <adorners:Watermark.TextStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Opacity" Value="0.5" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </adorners:Watermark.TextStyle>
-                        </PasswordBox>
-                        <PasswordBox Background="#f3f5f2" Foreground="Black" FontSize="14"  adorners:Watermark.Text ="Confirm Master Password " Name="confirmVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="20,151,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="confirmVPassword_PasswordChanged"  >
-                            <adorners:Watermark.TextStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Opacity" Value="0.5" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </adorners:Watermark.TextStyle>
-                        </PasswordBox>
-                        <Label Content="_____________________________________________________________________________" HorizontalAlignment="Center" Margin="7,50,635,0" VerticalAlignment="Top" Height="26" Width="205" Foreground="Red" />
-                        <Label Content="Create Vault" HorizontalAlignment="Left" Margin="7,46,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14"/>
-                        <Button Name="createBTN" Style="{DynamicResource RoundCorner2}" Content="Create"  Margin="61,199,692,429"  Width="94" Height="37" Foreground="#FFE1DDEE" Click="saveBTN_Click" IsEnabled="False"/>
-                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="443,81,22,0" VerticalAlignment="Top" Width="382" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" >
+                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="21,81,22,0" VerticalAlignment="Top" Width="804" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" >
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Vault Name" Width="188" DisplayMemberBinding="{Binding Name}"/>
-                                    <GridViewColumn Header="Creation Date" Width="186" DisplayMemberBinding="{Binding CreateDate}"/>
+                                    <GridViewColumn Header="Vault Name" Width="400" DisplayMemberBinding="{Binding Name}"/>
+                                    <GridViewColumn Header="Creation Date" Width="400" DisplayMemberBinding="{Binding CreateDate}"/>
                                 </GridView>
                             </ListView.View>
+                            <ListView.ContextMenu>
+                                <ContextMenu HasDropShadow="False" StaysOpen="True" >
+                                    <MenuItem Header="Delete Account" Click="DeleteVault_Click" Foreground="Red" Tag="2" />
+                                </ContextMenu>
+                            </ListView.ContextMenu>
                         </ListView>
-                        <Label Content="_________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" Margin="432,50,10,0" VerticalAlignment="Top" Height="26" Width="405" Foreground="Red" />
-                        <Label Content="Vaults List" HorizontalAlignment="Left" Margin="432,46,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold"/>
-                        <Label Content="_____________________________________________________________________________" Foreground="Red" HorizontalAlignment="Center" Margin="7,417,635,0" VerticalAlignment="Top" Height="26" Width="205"/>
-                        <Label Content="Delete Vault" HorizontalAlignment="Left" Margin="7,413,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14"/>
-                        <TextBox Background="#f3f5f2" Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="Vault Name " TextAlignment="Center" x:Name="vaultNameTXTDelete" HorizontalAlignment="Left" Height="30" Margin="20,448,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176">
-                            <adorners:Watermark.TextStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Opacity" Value="0.5" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </adorners:Watermark.TextStyle>
-                        </TextBox>
-                        <TextBox Background="#f3f5f2" Foreground="Black" FontSize="14" Visibility="Hidden" adorners:Watermark.Text ="Enter Master Password " VerticalContentAlignment="Center"  TextAlignment="Center" Name="vaultDeletePassword" HorizontalAlignment="Left" Height="30" Margin="20,483,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176">
-                            <adorners:Watermark.TextStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Opacity" Value="0.5" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </adorners:Watermark.TextStyle>
-                        </TextBox>
-                        <materialDesign:PackIcon Name="ShowDeleteVaultPassword" ToolTip="Show Password (Right Click)" Foreground="Gray" Kind="Eye" Margin="204,489,0,158" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseRightButtonDown="ShowDelVaultPassword" PreviewMouseRightButtonUp="ShowDelVaultPassword"/>
-                        <PasswordBox Background="#f3f5f2" Foreground="Black" FontSize="14"  adorners:Watermark.Text ="Enter Master Password " Name="delVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="20,483,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="delVPassword_PasswordChanged"  >
-                            <adorners:Watermark.TextStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Opacity" Value="0.5" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </adorners:Watermark.TextStyle>
-                        </PasswordBox>
-                        <Button Name="delBTN" Style="{DynamicResource RoundCorner2}" Content="Delete"  Margin="61,534,692,94"  Width="94" Height="37" Foreground="#FFE1DDEE" Click="delBTN_Click" IsEnabled="False"/>
+                        <Label Content="_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" Margin="10,55,10,0" VerticalAlignment="Top" Height="26" Width="827" Foreground="Red" />
+                        <Label Content="Vaults List" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold"/>
+                        <materialDesign:PackIcon Name="AddVaultIcon" ToolTip="Add Vault" Foreground="#690fc2" Kind="Plus" Margin="18,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="AddVaultIcon_PreviewMouseDown" FontWeight="Bold"/>
+                        <materialDesign:PackIcon x:Name="DelVaultIcon" ToolTip="Delete Vault" Foreground="#690fc2" Kind="Minus" Margin="56,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelVaultIcon_PreviewMouseDown"/>
                     </Grid>
                 </TabItem>
                 <TabItem Name="appTab" Header="appTab">
@@ -175,6 +102,8 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <TextBlock Name="appListVaultLVL"  Text="vault" HorizontalAlignment="Left" Margin="160,29,0,0" VerticalAlignment="Top" Foreground="Green" FontSize="14" FontWeight="Bold"/>
                         <materialDesign:PackIcon Name="AddAppIcon" ToolTip="Add Application" Foreground="#690fc2" Kind="Plus" Margin="17,585,0,54" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="AddAppIcon_PreviewMouseDown" FontWeight="Bold"/>
                         <materialDesign:PackIcon x:Name="DelApp" ToolTip="Delete Application" Foreground="#690fc2" Kind="Minus" Margin="54,585,0,54" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelAppIcon_PreviewMouseDown"/>
+                        <materialDesign:PackIcon Kind="Logout" Name="logoutIconV" Margin="361,627,0,0" Width="26" Height="30" Foreground="Red" RenderTransformOrigin="1.547,0.52"/>
+                        <Button Name="vaultCloseLBL" BorderThickness="0" Content="Exit Vault" Background="#f3f5f2" HorizontalAlignment="Left" Margin="384,629,0,0" VerticalAlignment="Top" Foreground="Red" FontSize="14" RenderTransformOrigin="4.157,15.948" FontWeight="Bold" Click="vaultCloseLBL_Click" Width="81" Height="25"/>
                     </Grid>
                 </TabItem>
             </TabControl>
