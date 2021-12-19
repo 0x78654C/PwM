@@ -62,8 +62,8 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="21,81,22,0" VerticalAlignment="Top" Width="804" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" >
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="Vault Name" Width="400" DisplayMemberBinding="{Binding Name}"/>
-                                    <GridViewColumn Header="Creation Date" Width="400" DisplayMemberBinding="{Binding CreateDate}"/>
+                                    <GridViewColumn Header="Vault Name" Width="396" DisplayMemberBinding="{Binding Name}"/>
+                                    <GridViewColumn Header="Creation Date" Width="398" DisplayMemberBinding="{Binding CreateDate}"/>
                                 </GridView>
                             </ListView.View>
                             <ListView.ContextMenu>
