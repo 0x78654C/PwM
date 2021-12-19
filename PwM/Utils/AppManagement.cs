@@ -80,13 +80,13 @@ namespace PwM.Utils
         {
             string pathToVault = Path.Combine(Utils.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
 
-            foreach(var item in listView.Items)
+            foreach (var item in listView.Items)
             {
-               if(item.ToString().Contains(application) && item.ToString().Contains(accountName))
+                if (item.ToString().Contains(application) && item.ToString().Contains(accountName))
                 {
                     Notification.ShowNotificationInfo("orange", $"Application {application} already contins {accountName} account!");
                     return;
-                }    
+                }
             }
             if (!File.Exists(pathToVault))
             {
@@ -429,7 +429,7 @@ namespace PwM.Utils
         {
             string application = GetApplicationFromListView(listView);
             string account = GetAccountFromListView(listView);
-            if (account.Length>0 && application.Length>0)
+            if (account.Length > 0 && application.Length > 0)
             {
                 GlobalVariables.accountName = account;
                 GlobalVariables.applicationName = application;
@@ -460,7 +460,7 @@ namespace PwM.Utils
             else
             {
                 string selectedItem = listView.SelectedItem.ToString();
-                 account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
+                account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
             }
             return account;
         }
@@ -487,7 +487,7 @@ namespace PwM.Utils
         }
 
 
-        public static void UpdateSelectedItemPassword(ListView listView,string vaultName)
+        public static void UpdateSelectedItemPassword(ListView listView, string vaultName)
         {
             string application = GetApplicationFromListView(listView);
             string account = GetAccountFromListView(listView);

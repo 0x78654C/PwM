@@ -22,7 +22,7 @@ namespace PwM.Encryption
             };
             return s_argon2.GetBytes(32);
         }
-        
+
         public static void ClearHash()
         {
             s_argon2.Dispose();
