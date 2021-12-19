@@ -61,7 +61,7 @@
                 </adorners:Watermark.TextStyle>
             </PasswordBox>
             <Label Content="_____________________________________________________________________________" HorizontalAlignment="Center" Margin="7,50,635,0" VerticalAlignment="Top" Height="26" Width="205" Foreground="Red" />
-            <Button Name="createBTN" Style="{DynamicResource RoundCorner2}" Content="Create"  Margin="69,166,70,10"  Width="94" Height="37" Foreground="#FFE1DDEE" Click="saveBTN_Click" IsEnabled="False"/>
+            <Button Name="createBTN" Style="{DynamicResource RoundCorner2}" Content="Create"  Margin="69,166,70,10" IsDefault="True" Width="94" Height="37" Foreground="#FFE1DDEE" Click="saveBTN_Click" IsEnabled="False"/>
         </Grid>
     </Border>
 </Window>
