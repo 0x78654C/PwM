@@ -84,8 +84,14 @@
     <Compile Include="AddApplications.xaml.cs">
       <DependentUpon>AddApplications.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AddVault.xaml.cs">
+      <DependentUpon>AddVault.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DelApplications.xaml.cs">
       <DependentUpon>DelApplications.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="DeleteVault.xaml.cs">
+      <DependentUpon>DeleteVault.xaml</DependentUpon>
     </Compile>
     <Compile Include="Encryption\PaswordGenerator.cs" />
     <Compile Include="PopMessage.xaml.cs">
@@ -102,11 +108,20 @@
     <Compile Include="Utils\Notification.cs" />
     <Compile Include="Utils\ScreenSaverDetect.cs" />
     <Compile Include="Utils\TextPassBoxChanges.cs" />
+    <Compile Include="Utils\VaultManagement.cs" />
     <Page Include="AddApplications.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="AddVault.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="DelApplications.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="DeleteVault.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
