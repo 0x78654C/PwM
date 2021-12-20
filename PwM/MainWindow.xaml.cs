@@ -117,7 +117,6 @@ namespace PwM
 
                     string header = headerClicked.Column.Header as string;
                     Sort(header, vaultList, direction);
-
                     _lastHeaderClicked = headerClicked;
                     _lastDirection = direction;
                 }
@@ -186,63 +185,27 @@ namespace PwM
         // Tab Switch
         private void Home_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            SetListViewColor(homeListVI, false);
-            SetListViewColor(vaultsListVI, true);
-            SetListViewColorApp(appListVI, true);
+            Utils.ListViewSettings.SetListViewColor(homeListVI, false);
+            Utils.ListViewSettings.SetListViewColor(vaultsListVI, true);
+            Utils.ListViewSettings.SetListViewColorApp(appListVI, true);
             tabControl.SelectedIndex = 0;
         }
         private void Vault_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            SetListViewColor(homeListVI, true);
-            SetListViewColor(vaultsListVI, false);
-            SetListViewColorApp(appListVI, true);
+            Utils.ListViewSettings.SetListViewColor(homeListVI, true);
+            Utils.ListViewSettings.SetListViewColor(vaultsListVI, false);
+            Utils.ListViewSettings.SetListViewColorApp(appListVI, true);
             tabControl.SelectedIndex = 1;
         }
         private void App_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            SetListViewColor(homeListVI, true);
-            SetListViewColor(vaultsListVI, true);
-            SetListViewColorApp(appListVI, false);
+            Utils.ListViewSettings.SetListViewColor(homeListVI, true);
+            Utils.ListViewSettings.SetListViewColor(vaultsListVI, true);
+            Utils.ListViewSettings.SetListViewColorApp(appListVI, false);
             tabControl.SelectedIndex = 2;
         }
         //--------------------
 
-        /// <summary>
-        /// Set Color of listView on click. 
-        /// </summary>
-        /// <param name="listViewItem"></param>
-        /// <param name="reset"></param>
-        private void SetListViewColor(ListViewItem listViewItem, bool reset)
-        {
-            var converter = new BrushConverter();
-            if (reset)
-            {
-                listViewItem.Background = Brushes.Transparent;
-                listViewItem.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
-                return;
-            }
-            listViewItem.Background = (Brush)converter.ConvertFromString("#6f2be3");
-        }
-
-        /// <summary>
-        /// Set Color of listView on click. 
-        /// </summary>
-        /// <param name="listViewItem"></param>
-        /// <param name="reset"></param>
-        private void SetListViewColorApp(ListViewItem listViewItem, bool reset)
-        {
-            if (listViewItem.IsEnabled)
-            {
-                var converter = new BrushConverter();
-                if (reset)
-                {
-                    listViewItem.Background = Brushes.Transparent;
-                    listViewItem.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
-                    return;
-                }
-                listViewItem.Background = (Brush)converter.ConvertFromString("#6f2be3");
-            }
-        }
 
 
         /// <summary>
@@ -307,16 +270,16 @@ namespace PwM
                 string vaultName = vaultList.SelectedItem.ToString();
                 vaultName = vaultName.Split(',')[0].Replace("{ Name = ", "");
                 var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(vaultName);
-                VaultClose();
+                Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
                 if (masterPassword != null && masterPassword.Length > 0)
                 {
                     if (Utils.AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword))
                     {
                         appListVI.IsEnabled = true;
                         appListVI.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
-                        SetListViewColor(homeListVI, true);
-                        SetListViewColor(vaultsListVI, true);
-                        SetListViewColorApp(appListVI, false);
+                        Utils.ListViewSettings.SetListViewColor(homeListVI, true);
+                        Utils.ListViewSettings.SetListViewColor(vaultsListVI, true);
+                        Utils.ListViewSettings.SetListViewColorApp(appListVI, false);
                         tabControl.SelectedIndex = 2;
                         appListVaultLVL.Text = vaultName;
                     }
@@ -336,22 +299,10 @@ namespace PwM
         /// <param name="e"></param>
         public void vaultCloseLBL_Click(object sender, RoutedEventArgs e)
         {
-            VaultClose();
+            Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
         }
 
-        // Function for clear applist, and all passwords boxes and text boxes from applicaiton tab, closes it and moves to vault tab.
-        public void VaultClose()
-        {
-            SetListViewColor(homeListVI, true);
-            SetListViewColor(vaultsListVI, false);
-            SetListViewColorApp(appListVI, true);
-            appList.Items.Clear();
-            tabControl.SelectedIndex = 1;
-            appListVI.Foreground = Brushes.Red;
-            appListVI.IsEnabled = false;
-            Utils.AppManagement.vaultSecure = null;
-            GC.Collect();
-        }
+
 
         /// <summary>
         /// Copy password from selected account for 15 seconds in clipboard. Right click context menu event.
@@ -398,10 +349,11 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    VaultClose();
+                    Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
                     break;
             }
         }
+
 
         /// <summary>
         /// Check if lock screen and close vault.
@@ -412,7 +364,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                VaultClose();
+                Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
             }
         }
 
