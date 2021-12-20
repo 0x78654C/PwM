@@ -49,12 +49,12 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             <TabControl Name="tabControl" HorizontalAlignment="Left" Height="693" Margin="220,10,0,0" VerticalAlignment="Top" Width="853">
                 <TabItem Name="homeTab" Header="homeTab">
                     <Grid Background="#f3f5f2">
-                        <Label Content="_____________________________________________________________________________" Foreground="Red" HorizontalAlignment="Center" Margin="10,72,632,0" VerticalAlignment="Top" Height="26" Width="205"/>
-                        <Label Content="User Connected" HorizontalAlignment="Left" Margin="10,66,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14"/>
-                        <TextBlock Text="user" Name="userTXB" TextAlignment="Left" HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="16,91,635,547" Width="196"></TextBlock>
-                        <Label Content="Vaults Created" HorizontalAlignment="Left" Margin="10,161,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14"/>
-                        <TextBlock Text="0" x:Name="vaultsCountLBL" TextAlignment="Left" HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="16,188,781,450" Width="50"/>
-                        <Label Content="_____________________________________________________________________________" Foreground="Red" HorizontalAlignment="Center" Margin="10,168,632,0" VerticalAlignment="Top" Height="26" Width="205"/>
+                        <Label Content="_____________________________________________________________________________" Foreground="Red" HorizontalAlignment="Center" Margin="17,68,625,0" VerticalAlignment="Top" Height="26" Width="205"/>
+                        <Label Content="User Connected" HorizontalAlignment="Left" Margin="16,62,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14" RenderTransformOrigin="0.752,0.586"/>
+                        <TextBlock Text="user" Name="userTXB" TextAlignment="Left" HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="22,88,629,550" Width="196"></TextBlock>
+                        <Label Content="Vaults Created" HorizontalAlignment="Left" Margin="18,157,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14"/>
+                        <TextBlock Text="0" x:Name="vaultsCountLBL" TextAlignment="Left" HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="23,183,774,455" Width="50"/>
+                        <Label Content="_____________________________________________________________________________" Foreground="Red" HorizontalAlignment="Center" Margin="18,162,624,0" VerticalAlignment="Top" Height="26" Width="205"/>
                     </Grid>
                 </TabItem>
                 <TabItem Name="vaultTab" Header="vaultTab">

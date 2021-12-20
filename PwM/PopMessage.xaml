@@ -13,7 +13,7 @@
                 <TextBlock Text="notification status" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="18" Margin="65,6,77,4" Width="246" RenderTransformOrigin="0.5,0.5"/>
             </Grid>
             <Button Name="confirmBTN" Foreground="#FFE1DDEE" Style="{DynamicResource RoundCorner2}"  Content="OK" HorizontalAlignment="Left" Margin="282,152,0,0" VerticalAlignment="Top" Width="100" Height="41" Click="confirmBTN_Click" IsDefault="True"/>
-            <TextBox Name="notificationLBL" BorderThickness="0" Text="notificationArea" HorizontalAlignment="Left" Margin="21,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" Height="97" TextWrapping="Wrap" AcceptsReturn="True" RenderTransformOrigin="0.469,1.118" Width="341"/>
+            <TextBox Name="notificationLBL" Background="#f3f5f2" BorderThickness="0" Text="notificationArea" HorizontalAlignment="Left" Margin="21,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" Height="97" TextWrapping="Wrap" AcceptsReturn="True" RenderTransformOrigin="0.469,1.118" Width="341"/>
         </Grid>
     </Border>
 </Window>
