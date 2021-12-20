@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Security;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,7 +20,6 @@ namespace PwM
         private static string s_rootPath = Path.GetPathRoot(Environment.SystemDirectory);
         private static readonly string s_accountName = Environment.UserName;
         private static string s_passwordManagerDirectory = $"{s_rootPath}Users\\{s_accountName}\\AppData\\Local\\PwM\\";
-        private static int s_vaultsCount = 0;
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
         System.Windows.Threading.DispatcherTimer dispatcherTimer;
@@ -30,14 +28,12 @@ namespace PwM
         {
             InitializeComponent();
             InitializeVaultsDirectory(s_passwordManagerDirectory);
-            ListVaults(s_passwordManagerDirectory);
+            Utils.VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
             userTXB.Text = s_accountName;
-            vaultsCountLBL.Text = s_vaultsCount.ToString();
+            vaultsCountLBL.Text = Utils.GlobalVariables.vaultsCount.ToString();
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
         }
-
-
 
         /// <summary>
         /// Create vautls directory.
@@ -50,142 +46,7 @@ namespace PwM
         }
 
 
-        /// <summary>
-        /// Create initial vaults files.
-        /// </summary>
-        /// <param name="vaultName">Vault name.</param>
-        /// <param name="password">Password</param>
-        /// <param name="confirmPassword">Confirm password.</param>
-        private void CreateVault(TextBox vaultName, PasswordBox password, PasswordBox confirmPassword)
-        {
-            try
-            {
-                string pathToVault = Path.Combine(s_passwordManagerDirectory, $"{vaultName.Text}.x");
-                if (File.Exists(pathToVault))
-                {
-                    Utils.Notification.ShowNotificationInfo("orange", $"Vault {vaultName.Text} already exist!");
-                    ClearPBoxesInput(addVPassword, confirmVPassword);
-                    vaultName.Clear();
-                    return;
-                }
-
-                if (vaultName.Text.Length < 3)
-                {
-                    Utils.Notification.ShowNotificationInfo("orange", "Vault name should have at least 3 characters long.");
-                    ClearPBoxesInput(addVPassword, confirmVPassword);
-                    vaultName.Clear();
-                    return;
-                }
-
-                if (!Encryption.PasswordValidator.ValidatePassword(confirmPassword.Password))
-                {
-                    Utils.Notification.ShowNotificationInfo("orange", "Password must be at least 12 characters, and must include at least one upper case letter, one lower case letter, one numeric digit, one special character and no space!");
-                    ClearPBoxesInput(addVPassword, confirmVPassword);
-                    return;
-                }
-
-                string sealVault = Encryption.AES.Encrypt(string.Empty, confirmPassword.Password);
-                ClearPBoxesInput(addVPassword, confirmVPassword);
-                File.WriteAllText(pathToVault, sealVault);
-                Utils.Notification.ShowNotificationInfo("green", $"Vault {vaultName.Text} was created!");
-                vaultName.Clear();
-                ListVaults(s_passwordManagerDirectory);
-            }
-            catch (Exception e)
-            {
-                Utils.Notification.ShowNotificationInfo("red", e.Message);
-            }
-        }
-
-        /// <summary>
-        /// Deletes a specific vault file.
-        /// </summary>
-        /// <param name="vaultName">Vault Name.</param>
-        /// <param name="password">Master password.</param>
-        private void DeleteVault(TextBox vaultName, PasswordBox password)
-        {
-            string pathToVault = Path.Combine(s_passwordManagerDirectory, $"{vaultName.Text}.x");
-            if (!File.Exists(pathToVault))
-            {
-                Utils.Notification.ShowNotificationInfo("orange", $"Vault {vaultName.Text} does not exist!");
-                password.Clear();
-                return;
-            }
-            string readEncData = File.ReadAllText(pathToVault);
-            // string decryptVault = Encryption.AES.Decrypt(readEncData, password.Password);
-            string decryptVault = Encryption.AES.Decrypt(readEncData, password.Password);
-            if (decryptVault.Contains("Error decrypting"))
-            {
-                Utils.Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
-                password.Clear();
-                return;
-            }
-            File.Delete(pathToVault);
-            Utils.Notification.ShowNotificationInfo("green", $"Vault { vaultName.Text} was deleted!");
-            vaultName.Clear();
-            password.Clear();
-            ListVaults(s_passwordManagerDirectory);
-        }
-
-
-        /// <summary>
-        /// List current vaults in listView object.
-        /// </summary>
-        /// <param name="vaultsDirectory">Path to vault directory.</param>
-        private void ListVaults(string vaultsDirectory)
-        {
-            s_vaultsCount = 0;
-            vaultList.Items.Clear();
-            if (!Directory.Exists(vaultsDirectory))
-            {
-                Utils.Notification.ShowNotificationInfo("red", "Vaults directory does not exist");
-                return;
-            }
-
-            var getFiles = new DirectoryInfo(vaultsDirectory).GetFiles();
-
-            foreach (var file in getFiles)
-            {
-                s_vaultsCount++;
-                vaultList.Items.Add(new { Name = file.Name.Substring(0, file.Name.Length - 2), CreateDate = file.CreationTime });
-            }
-        }
-
-        /// <summary>
-        /// Clear PasswordBoxes input.
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="confirmPassword"></param>
-        private void ClearPBoxesInput(PasswordBox password, PasswordBox confirmPassword)
-        {
-            password.Clear();
-            confirmPassword.Clear();
-        }
-
-
-        /// <summary>
-        /// Create vault button action.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void saveBTN_Click(object sender, RoutedEventArgs e)
-        {
-            CreateVault(vaultNameTXT, addVPassword, confirmVPassword);
-        }
-
-        /// <summary>
-        /// Delete vault button action.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void delBTN_Click(object sender, RoutedEventArgs e)
-        {
-            DeleteVault(vaultNameTXTDelete, delVPassword);
-        }
-
-
         //------------------------UI Settings------------------------------
-
         /// <summary>
         /// Column sort click on heard for applist.
         /// </summary>
@@ -425,28 +286,6 @@ namespace PwM
         }
 
         /// <summary>
-        /// Check password length and enable create button.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void confirmVPassword_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            createBTN.IsEnabled = (confirmVPassword.Password == addVPassword.Password && confirmVPassword.Password.Length >= 12);
-        }
-
-        /// <summary>
-        /// Check password length and enable delete vault button.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void delVPassword_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            delBTN.IsEnabled = (delVPassword.Password.Length >= 12);
-        }
-
-
-
-        /// <summary>
         /// Decrypt vault buy double click on it and populate appList on Application tab and switch to it.
         /// </summary>
         /// <param name="sender"></param>
@@ -491,17 +330,6 @@ namespace PwM
         }
 
         /// <summary>
-        /// Check password length and enable create vault button.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void addVPassword_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            createBTN.IsEnabled = (confirmVPassword.Password == addVPassword.Password && addVPassword.Password.Length >= 12);
-        }
-
-
-        /// <summary>
         /// Clear applist, and all passwords boxes and text boxes from applicaiton tab, closes it and moves to vault tab.
         /// </summary>
         /// <param name="sender"></param>
@@ -525,7 +353,6 @@ namespace PwM
             GC.Collect();
         }
 
-        
         /// <summary>
         /// Copy password from selected account for 15 seconds in clipboard. Right click context menu event.
         /// </summary>
@@ -561,7 +388,6 @@ namespace PwM
             Utils.AppManagement.ShowPassword(appList);
         }
 
-
         /// <summary>
         /// Check if PC enters sleep or hibernate mode and lock vault.
         /// </summary>
@@ -590,7 +416,6 @@ namespace PwM
             }
         }
 
-
         /// <summary>
         /// Enter key event for open vault.
         /// </summary>
@@ -604,41 +429,6 @@ namespace PwM
             }
         }
 
-        /// <summary>
-        /// Show/hide master password from create vault passwordbox using a textbox.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ShowVaultPassword(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ButtonState == MouseButtonState.Pressed)
-            {
-                Utils.TextPassBoxChanges.ShowPassword(addVPassword, vaultMassterPass);
-                Utils.TextPassBoxChanges.ShowPassword(confirmVPassword, vaultConfirmMassterPass);
-            }
-            else if (e.ButtonState == MouseButtonState.Released)
-            {
-                Utils.TextPassBoxChanges.HidePassword(addVPassword, vaultMassterPass);
-                Utils.TextPassBoxChanges.HidePassword(confirmVPassword, vaultConfirmMassterPass);
-            }
-        }
-
-        /// <summary>
-        /// Show/hide master password from delete vault passwordbox using a textbox.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ShowDelVaultPassword(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ButtonState == MouseButtonState.Pressed)
-            {
-                Utils.TextPassBoxChanges.ShowPassword(delVPassword, vaultDeletePassword);
-            }
-            else if (e.ButtonState == MouseButtonState.Released)
-            {
-                Utils.TextPassBoxChanges.HidePassword(delVPassword, vaultDeletePassword);
-            }
-        }
 
         /// <summary>
         /// Update account password event.
@@ -680,6 +470,26 @@ namespace PwM
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
             Utils.AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
+        }
+
+        private void DeleteVault_Click(object sender, RoutedEventArgs e)
+        {
+            Utils.VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
+            vaultsCountLBL.Text = Utils.GlobalVariables.vaultsCount.ToString();
+        }
+
+        private void AddVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            AddVault addVault = new AddVault();
+            addVault.ShowDialog();
+            if (Utils.GlobalVariables.createConfirmation == "yes")
+                Utils.VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
+        }
+
+        private void DelVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Utils.VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
+            vaultsCountLBL.Text = Utils.GlobalVariables.vaultsCount.ToString();
         }
     }
 }

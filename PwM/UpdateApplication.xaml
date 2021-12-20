@@ -40,7 +40,7 @@
                     </Style>
                 </adorners:Watermark.TextStyle>
             </PasswordBox>
-            <Button Name="updateAccPassBTN" Style="{DynamicResource RoundCorner2}" Content="Update"  Margin="69,169,70,7"  Width="94" Height="37" Foreground="#FFE1DDEE" IsEnabled="False" Click="updateAccPassBTN_Click"/>
+            <Button Name="updateAccPassBTN" Style="{DynamicResource RoundCorner2}" Content="Update"  Margin="69,169,70,7"  Width="94" Height="37" Foreground="#FFE1DDEE" IsEnabled="False" Click="updateAccPassBTN_Click" IsDefault="True"/>
             <TextBlock Text="account" x:Name="AccountNameTXT" TextAlignment="Left" HorizontalAlignment="Center" Foreground="#551cc7" FontSize="13" Margin="99,92,28,101" Width="106" RenderTransformOrigin="0.5,0.5"/>
             <TextBlock Text="aplication" x:Name="ApplicationNameTXT" TextAlignment="Left" HorizontalAlignment="Center" Foreground="green" FontSize="13" Margin="99,61,5,132" Width="129" RenderTransformOrigin="0.5,0.5"/>
         </Grid>

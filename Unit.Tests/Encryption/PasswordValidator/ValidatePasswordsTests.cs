@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
 namespace Unit.Tests.Encryption.PasswordValidator
 {
@@ -24,11 +19,11 @@ namespace Unit.Tests.Encryption.PasswordValidator
         }
 
         [Theory]
-        [InlineData("A",false)]
-        [InlineData("£",true)]
-        public void Ensure_if_we_miss_special_char_we_fail(string append,bool expected)
+        [InlineData("A", false)]
+        [InlineData("£", true)]
+        public void Ensure_if_we_miss_special_char_we_fail(string append, bool expected)
         {
-            Assert.Equal(expected, PwM.Encryption.PasswordValidator.ValidatePassword(append+"Abc152362cdevr34eGR"));
+            Assert.Equal(expected, PwM.Encryption.PasswordValidator.ValidatePassword(append + "Abc152362cdevr34eGR"));
         }
 
         [Theory]

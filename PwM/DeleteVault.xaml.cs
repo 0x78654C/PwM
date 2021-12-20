@@ -1,20 +1,17 @@
 ﻿using System.Windows;
 
-
 namespace PwM
 {
     /// <summary>
-    /// Interaction logic for DelApplications.xaml
+    /// Interaction logic for DeleteVault.xaml
     /// </summary>
-    public partial class DelApplications : Window
+    public partial class DeleteVault : Window
     {
-        public DelApplications()
+        public DeleteVault()
         {
             InitializeComponent();
-
-            string application = Utils.GlobalVariables.applicationName;
-            string account = Utils.GlobalVariables.accountName;
-            notificationLBL.Text = $"Do you want tot delete {account} account for {application} application?";
+            string vault = Utils.GlobalVariables.vaultName;
+            notificationLBL.Text = $"Do you want tot delete {vault} vault?";
         }
 
         /// <summary>
@@ -30,8 +27,6 @@ namespace PwM
 
         private void CancelBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.applicationName = "";
-            Utils.GlobalVariables.accountName = "";
             Utils.GlobalVariables.deleteConfirmation = "";
             this.Close();
         }

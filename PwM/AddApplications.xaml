@@ -53,7 +53,7 @@
                     </Style>
                 </adorners:Watermark.TextStyle>
             </PasswordBox>
-            <Button Name="addAppBTN" Style="{DynamicResource RoundCorner2}" Content="Add"  Margin="72,165,0,0"  Width="94" Height="37" Foreground="#FFE1DDEE" Click="addAppBTN_Click" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <Button Name="addAppBTN" Style="{DynamicResource RoundCorner2}" Content="Add"  Margin="72,165,0,0"  Width="94" Height="37" Foreground="#FFE1DDEE" Click="addAppBTN_Click" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" IsDefault="True"/>
         </Grid>
     </Border>
 </Window>
