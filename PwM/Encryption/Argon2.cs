@@ -4,7 +4,6 @@ namespace PwM.Encryption
 {
     public static class Argon2
     {
-        public static Argon2id s_argon2;
 
         /// <summary>
         /// Argon2 Password Hash
@@ -13,20 +12,19 @@ namespace PwM.Encryption
         /// <returns></returns>
         public static byte[] Argon2HashPassword(string password)
         {
-            s_argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
+            byte[] bytes = new byte[32];
+            using (var argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
             {
                 Salt = Encoding.UTF8.GetBytes(password.Substring(2, 10)),
                 DegreeOfParallelism = 2,
                 Iterations = 40,
                 MemorySize = 4096
-            };
-            return s_argon2.GetBytes(32);
-        }
+            })
+            {
+                bytes = argon2.GetBytes(32);
+            }
 
-        public static void ClearHash()
-        {
-            s_argon2.Dispose();
-            s_argon2.Reset();
+            return bytes;
         }
     }
 }

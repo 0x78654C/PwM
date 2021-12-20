@@ -59,6 +59,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Encryption\Argon2Tests.cs" />
     <Compile Include="Encryption\PasswordGeneratorTests.cs" />
     <Compile Include="Encryption\PasswordValidator\ValidatePasswordsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
