@@ -1,6 +1,4 @@
-﻿
-using System;
-using Xunit;
+﻿using Xunit;
 
 namespace Unit.Tests.Encryption.PasswordValidator
 {
@@ -13,12 +11,12 @@ namespace Unit.Tests.Encryption.PasswordValidator
         [InlineData("!fwe235423GE")]
         public void Ensure_we_build_a_secure_string(string item)
         {
-           var ss = PwM.Encryption.PasswordValidator.ConvertSecureStringToString(GetSecureString(item));
+            var ss = PwM.Encryption.PasswordValidator.ConvertSecureStringToString(GetSecureString(item));
             Assert.Equal(item, ss);
         }
 
 
-        private static new System.Security.SecureString GetSecureString(string item)
+        private static System.Security.SecureString GetSecureString(string item)
         {
             var ss = new System.Security.SecureString();
             foreach (char c in item) { ss.AppendChar(c); }

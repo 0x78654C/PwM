@@ -1,9 +1,5 @@
-﻿
-using System;
-using System.Runtime.InteropServices;
-using System.Security;
+﻿using System.Security;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 
 namespace PwM.Encryption
 {

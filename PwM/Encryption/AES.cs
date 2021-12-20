@@ -42,7 +42,7 @@ namespace PwM.Encryption
                     { "mac", mac },
                 };
                 JavaScriptSerializer serializer = new JavaScriptSerializer();
-             
+
                 return Convert.ToBase64String(encoding.GetBytes(serializer.Serialize(keyValues)));
             }
             catch (Exception e)
@@ -76,7 +76,7 @@ namespace PwM.Encryption
                 aes.IV = Convert.FromBase64String(payload["iv"]);
                 ICryptoTransform AESDecrypt = aes.CreateDecryptor(aes.Key, aes.IV);
                 byte[] buffer = Convert.FromBase64String(payload["value"]);
-     
+
                 return encoding.GetString(AESDecrypt.TransformFinalBlock(buffer, 0, buffer.Length));
             }
             catch (Exception e)
