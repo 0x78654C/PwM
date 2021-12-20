@@ -104,6 +104,7 @@
     <Compile Include="Utils\ClearVariables.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GlobalVariables.cs" />
+    <Compile Include="Utils\ListViewSettings.cs" />
     <Compile Include="Utils\MasterPasswordLoad.cs" />
     <Compile Include="Utils\Notification.cs" />
     <Compile Include="Utils\ScreenSaverDetect.cs" />
