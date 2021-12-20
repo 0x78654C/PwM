@@ -1,4 +1,5 @@
-﻿using System.Security;
+﻿using Microsoft.Win32;
+using System.Security;
 using System.Windows;
 using System.Windows.Input;
 
@@ -15,7 +16,36 @@ namespace PwM
         {
             InitializeComponent();
             vaultNameLBL.Text = Utils.GlobalVariables.vaultName;
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
+            SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
         }
+        /// <summary>
+        /// Check if PC enters sleep or hibernate mode and closes window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Suspend:
+                    this.Close();
+                    break;
+            }
+        }
+
+
+        /// <summary>
+        /// Check if lock screen and closes window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (e.Reason == SessionSwitchReason.SessionLock)
+                this.Close();
+        }
+
         /// <summary>
         /// Mouse window drag function
         /// </summary>

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using Microsoft.Win32;
+using System.Windows;
 using System.Windows.Input;
 
 namespace PwM
@@ -11,7 +12,41 @@ namespace PwM
         public AddVault()
         {
             InitializeComponent();
+            SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
+            SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
         }
+
+        /// <summary>
+        /// Check if PC enters sleep or hibernate mode and closes window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
+        {
+            switch (e.Mode)
+            {
+                case PowerModes.Suspend:
+                    Utils.GlobalVariables.closeAppConfirmation = "yes";
+                    this.Close();
+                    break;
+            }
+        }
+
+
+        /// <summary>
+        /// Check if lock screen and closes window.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
+        {
+            if (e.Reason == SessionSwitchReason.SessionLock)
+            {
+                Utils.GlobalVariables.closeAppConfirmation = "yes";
+                this.Close();
+            }
+        }
+
         /// <summary>
         /// Check password length and enable create vault button.
         /// </summary>
@@ -53,6 +88,7 @@ namespace PwM
                 this.Close();
             }
         }
+
         /// <summary>
         /// Mouse window drag function
         /// </summary>
@@ -84,6 +120,5 @@ namespace PwM
             Utils.GlobalVariables.closeAppConfirmation = "yes";
             this.Close();
         }
-
     }
 }
