@@ -80,14 +80,6 @@ namespace PwM.Utils
         {
             string pathToVault = Path.Combine(Utils.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
 
-            foreach (var item in listView.Items)
-            {
-                if (item.ToString().Contains(application) && item.ToString().Contains(accountName))
-                {
-                    Notification.ShowNotificationInfo("orange", $"Application {application} already contins {accountName} account!");
-                    return;
-                }
-            }
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
@@ -95,9 +87,16 @@ namespace PwM.Utils
             }
             if (masterPassword == null)
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
                 ClearVariables.VariablesClear();
                 return;
+            }
+            foreach (var item in listView.Items)
+            {
+                if (item.ToString().Contains(application) && item.ToString().Contains(accountName))
+                {
+                    Notification.ShowNotificationInfo("orange", $"Application {application} already contins {accountName} account!");
+                    return;
+                }
             }
             string readVault = File.ReadAllText(pathToVault);
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
@@ -147,7 +146,6 @@ namespace PwM.Utils
             string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
             if (masterPassword == null)
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
                 ClearVariables.VariablesClear();
                 return;
             }
@@ -237,7 +235,6 @@ namespace PwM.Utils
             }
             if (masterPassword == null)
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
                 ClearVariables.VariablesClear();
                 return;
             }
@@ -428,19 +425,26 @@ namespace PwM.Utils
         public static void DeleteSelectedItem(ListView listView, string vaultName)
         {
             string application = GetApplicationFromListView(listView);
-            string account = GetAccountFromListView(listView);
-            if (account.Length > 0 && application.Length > 0)
+            if (application.Length > 0)
             {
-                GlobalVariables.accountName = account;
-                GlobalVariables.applicationName = application;
-                DelApplications delApplications = new DelApplications();
-                delApplications.ShowDialog();
-                if (GlobalVariables.deleteConfirmation == "yes")
+                string account = GetAccountFromListView(listView);
+                if (account.Length > 0 && application.Length > 0)
                 {
-                    var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
-                    DeleteApplicaiton(listView, vaultName, application, account, masterPassword);
-                    ClearVariables.VariablesClear();
+                    GlobalVariables.accountName = account;
+                    GlobalVariables.applicationName = application;
+                    DelApplications delApplications = new DelApplications();
+                    delApplications.ShowDialog();
+                    if (GlobalVariables.deleteConfirmation == "yes")
+                    {
+                        var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
+                        DeleteApplicaiton(listView, vaultName, application, account, masterPassword);
+                        ClearVariables.VariablesClear();
+                    }
                 }
+            }
+            else
+            {
+                Notification.ShowNotificationInfo("orange", "You must select an application for delete!");
             }
         }
 
@@ -454,7 +458,6 @@ namespace PwM.Utils
             string account = string.Empty;
             if (listView.SelectedItem == null)
             {
-                Notification.ShowNotificationInfo("orange", "You must select an application for delete!");
                 return account;
             }
             else
@@ -475,7 +478,6 @@ namespace PwM.Utils
             string application = string.Empty;
             if (listView.SelectedItem == null)
             {
-                Notification.ShowNotificationInfo("orange", "You must select an application for delete!");
                 return application;
             }
             else
