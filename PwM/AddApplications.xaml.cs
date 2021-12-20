@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using PwM.Encryption;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -86,7 +87,7 @@ namespace PwM
         /// <param name="e"></param>
         private void GeneratePassAcc_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Encryption.PasswordValidator.GeneratePassword(accPasswordBox);
+            accPasswordBox.Password = PasswordGenerator.GeneratePassword(20);
         }
 
         // Password, text boxes length check and add application button enable .
