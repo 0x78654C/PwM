@@ -47,16 +47,7 @@ namespace PwM.Encryption
         /// <param name="data">Data.</param>
         public static string ConvertSecureStringToString(this SecureString data)
         {
-            var pointer = IntPtr.Zero;
-            try
-            {
-                pointer = Marshal.SecureStringToGlobalAllocUnicode(data);
-                return Marshal.PtrToStringUni(pointer);
-            }
-            finally
-            {
-                Marshal.ZeroFreeGlobalAllocUnicode(pointer);
-            }
+            return new System.Net.NetworkCredential(string.Empty, data).Password;
         }
         /// <summary>
         /// Convert string to secure string.
@@ -73,13 +64,5 @@ namespace PwM.Encryption
             return secureString;
         }
 
-        /// <summary>
-        /// Password generator for new added applicaiton accounts.
-        /// </summary>
-        /// <param name="passwordBox"></param>
-        public static void GeneratePassword(PasswordBox passwordBox)
-        {
-            passwordBox.Password = PasswordGenerator.GeneratePassword(20);
-        }
     }
 }

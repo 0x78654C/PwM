@@ -61,6 +61,8 @@
   <ItemGroup>
     <Compile Include="Encryption\Argon2Tests.cs" />
     <Compile Include="Encryption\PasswordGeneratorTests.cs" />
+    <Compile Include="Encryption\PasswordValidator\ConvertSecureStringToStringTests.cs" />
+    <Compile Include="Encryption\PasswordValidator\StringToSecureStringTests.cs" />
     <Compile Include="Encryption\PasswordValidator\ValidatePasswordsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
