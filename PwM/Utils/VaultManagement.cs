@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace PwM.Utils
 {
@@ -69,15 +70,18 @@ namespace PwM.Utils
         public static void DeleteVaultItem(ListView listView, string vaultDirectory)
         {
             string vault = GetVaultNameFromListView(listView);
-            GlobalVariables.vaultName = vault;
-            DeleteVault deleteVault = new DeleteVault();
-            deleteVault.ShowDialog();
-            if (GlobalVariables.deleteConfirmation == "yes")
+            if (vault.Length > 0)
             {
-                var masterPassword = MasterPasswordLoad.LoadMasterPassword(vault);
-                if (masterPassword != null)
-                    DeleteVault(vault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword), vaultDirectory, listView);
-                ClearVariables.VariablesClear();
+                GlobalVariables.vaultName = vault;
+                DeleteVault deleteVault = new DeleteVault();
+                deleteVault.ShowDialog();
+                if (GlobalVariables.deleteConfirmation == "yes")
+                {
+                    var masterPassword = MasterPasswordLoad.LoadMasterPassword(vault);
+                    if (masterPassword != null)
+                        DeleteVault(vault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword), vaultDirectory, listView);
+                    ClearVariables.VariablesClear();
+                }
             }
         }
 
@@ -149,6 +153,28 @@ namespace PwM.Utils
                 GlobalVariables.vaultsCount++;
                 listView.Items.Add(new { Name = file.Name.Substring(0, file.Name.Length - 2), CreateDate = file.CreationTime });
             }
+        }
+
+        /// <summary>
+        /// Function for clear applist, and all passwords boxes and text boxes from applicaiton tab, closes it and moves to vault tab.
+        /// </summary>
+        /// <param name="homeListView"></param>
+        /// <param name="vaultListView"></param>
+        /// <param name="appListView"></param>
+        /// <param name="appList"></param>
+        /// <param name="tabControl"></param>
+        public static void VaultClose(ListViewItem homeListView, ListViewItem vaultListView, ListViewItem appListView,
+            ListView appList, TabControl tabControl)
+        {
+            ListViewSettings.SetListViewColor(homeListView, true);
+            ListViewSettings.SetListViewColor(vaultListView, false);
+            ListViewSettings.SetListViewColorApp(appListView, true);
+            appList.Items.Clear();
+            tabControl.SelectedIndex = 1;
+            appListView.Foreground = Brushes.Red;
+            appListView.IsEnabled = false;
+            AppManagement.vaultSecure = null;
+            GC.Collect();
         }
     }
 }
