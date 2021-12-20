@@ -267,10 +267,10 @@ namespace PwM
             var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
             {
+                Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
                 string vaultName = vaultList.SelectedItem.ToString();
                 vaultName = vaultName.Split(',')[0].Replace("{ Name = ", "");
                 var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(vaultName);
-                Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
                 if (masterPassword != null && masterPassword.Length > 0)
                 {
                     if (Utils.AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword))
