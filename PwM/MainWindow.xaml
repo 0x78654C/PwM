@@ -51,9 +51,9 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     <Grid Background="#f3f5f2">
                         <Label Content="_____________________________________________________________________________" Foreground="Red" HorizontalAlignment="Center" Margin="17,68,625,0" VerticalAlignment="Top" Height="26" Width="205"/>
                         <Label Content="User Connected" HorizontalAlignment="Left" Margin="16,62,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14" RenderTransformOrigin="0.752,0.586"/>
-                        <TextBlock Text="user" Name="userTXB" TextAlignment="Left" HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="22,88,629,550" Width="196"></TextBlock>
+                        <TextBlock Text=" user" Name="userTXB" HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="18,88,633,550" Width="196"></TextBlock>
                         <Label Content="Vaults Created" HorizontalAlignment="Left" Margin="18,157,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14"/>
-                        <TextBlock Text="0" x:Name="vaultsCountLBL" TextAlignment="Left" HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="23,183,774,455" Width="50"/>
+                        <TextBlock Text=" 0" x:Name="vaultsCountLBL"  HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="20,181,777,457" Width="50"/>
                         <Label Content="_____________________________________________________________________________" Foreground="Red" HorizontalAlignment="Center" Margin="18,162,624,0" VerticalAlignment="Top" Height="26" Width="205"/>
                     </Grid>
                 </TabItem>
@@ -110,7 +110,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             <Grid VerticalAlignment="Top" Height="50" Background="#f3f5f2" >
                 <TextBlock Text="PwM - Password Manager"  TextAlignment="Center" HorizontalAlignment="Center" Foreground="Black" FontSize="18" Margin="450,13,220,7" Width="337"></TextBlock>
                 <StackPanel VerticalAlignment="Center">
-                    <materialDesign:PopupBox Foreground="Black" HorizontalAlignment="Right"  Margin="9" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False">
+                    <materialDesign:PopupBox Foreground="Black" HorizontalAlignment="Right"  Margin="0,9" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Width="29">
                         <Border BorderBrush="#690fc2" BorderThickness="1">
                             <StackPanel Width="150" Background="#f3f5f2">
                                 <Button Content="About" VerticalContentAlignment="Center" FontSize="18" Click="aboutBTN_Click"/>
@@ -120,7 +120,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         </Border>
                     </materialDesign:PopupBox>
                 </StackPanel>
-                <Label Name="miniMizeLBL" Content="_" PreviewMouseDown="miniMizeLBL_PreviewMouseDown" FontSize="25" Foreground="Black" HorizontalAlignment="Left" Margin="1007,-3,0,0" VerticalAlignment="Top"/>
+                <Label Name="miniMizeLBL" Content="_" PreviewMouseDown="miniMizeLBL_PreviewMouseDown" FontSize="25" Foreground="Black" HorizontalAlignment="Left" Margin="1026,-3,0,0" VerticalAlignment="Top"/>
                 <materialDesign:PackIcon Kind="Key" Margin="503,9,0,0" Width="31" Height="33" Foreground="Black" RenderTransformOrigin="1.547,0.52"/>
             </Grid>
             <Grid x:Name="GridMenu" HorizontalAlignment="Left"  Width="221">
