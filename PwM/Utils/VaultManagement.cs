@@ -77,9 +77,7 @@ namespace PwM.Utils
                 deleteVault.ShowDialog();
                 if (GlobalVariables.deleteConfirmation == "yes")
                 {
-                    var masterPassword = MasterPasswordLoad.LoadMasterPassword(vault);
-                    if (masterPassword != null)
-                        DeleteVault(vault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword), vaultDirectory, listView);
+                    DeleteVault(vault, vaultDirectory, listView);
                     ClearVariables.VariablesClear();
                 }
             }
@@ -112,19 +110,12 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="vaultName">Vault Name.</param>
         /// <param name="password">Master password.</param>
-        private static void DeleteVault(string vaultName, string masterPassword, string vaultDirectory, ListView vaultsList)
+        private static void DeleteVault(string vaultName, string vaultDirectory, ListView vaultsList)
         {
             string pathToVault = Path.Combine(vaultDirectory, $"{vaultName}.x");
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("orange", $"Vault {vaultName} does not exist!");
-                return;
-            }
-            string readEncData = File.ReadAllText(pathToVault);
-            string decryptVault = Encryption.AES.Decrypt(readEncData, masterPassword);
-            if (decryptVault.Contains("Error decrypting"))
-            {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
                 return;
             }
             File.Delete(pathToVault);
@@ -145,9 +136,7 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("red", "Vaults directory does not exist");
                 return;
             }
-
             var getFiles = new DirectoryInfo(vaultsDirectory).GetFiles();
-
             foreach (var file in getFiles)
             {
                 GlobalVariables.vaultsCount++;
