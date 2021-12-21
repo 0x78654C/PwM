@@ -77,7 +77,7 @@ namespace PwM
                     break;
 
                 case "orange":
-                    popGrid.Background = Brushes.Orange;
+                    popGrid.Background = Brushes.DarkOrange;
                     titleTxt.Text = "WARNING";
                     notificationLBL.Text = messageData;
                     break;
