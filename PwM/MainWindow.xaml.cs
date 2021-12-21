@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -23,16 +24,31 @@ namespace PwM
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
         System.Windows.Threading.DispatcherTimer dispatcherTimer;
+        Mutex MyMutex;
 
         public MainWindow()
         {
+            Application_Startup(); // Check if PwM is already running.
             InitializeComponent();
             InitializeVaultsDirectory(s_passwordManagerDirectory);
             Utils.VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
-            userTXB.Text = s_accountName;
-            vaultsCountLBL.Text = Utils.GlobalVariables.vaultsCount.ToString();
+            userTXB.Text = " "+s_accountName;
+            vaultsCountLBL.Text = " "+Utils.GlobalVariables.vaultsCount.ToString();
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
+        }
+
+        /// <summary>
+        /// Check aplication start instace and close if is already opened.
+        /// </summary>
+        private void Application_Startup()
+        {
+            MyMutex = new Mutex(true, "PwM", out bool aIsNewInstance);
+            if (!aIsNewInstance)
+            {
+                Utils.Notification.ShowNotificationInfo("orange", "PwM - Password Manager is already running....");
+                App.Current.Shutdown();
+            }
         }
 
         /// <summary>
