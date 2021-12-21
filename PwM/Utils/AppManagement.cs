@@ -500,7 +500,7 @@ namespace PwM.Utils
                 UpdateApplication updateApplication = new UpdateApplication();
                 updateApplication.ShowDialog();
                 string newPassword = GlobalVariables.accountPassword;
-                if (newPassword != null)
+                if (!string.IsNullOrEmpty(newPassword))
                 {
                     var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                     UpdateAccount(listView, vaultName, application, account, newPassword, masterPassword);
