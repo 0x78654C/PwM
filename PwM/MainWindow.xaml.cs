@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -31,11 +32,13 @@ namespace PwM
             Application_Startup(); // Check if PwM is already running.
             InitializeComponent();
             InitializeVaultsDirectory(s_passwordManagerDirectory);
+            versionLabel.Content = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
             Utils.VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
-            userTXB.Text = " "+s_accountName;
-            vaultsCountLBL.Text = " "+Utils.GlobalVariables.vaultsCount.ToString();
+            userTXB.Text = " " + s_accountName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
+            Utils.ListViewSettings.SetListViewColor(vaultsListVI, false);
+            Utils.ListViewSettings.SetListViewColorApp(appListVI, true);
         }
 
         /// <summary>
@@ -199,26 +202,18 @@ namespace PwM
 
 
         // Tab Switch
-        private void Home_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+
+        private void Vault_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.ListViewSettings.SetListViewColor(homeListVI, false);
-            Utils.ListViewSettings.SetListViewColor(vaultsListVI, true);
+            Utils.ListViewSettings.SetListViewColor(vaultsListVI, false);
             Utils.ListViewSettings.SetListViewColorApp(appListVI, true);
             tabControl.SelectedIndex = 0;
         }
-        private void Vault_PreviewMouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Utils.ListViewSettings.SetListViewColor(homeListVI, true);
-            Utils.ListViewSettings.SetListViewColor(vaultsListVI, false);
-            Utils.ListViewSettings.SetListViewColorApp(appListVI, true);
-            tabControl.SelectedIndex = 1;
-        }
         private void App_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.ListViewSettings.SetListViewColor(homeListVI, true);
             Utils.ListViewSettings.SetListViewColor(vaultsListVI, true);
             Utils.ListViewSettings.SetListViewColorApp(appListVI, false);
-            tabControl.SelectedIndex = 2;
+            tabControl.SelectedIndex = 1;
         }
         //--------------------
 
@@ -283,7 +278,7 @@ namespace PwM
             var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
             {
-                Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
+                Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
                 string vaultName = vaultList.SelectedItem.ToString();
                 vaultName = vaultName.Split(',')[0].Replace("{ Name = ", "");
                 var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(vaultName);
@@ -293,10 +288,9 @@ namespace PwM
                     {
                         appListVI.IsEnabled = true;
                         appListVI.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
-                        Utils.ListViewSettings.SetListViewColor(homeListVI, true);
                         Utils.ListViewSettings.SetListViewColor(vaultsListVI, true);
                         Utils.ListViewSettings.SetListViewColorApp(appListVI, false);
-                        tabControl.SelectedIndex = 2;
+                        tabControl.SelectedIndex = 1;
                         appListVaultLVL.Text = vaultName;
                     }
                 }
@@ -315,7 +309,7 @@ namespace PwM
         /// <param name="e"></param>
         public void vaultCloseLBL_Click(object sender, RoutedEventArgs e)
         {
-            Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
+            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
         }
 
 
@@ -365,7 +359,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
+                    Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
                     break;
             }
         }
@@ -380,7 +374,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.VaultManagement.VaultClose(homeListVI, vaultsListVI, appListVI, appList, tabControl);
+                Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
             }
         }
 
@@ -435,29 +429,72 @@ namespace PwM
             Utils.AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
         }
 
+        /// <summary>
+        /// Delete account from listView context menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
             Utils.AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
         }
 
+        /// <summary>
+        /// Delete vault from listView context menu.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DeleteVault_Click(object sender, RoutedEventArgs e)
         {
+            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
             Utils.VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
-            vaultsCountLBL.Text = Utils.GlobalVariables.vaultsCount.ToString();
         }
 
+        /// <summary>
+        /// Add vault.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void AddVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             AddVault addVault = new AddVault();
             addVault.ShowDialog();
             if (Utils.GlobalVariables.createConfirmation == "yes")
+            {
                 Utils.VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
+            }
         }
 
+        /// <summary>
+        /// Delete vault from '-' icon.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DelVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
             Utils.VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
-            vaultsCountLBL.Text = Utils.GlobalVariables.vaultsCount.ToString();
+        }
+
+        /// <summary>
+        /// Import vault file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ImportVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Utils.ImportExport.Import(vaultList, s_passwordManagerDirectory);
+        }
+
+
+        /// <summary>
+        /// Export vault file.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ExportVault_Click(object sender, RoutedEventArgs e)
+        {
+            Utils.ImportExport.Export(vaultList, s_passwordManagerDirectory);
         }
     }
 }
