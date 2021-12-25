@@ -89,7 +89,7 @@ namespace PwM.Utils
         /// <param name="listView"></param>
         /// <returns></returns>
 
-        private static string GetVaultNameFromListView(ListView listView)
+        public static string GetVaultNameFromListView(ListView listView)
         {
             string application = string.Empty;
             if (listView.SelectedItem == null)
@@ -152,14 +152,13 @@ namespace PwM.Utils
         /// <param name="appListView"></param>
         /// <param name="appList"></param>
         /// <param name="tabControl"></param>
-        public static void VaultClose(ListViewItem homeListView, ListViewItem vaultListView, ListViewItem appListView,
+        public static void VaultClose(ListViewItem vaultListView, ListViewItem appListView,
             ListView appList, TabControl tabControl)
         {
-            ListViewSettings.SetListViewColor(homeListView, true);
             ListViewSettings.SetListViewColor(vaultListView, false);
             ListViewSettings.SetListViewColorApp(appListView, true);
             appList.Items.Clear();
-            tabControl.SelectedIndex = 1;
+            tabControl.SelectedIndex = 0;
             appListView.Foreground = Brushes.Red;
             appListView.IsEnabled = false;
             AppManagement.vaultSecure = null;
