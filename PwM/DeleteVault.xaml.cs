@@ -58,6 +58,11 @@ namespace PwM
             this.Close();
         }
 
+        /// <summary>
+        /// Cancel button
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CancelBTN_Click(object sender, RoutedEventArgs e)
         {
             Utils.GlobalVariables.deleteConfirmation = "";
