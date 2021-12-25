@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Security;
 using System.Web.Script.Serialization;
@@ -368,6 +369,10 @@ namespace PwM.Utils
                 listView.Items.Add(item);
             }
             tempListView.Items.Clear();
+
+            listView.Items.SortDescriptions.Add(new SortDescription("site/application", ListSortDirection.Ascending));
+            listView.Items.IsLiveSorting = true;
+            listView.Items.LiveSortingProperties.Add("site/application");
         }
 
         /// <summary>
