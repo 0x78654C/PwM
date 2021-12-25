@@ -47,19 +47,9 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 <ColumnDefinition Width="0*"/>
             </Grid.ColumnDefinitions>
             <TabControl Name="tabControl" HorizontalAlignment="Left" Height="693" Margin="220,10,0,0" VerticalAlignment="Top" Width="853">
-                <TabItem Name="homeTab" Header="homeTab">
-                    <Grid Background="#f3f5f2">
-                        <Label Content="_____________________________________________________________________________" Foreground="Red" HorizontalAlignment="Center" Margin="17,68,625,0" VerticalAlignment="Top" Height="26" Width="205"/>
-                        <Label Content="User Connected" HorizontalAlignment="Left" Margin="16,62,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14" RenderTransformOrigin="0.752,0.586"/>
-                        <TextBlock Text=" user" Name="userTXB" HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="18,88,633,550" Width="196"></TextBlock>
-                        <Label Content="Vaults Created" HorizontalAlignment="Left" Margin="18,157,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontWeight="Bold" FontSize="14"/>
-                        <TextBlock Text=" 0" x:Name="vaultsCountLBL"  HorizontalAlignment="Center" Foreground="Green" FontSize="15" Margin="20,181,777,457" Width="50"/>
-                        <Label Content="_____________________________________________________________________________" Foreground="Red" HorizontalAlignment="Center" Margin="18,162,624,0" VerticalAlignment="Top" Height="26" Width="205"/>
-                    </Grid>
-                </TabItem>
                 <TabItem Name="vaultTab" Header="vaultTab">
                     <Grid Background="#f3f5f2">
-                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="21,81,22,0" VerticalAlignment="Top" Width="804" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" >
+                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="21,81,22,0" VerticalAlignment="Top" Width="804" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" SelectionMode="Single" >
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="Vault Name" Width="396" DisplayMemberBinding="{Binding Name}"/>
@@ -68,6 +58,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                             </ListView.View>
                             <ListView.ContextMenu>
                                 <ContextMenu HasDropShadow="False" StaysOpen="True" >
+                                    <MenuItem Header="Export Vault" Click="ExportVault_Click" Foreground="Black" Tag="2" />
                                     <MenuItem Header="Delete Account" Click="DeleteVault_Click" Foreground="Red" Tag="2" />
                                 </ContextMenu>
                             </ListView.ContextMenu>
@@ -76,11 +67,12 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <Label Content="Vaults List" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold"/>
                         <materialDesign:PackIcon Name="AddVaultIcon" ToolTip="Add Vault" Foreground="#690fc2" Kind="Plus" Margin="18,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="AddVaultIcon_PreviewMouseDown" FontWeight="Bold"/>
                         <materialDesign:PackIcon x:Name="DelVaultIcon" ToolTip="Delete Vault" Foreground="#690fc2" Kind="Minus" Margin="56,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelVaultIcon_PreviewMouseDown"/>
+                        <materialDesign:PackIcon x:Name="ImportVaultIcon" ToolTip="Import Vault" Foreground="#690fc2" Kind="LetterI" Margin="92,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="ImportVaultIcon_PreviewMouseDown"/>
                     </Grid>
                 </TabItem>
                 <TabItem Name="appTab" Header="appTab">
                     <Grid Background="#f3f5f2">
-                        <ListView Name="appList" GridViewColumnHeader.Click="AppListColumnHeaderClickedHandler" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="522" Margin="21,56,21,0" VerticalAlignment="Top" Width="805" Background="#f3f5f2" Foreground="#0d0300" FontSize="14">
+                        <ListView Name="appList" GridViewColumnHeader.Click="AppListColumnHeaderClickedHandler" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="522" Margin="21,56,21,0" VerticalAlignment="Top" Width="805" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" SelectionMode="Single">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="Application" Width="264" DisplayMemberBinding="{Binding Application}"/>
@@ -127,12 +119,8 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 <Grid.Background>
                     <ImageBrush ImageSource="pack://application:,,,/Resources/Menu.jpg"/>
                 </Grid.Background>
-                <ListViewItem  Name="homeListVI" ToolTip="Home" Height="39" Foreground="#FFDCDCDC" FontSize="18" PreviewMouseDown="Home_PreviewMouseDown" Margin="0,88,0,576">
-                    <StackPanel Orientation="Horizontal" >
-                        <materialDesign:PackIcon Name="homeIcon" Kind="Home" Margin="9" Width="18" Height="18" VerticalAlignment="Center"/>
-                        <TextBlock Name="homeTXT" Text="Home" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </ListViewItem>
+                <Label Content="_____________________________________________________________________________" Foreground="#f3f5f2" HorizontalAlignment="Center" Margin="7,53,9,0" VerticalAlignment="Top" Height="26" Width="205"/>
+                <TextBlock Text=" user" Name="userTXB" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="15" Margin="8,50,10,626" Width="203"></TextBlock>
                 <ListViewItem  Name="appListVI" ToolTip="Applications" Height="39" Foreground="Red" FontSize="18" PreviewMouseDown="App_PreviewMouseDown" Margin="0,166,0,498" IsEnabled="False">
                     <StackPanel Orientation="Horizontal" >
                         <materialDesign:PackIcon Name="appIcon" Kind="ApplicationBraces" Margin="9" Width="18" Height="18" VerticalAlignment="Center"/>
@@ -145,7 +133,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <TextBlock Name="vaultTXT" Text="Vaults" VerticalAlignment="Center"/>
                     </StackPanel>
                 </ListViewItem>
-                <Label Name="versionLabel" Content="v1.0" HorizontalAlignment="Left" Foreground="#FFDCDCDC" FontSize="12" Margin="188,679,0,-2"  VerticalAlignment="Top"/>
+                <Label Name="versionLabel" Content="v1.0" HorizontalAlignment="Left" Foreground="#FFDCDCDC" FontSize="12" Margin="179,679,0,-2"  VerticalAlignment="Top" Width="40"/>
             </Grid>
         </Grid>
     </Border>
