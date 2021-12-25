@@ -13,7 +13,5 @@ namespace Unit.Tests.Encryption.PasswordValidator
             var ss = PwM.Encryption.PasswordValidator.StringToSecureString(item);
             Assert.Equal(item, new System.Net.NetworkCredential(string.Empty, ss).Password);
         }
-
-
     }
 }
