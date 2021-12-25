@@ -58,11 +58,13 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -94,6 +96,9 @@
       <DependentUpon>DeleteVault.xaml</DependentUpon>
     </Compile>
     <Compile Include="Encryption\PaswordGenerator.cs" />
+    <Compile Include="ImportNotification.xaml.cs">
+      <DependentUpon>ImportNotification.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PopMessage.xaml.cs">
       <DependentUpon>PopMessage.xaml</DependentUpon>
     </Compile>
@@ -104,6 +109,7 @@
     <Compile Include="Utils\ClearVariables.cs" />
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GlobalVariables.cs" />
+    <Compile Include="Utils\ImportExport.cs" />
     <Compile Include="Utils\ListViewSettings.cs" />
     <Compile Include="Utils\MasterPasswordLoad.cs" />
     <Compile Include="Utils\Notification.cs" />
@@ -123,6 +129,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="DeleteVault.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ImportNotification.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
