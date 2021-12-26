@@ -82,7 +82,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                             </ListView.View>
                             <ListView.ContextMenu>
                                 <ContextMenu HasDropShadow="False" StaysOpen="True" >
-                                    <MenuItem Header="Copy to clipboard(15 seconds avaible)" Click="CopyToClipboard_Click" Tag="1" />
+                                    <MenuItem Header="Copy to clipboard (15 seconds avaible)" Click="CopyToClipboard_Click" Tag="1" />
                                     <MenuItem Header="Show Password" Click="ShowPassword_Click" Tag="2" />
                                     <MenuItem Header="Update Account Password" Click="UpdateAccountPass_Click" Tag="2" />
                                     <MenuItem Header="Delete Account" Click="DeleteAccount_Click" Foreground="Red" Tag="2" />
