@@ -14,10 +14,6 @@ The Passwowrd Manager generates a vault file for every user logged in system. Yo
 
 ## Requirements:
 
-.NET Core 3.1
-
-.NET Standard 2.1
-
 .NET Framework 4.7.2
 
 ## Samples
