@@ -14,14 +14,7 @@ namespace PwM.Utils
         /// <param name="button"></param>
         public static void TextPassBoxChanged(TextBox application, TextBox account, PasswordBox password, Button button)
         {
-            if (application.Text.Length > 0 && account.Text.Length > 0 && password.Password.Length > 0)
-            {
-                button.IsEnabled = true;
-            }
-            else
-            {
-                button.IsEnabled = false;
-            }
+            button.IsEnabled = (application.Text.Length > 0 && account.Text.Length > 0 && password.Password.Length > 0);
         }
 
         /// <summary>
@@ -32,14 +25,7 @@ namespace PwM.Utils
         /// <param name="button"></param>
         public static void TextPassBoxChanged(TextBox application, TextBox account, Button button)
         {
-            if (application.Text.Length > 0 && account.Text.Length > 0)
-            {
-                button.IsEnabled = true;
-            }
-            else
-            {
-                button.IsEnabled = false;
-            }
+            button.IsEnabled = (application.Text.Length > 0 && account.Text.Length > 0);
         }
 
         /// <summary>
@@ -75,7 +61,6 @@ namespace PwM.Utils
             passwordBox.Visibility = System.Windows.Visibility.Collapsed;
             textBox.Visibility = System.Windows.Visibility.Visible;
             textBox.Text = passwordBox.Password;
-            //textBox.Focus();
         }
 
         /// <summary>
@@ -88,7 +73,6 @@ namespace PwM.Utils
             passwordBox.Visibility = System.Windows.Visibility.Visible;
             textBox.Visibility = System.Windows.Visibility.Collapsed;
             textBox.Clear();
-            //  passwordBox.Focus();
         }
     }
 }

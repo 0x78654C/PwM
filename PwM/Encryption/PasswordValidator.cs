@@ -59,6 +59,5 @@ namespace PwM.Encryption
             }
             return secureString;
         }
-
     }
 }

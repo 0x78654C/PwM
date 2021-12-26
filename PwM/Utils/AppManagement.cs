@@ -80,7 +80,6 @@ namespace PwM.Utils
         public static void AddApplication(ListView listView, string vaultName, string application, string accountName, string accountPassword, SecureString masterPassword)
         {
             string pathToVault = Path.Combine(Utils.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
-
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
@@ -106,13 +105,11 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
                 return;
             }
-
             if (accountName.Length < 3)
             {
                 Notification.ShowNotificationInfo("orange", "The length of account name should be at least 3 characters!");
                 return;
             }
-
             var keyValues = new Dictionary<string, object>
                 {
                     { "site/application", application },
@@ -198,7 +195,6 @@ namespace PwM.Utils
                 }
                 string encryptdata = Encryption.AES.Encrypt(string.Join("\n", listApps), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
                 vaultSecure = Encryption.PasswordValidator.StringToSecureString(string.Join("\n", listApps));
-
                 listApps.Clear();
                 if (File.Exists(pathToVault))
                 {
@@ -369,7 +365,6 @@ namespace PwM.Utils
                 listView.Items.Add(item);
             }
             tempListView.Items.Clear();
-
             listView.Items.SortDescriptions.Add(new SortDescription("site/application", ListSortDirection.Ascending));
             listView.Items.IsLiveSorting = true;
             listView.Items.LiveSortingProperties.Add("site/application");

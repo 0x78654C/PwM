@@ -6,7 +6,7 @@ namespace PwM.Encryption
     {
 
         /// <summary>
-        /// Argon2 Password Hash
+        /// Argon2id Password Hash
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
@@ -23,7 +23,6 @@ namespace PwM.Encryption
             {
                 bytes = argon2.GetBytes(32);
             }
-
             return bytes;
         }
     }
