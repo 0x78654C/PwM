@@ -79,7 +79,7 @@ namespace PwM.Utils
         /// <param name="masterPassword"></param>
         public static void AddApplication(ListView listView, string vaultName, string application, string accountName, string accountPassword, SecureString masterPassword)
         {
-            string pathToVault = Path.Combine(Utils.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
@@ -92,7 +92,9 @@ namespace PwM.Utils
             }
             foreach (var item in listView.Items)
             {
-                if (item.ToString().Contains(application) && item.ToString().Contains(accountName))
+                string app = item.ToString().SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
+                string acc = item.ToString().SplitByText(", ", 1).Replace("Account = ", string.Empty);
+                if (app==(application) && acc==(accountName))
                 {
                     Notification.ShowNotificationInfo("orange", $"Application {application} already contins {accountName} account!");
                     return;
@@ -409,6 +411,7 @@ namespace PwM.Utils
                         if (outJson["site/application"] == application && outJson["account"] == account)
                         {
                             outPass = outJson["password"];
+                            GlobalVariables.accountPassword= outJson["password"];
                             Notification.ShowNotificationInfo("green", $"Password for {account} is copied to clipboard!");
                         }
                     }
@@ -436,8 +439,14 @@ namespace PwM.Utils
                     delApplications.ShowDialog();
                     if (GlobalVariables.deleteConfirmation == "yes")
                     {
-                        var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
-                        DeleteApplicaiton(listView, vaultName, application, account, masterPassword);
+                        if (!GlobalVariables.masterPasswordCheck)
+                        {
+                            var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
+                            DeleteApplicaiton(listView, vaultName, application, account, masterPassword);
+                            ClearVariables.VariablesClear();
+                            return;
+                        }
+                        DeleteApplicaiton(listView, vaultName, application, account, GlobalVariables.masterPassword);
                         ClearVariables.VariablesClear();
                     }
                 }
@@ -488,6 +497,11 @@ namespace PwM.Utils
             return application;
         }
 
+        /// <summary>
+        /// Update applicaiton account password via context menu(right click).
+        /// </summary>
+        /// <param name="listView"></param>
+        /// <param name="vaultName"></param>
 
         public static void UpdateSelectedItemPassword(ListView listView, string vaultName)
         {
@@ -502,8 +516,14 @@ namespace PwM.Utils
                 string newPassword = GlobalVariables.accountPassword;
                 if (!string.IsNullOrEmpty(newPassword))
                 {
-                    var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
-                    UpdateAccount(listView, vaultName, application, account, newPassword, masterPassword);
+                    if (!GlobalVariables.masterPasswordCheck)
+                    {
+                        var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
+                        UpdateAccount(listView, vaultName, application, account, newPassword, masterPassword);
+                        ClearVariables.VariablesClear();
+                        return;
+                    }
+                    UpdateAccount(listView, vaultName, application, account, newPassword,GlobalVariables.masterPassword);
                     ClearVariables.VariablesClear();
                 }
             }
