@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PwM.Utils
 {
@@ -153,7 +154,7 @@ namespace PwM.Utils
         /// <param name="appList"></param>
         /// <param name="tabControl"></param>
         public static void VaultClose(ListViewItem vaultListView, ListViewItem appListView,
-            ListView appList, TabControl tabControl)
+            ListView appList, TabControl tabControl, DispatcherTimer masterPasswordTimer)
         {
             ListViewSettings.SetListViewColor(vaultListView, false);
             ListViewSettings.SetListViewColorApp(appListView, true);
@@ -161,7 +162,10 @@ namespace PwM.Utils
             tabControl.SelectedIndex = 0;
             appListView.Foreground = Brushes.Red;
             appListView.IsEnabled = false;
+            GlobalVariables.masterPassword = null;
             AppManagement.vaultSecure = null;
+            if (masterPasswordTimer!=null)
+                masterPasswordTimer.Stop();
             GC.Collect();
         }
     }
