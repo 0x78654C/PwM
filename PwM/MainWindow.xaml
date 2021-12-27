@@ -7,7 +7,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         mc:Ignorable="d"
         Name="Pwm"
         xmlns:adorners="http://gu.se/Adorners"
-        Title="PwM" Icon="pack://application:,,,/Resources/Logo.ico"  Height="704.594" Width="1074.808" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Visibility="Visible" MouseDown="Window_MouseDown" AllowsTransparency="True"  Background="Transparent" WindowStyle="None">
+        Title="PwM" Icon="pack://application:,,,/Resources/Logo.ico"  Height="704.594" Width="1074.808" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Visibility="Visible" MouseDown="Window_MouseDown" AllowsTransparency="True"  Background="Transparent" WindowStyle="None" Closing="Pwm_Closing">
 
     <Window.Resources>
         <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
@@ -56,7 +56,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             <TabControl Name="tabControl" HorizontalAlignment="Left" Height="693" Margin="220,10,0,0" VerticalAlignment="Top" Width="853">
                 <TabItem Name="vaultTab" Header="vaultTab">
                     <Grid Background="#f3f5f2">
-                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="21,81,22,0" VerticalAlignment="Top" Width="804" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" SelectionMode="Single" >
+                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="21,81,22,0" VerticalAlignment="Top" Width="804" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" SelectionMode="Single">
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
                                     <GridViewColumn Header="Vault Name" Width="396" DisplayMemberBinding="{Binding Name}"/>
@@ -107,6 +107,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 </TabItem>
             </TabControl>
             <Grid VerticalAlignment="Top" Height="50" Background="#f3f5f2" >
+                <Border BorderThickness="0 0 0.4 0" BorderBrush="#690fc2"/>
                 <TextBlock Text="PwM - Password Manager"  TextAlignment="Center" HorizontalAlignment="Center" Foreground="Black" FontSize="18" Margin="450,13,220,7" Width="337"></TextBlock>
                 <StackPanel VerticalAlignment="Center">
                     <materialDesign:PopupBox Foreground="Black" HorizontalAlignment="Right"  Margin="0,9" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Width="29">
@@ -119,7 +120,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         </Border>
                     </materialDesign:PopupBox>
                 </StackPanel>
-                <Label Name="miniMizeLBL" Content="_" PreviewMouseDown="miniMizeLBL_PreviewMouseDown" FontSize="25" Foreground="Black" HorizontalAlignment="Left" Margin="1026,-3,0,0" VerticalAlignment="Top"/>
+                <Label Name="miniMizeLBL" Content="_" PreviewMouseDown="miniMizeLBL_PreviewMouseDown" FontSize="25" Foreground="Black" HorizontalAlignment="Left" Margin="1027,-3,0,0" VerticalAlignment="Top"/>
                 <materialDesign:PackIcon Kind="Key" Margin="503,9,0,0" Width="31" Height="33" Foreground="Black" RenderTransformOrigin="1.547,0.52"/>
             </Grid>
             <Grid x:Name="GridMenu" HorizontalAlignment="Left"  Width="221">
