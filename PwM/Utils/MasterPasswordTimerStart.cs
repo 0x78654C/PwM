@@ -15,7 +15,7 @@ namespace PwM.Utils
         {
             masterPaswordTimer = new DispatcherTimer();
             masterPaswordTimer.Tick += MasterPasswordCheck_Tick;
-            masterPaswordTimer.Interval = new TimeSpan(0, 1, 0);
+            masterPaswordTimer.Interval = new TimeSpan(0, 30, 0);
             masterPaswordTimer.Start();
         }
 
