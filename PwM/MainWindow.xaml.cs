@@ -24,7 +24,8 @@ namespace PwM
         private static string s_passwordManagerDirectory = $"{s_rootPath}Users\\{s_accountName}\\AppData\\Local\\PwM\\";
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
-        System.Windows.Threading.DispatcherTimer dispatcherTimer;
+        private System.Windows.Threading.DispatcherTimer _dispatcherTimer;
+        public static  System.Windows.Threading.DispatcherTimer s_masterPassCheckTimer;
         Mutex MyMutex;
 
         public MainWindow()
@@ -278,10 +279,11 @@ namespace PwM
             var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
             {
-                Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
+                Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
                 string vaultName = vaultList.SelectedItem.ToString();
                 vaultName = vaultName.Split(',')[0].Replace("{ Name = ", "");
                 var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(vaultName);
+                Utils.GlobalVariables.masterPassword = masterPassword;
                 if (masterPassword != null && masterPassword.Length > 0)
                 {
                     if (Utils.AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword))
@@ -309,10 +311,8 @@ namespace PwM
         /// <param name="e"></param>
         public void vaultCloseLBL_Click(object sender, RoutedEventArgs e)
         {
-            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
+            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
         }
-
-
 
         /// <summary>
         /// Copy password from selected account for 15 seconds in clipboard. Right click context menu event.
@@ -322,10 +322,10 @@ namespace PwM
         private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
             Clipboard.SetText(Utils.AppManagement.CopyPassToClipBoard(appList));
-            dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-            dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 0, 15);
-            dispatcherTimer.Start();
+            _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            _dispatcherTimer.Tick += dispatcherTimer_Tick;
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 15);
+            _dispatcherTimer.Start();
         }
 
         /// <summary>
@@ -335,8 +335,8 @@ namespace PwM
         /// <param name="e"></param>
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            Clipboard.Clear();
-            dispatcherTimer.Stop();
+            ClearClipboard(Utils.GlobalVariables.accountPassword);
+            _dispatcherTimer.Stop();
         }
 
         /// <summary>
@@ -359,7 +359,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
+                    Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
                     break;
             }
         }
@@ -374,7 +374,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
+                Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
             }
         }
 
@@ -413,8 +413,14 @@ namespace PwM
             addApplications.ShowDialog();
             if (Utils.GlobalVariables.closeAppConfirmation != "yes")
             {
-                var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
-                Utils.AppManagement.AddApplication(appList, appListVaultLVL.Text, Utils.GlobalVariables.applicationName, Utils.GlobalVariables.accountName, Utils.GlobalVariables.accountPassword, masterPassword);
+                if (!Utils.GlobalVariables.masterPasswordCheck)
+                {
+                    var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
+                    Utils.AppManagement.AddApplication(appList, appListVaultLVL.Text, Utils.GlobalVariables.applicationName, Utils.GlobalVariables.accountName, Utils.GlobalVariables.accountPassword, masterPassword);
+                    Utils.ClearVariables.VariablesClear();
+                    return;
+                }
+                Utils.AppManagement.AddApplication(appList, appListVaultLVL.Text, Utils.GlobalVariables.applicationName, Utils.GlobalVariables.accountName, Utils.GlobalVariables.accountPassword, Utils.GlobalVariables.masterPassword);
                 Utils.ClearVariables.VariablesClear();
             }
         }
@@ -446,7 +452,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DeleteVault_Click(object sender, RoutedEventArgs e)
         {
-            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
+            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
             Utils.VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
         }
 
@@ -472,7 +478,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DelVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl);
+            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
             Utils.VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
         }
 
@@ -495,6 +501,33 @@ namespace PwM
         private void ExportVault_Click(object sender, RoutedEventArgs e)
         {
             Utils.ImportExport.Export(vaultList, s_passwordManagerDirectory);
+        }
+
+        /// <summary>
+        /// Clearing clipboard on app closing.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Pwm_Closing(object sender, CancelEventArgs e)
+        {
+            ClearClipboard(Utils.GlobalVariables.accountPassword);
+        }
+
+        /// <summary>
+        /// Check if password is copied on clipboard and clear if true only. 
+        /// </summary>
+        /// <param name="accPassword"></param>
+        private void ClearClipboard(string accPassword)
+        {
+            if (Clipboard.ContainsText(TextDataFormat.Text))
+            {
+                string clipboardContent = Clipboard.GetText(TextDataFormat.Text);
+                if (clipboardContent == accPassword)
+                {
+                    Clipboard.Clear();
+                   Utils.GlobalVariables.accountPassword = "";
+                }
+            }
         }
     }
 }
