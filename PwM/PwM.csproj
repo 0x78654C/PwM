@@ -112,8 +112,8 @@
     <Compile Include="Utils\ImportExport.cs" />
     <Compile Include="Utils\ListViewSettings.cs" />
     <Compile Include="Utils\MasterPasswordLoad.cs" />
+    <Compile Include="Utils\MasterPasswordTimerStart.cs" />
     <Compile Include="Utils\Notification.cs" />
-    <Compile Include="Utils\ScreenSaverDetect.cs" />
     <Compile Include="Utils\TextPassBoxChanges.cs" />
     <Compile Include="Utils\VaultManagement.cs" />
     <Page Include="AddApplications.xaml">
