@@ -3,7 +3,7 @@
 </p>
 
 # PwM
-Simple password manager in C# WPF  to store locally sensitive authentication data for a specific application. 
+Simple offline password manager in C# WPF  to store locally sensitive authentication data for a specific application. 
 The ideea of creation for this Password Manager came from the simple fact to use something simple and fast.   
 PwM is still a work in progress and will be more features added to it.
 
