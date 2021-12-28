@@ -65,7 +65,7 @@ namespace PwM.Utils
             }
         }
 
-        
+
         /// <summary>
         /// Export vault.
         /// </summary>
@@ -86,7 +86,7 @@ namespace PwM.Utils
             {
                 try
                 {
-                    string vaultPath = vaultDirPath + vault+".x";
+                    string vaultPath = vaultDirPath + vault + ".x";
                     File.Copy(vaultPath, s_saveFileDialog.FileName, true);
                     Notification.ShowNotificationInfo("green", $"Vault {vault} is exported!");
                 }
@@ -125,11 +125,11 @@ namespace PwM.Utils
         }
 
 
-       /// <summary>
-       /// Vault overwrite notification check.
-       /// </summary>
-       /// <param name="vaultName"></param>
-       /// <returns></returns>
+        /// <summary>
+        /// Vault overwrite notification check.
+        /// </summary>
+        /// <param name="vaultName"></param>
+        /// <returns></returns>
         private static string VaultImportOverwriteFile(string vaultName)
         {
             GlobalVariables.vaultName = vaultName;
