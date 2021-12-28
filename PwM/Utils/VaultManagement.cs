@@ -164,7 +164,7 @@ namespace PwM.Utils
             appListView.IsEnabled = false;
             GlobalVariables.masterPassword = null;
             AppManagement.vaultSecure = null;
-            if (masterPasswordTimer!=null)
+            if (masterPasswordTimer.IsEnabled)
                 masterPasswordTimer.Stop();
             GC.Collect();
         }
