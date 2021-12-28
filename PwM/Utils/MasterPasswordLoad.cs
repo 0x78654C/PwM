@@ -14,7 +14,7 @@ namespace PwM.Utils
             SecureString password;
             GlobalVariables.vaultName = vaultName;
             MasterPassword masterPassword = new MasterPassword();
-            masterPassword.ShowDialog();          
+            masterPassword.ShowDialog();
             password = masterPassword.masterPassword;
             masterPassword.masterPasswordPWD.Clear();
             masterPassword.masterPassword = null;
