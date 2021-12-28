@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using PwM.Utils;
 
 namespace PwM
 {
@@ -335,7 +336,7 @@ namespace PwM
         /// <param name="e"></param>
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            ClearClipboard(Utils.GlobalVariables.accountPassword);
+            ClipBoardUtil.ClearClipboard(Utils.GlobalVariables.accountPassword);
             _dispatcherTimer.Stop();
         }
 
@@ -510,24 +511,9 @@ namespace PwM
         /// <param name="e"></param>
         private void Pwm_Closing(object sender, CancelEventArgs e)
         {
-            ClearClipboard(Utils.GlobalVariables.accountPassword);
+            ClipBoardUtil.ClearClipboard(Utils.GlobalVariables.accountPassword);
         }
 
-        /// <summary>
-        /// Check if password is copied on clipboard and clear if true only. 
-        /// </summary>
-        /// <param name="accPassword"></param>
-        private void ClearClipboard(string accPassword)
-        {
-            if (Clipboard.ContainsText(TextDataFormat.Text))
-            {
-                string clipboardContent = Clipboard.GetText(TextDataFormat.Text);
-                if (clipboardContent == accPassword)
-                {
-                    Clipboard.Clear();
-                   Utils.GlobalVariables.accountPassword = "";
-                }
-            }
-        }
+
     }
 }
