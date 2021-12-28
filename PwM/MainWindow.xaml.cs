@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using PwM.Utils;
 using System;
 using System.ComponentModel;
 using System.IO;
@@ -10,7 +11,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
-using PwM.Utils;
 
 namespace PwM
 {
@@ -26,7 +26,7 @@ namespace PwM
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
         private System.Windows.Threading.DispatcherTimer _dispatcherTimer;
-        public static  System.Windows.Threading.DispatcherTimer s_masterPassCheckTimer;
+        public static System.Windows.Threading.DispatcherTimer s_masterPassCheckTimer;
         Mutex MyMutex;
 
         public MainWindow()
@@ -34,13 +34,15 @@ namespace PwM
             Application_Startup(); // Check if PwM is already running.
             InitializeComponent();
             InitializeVaultsDirectory(s_passwordManagerDirectory);
+            s_masterPassCheckTimer = new System.Windows.Threading.DispatcherTimer();
             versionLabel.Content = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            Utils.VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
+            VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
             userTXB.Text = " " + s_accountName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
-            Utils.ListViewSettings.SetListViewColor(vaultsListVI, false);
-            Utils.ListViewSettings.SetListViewColorApp(appListVI, true);
+            ListViewSettings.SetListViewColor(vaultsListVI, false);
+            ListViewSettings.SetListViewColorApp(appListVI, true);
+            
         }
 
         /// <summary>
@@ -51,7 +53,7 @@ namespace PwM
             MyMutex = new Mutex(true, "PwM", out bool aIsNewInstance);
             if (!aIsNewInstance)
             {
-                Utils.Notification.ShowNotificationInfo("orange", "PwM - Password Manager is already running....");
+                Notification.ShowNotificationInfo("orange", "PwM - Password Manager is already running....");
                 App.Current.Shutdown();
             }
         }
@@ -207,14 +209,14 @@ namespace PwM
 
         private void Vault_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.ListViewSettings.SetListViewColor(vaultsListVI, false);
-            Utils.ListViewSettings.SetListViewColorApp(appListVI, true);
+            ListViewSettings.SetListViewColor(vaultsListVI, false);
+            ListViewSettings.SetListViewColorApp(appListVI, true);
             tabControl.SelectedIndex = 0;
         }
         private void App_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.ListViewSettings.SetListViewColor(vaultsListVI, true);
-            Utils.ListViewSettings.SetListViewColorApp(appListVI, false);
+            ListViewSettings.SetListViewColor(vaultsListVI, true);
+            ListViewSettings.SetListViewColorApp(appListVI, false);
             tabControl.SelectedIndex = 1;
         }
         //--------------------
@@ -280,19 +282,19 @@ namespace PwM
             var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
             {
-                Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+                VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
                 string vaultName = vaultList.SelectedItem.ToString();
                 vaultName = vaultName.Split(',')[0].Replace("{ Name = ", "");
-                var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(vaultName);
-                Utils.GlobalVariables.masterPassword = masterPassword;
+                var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
+                GlobalVariables.masterPassword = masterPassword;
                 if (masterPassword != null && masterPassword.Length > 0)
                 {
-                    if (Utils.AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword))
+                    if (AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword))
                     {
                         appListVI.IsEnabled = true;
                         appListVI.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
-                        Utils.ListViewSettings.SetListViewColor(vaultsListVI, true);
-                        Utils.ListViewSettings.SetListViewColorApp(appListVI, false);
+                        ListViewSettings.SetListViewColor(vaultsListVI, true);
+                        ListViewSettings.SetListViewColorApp(appListVI, false);
                         tabControl.SelectedIndex = 1;
                         appListVaultLVL.Text = vaultName;
                     }
@@ -312,7 +314,7 @@ namespace PwM
         /// <param name="e"></param>
         public void vaultCloseLBL_Click(object sender, RoutedEventArgs e)
         {
-            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
         }
 
         /// <summary>
@@ -322,7 +324,7 @@ namespace PwM
         /// <param name="e"></param>
         private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(Utils.AppManagement.CopyPassToClipBoard(appList));
+            Clipboard.SetText(AppManagement.CopyPassToClipBoard(appList));
             _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             _dispatcherTimer.Tick += dispatcherTimer_Tick;
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 15);
@@ -336,7 +338,7 @@ namespace PwM
         /// <param name="e"></param>
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
-            ClipBoardUtil.ClearClipboard(Utils.GlobalVariables.accountPassword);
+            ClipBoardUtil.ClearClipboard(GlobalVariables.accountPassword);
             _dispatcherTimer.Stop();
         }
 
@@ -347,7 +349,7 @@ namespace PwM
         /// <param name="e"></param>
         private void ShowPassword_Click(object sender, RoutedEventArgs e)
         {
-            Utils.AppManagement.ShowPassword(appList);
+            AppManagement.ShowPassword(appList);
         }
 
         /// <summary>
@@ -360,7 +362,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+                    VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
                     break;
             }
         }
@@ -375,7 +377,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+                VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
             }
         }
 
@@ -400,7 +402,7 @@ namespace PwM
         /// <param name="e"></param>
         private void UpdateAccountPass_Click(object sender, RoutedEventArgs e)
         {
-            Utils.AppManagement.UpdateSelectedItemPassword(appList, appListVaultLVL.Text);
+            AppManagement.UpdateSelectedItemPassword(appList, appListVaultLVL.Text);
         }
 
         /// <summary>
@@ -412,17 +414,17 @@ namespace PwM
         {
             AddApplications addApplications = new AddApplications();
             addApplications.ShowDialog();
-            if (Utils.GlobalVariables.closeAppConfirmation != "yes")
+            if (GlobalVariables.closeAppConfirmation != "yes")
             {
-                if (!Utils.GlobalVariables.masterPasswordCheck)
+                if (!GlobalVariables.masterPasswordCheck)
                 {
-                    var masterPassword = Utils.MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
-                    Utils.AppManagement.AddApplication(appList, appListVaultLVL.Text, Utils.GlobalVariables.applicationName, Utils.GlobalVariables.accountName, Utils.GlobalVariables.accountPassword, masterPassword);
-                    Utils.ClearVariables.VariablesClear();
+                    var masterPassword = MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
+                    AppManagement.AddApplication(appList, appListVaultLVL.Text, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, masterPassword);
+                    ClearVariables.VariablesClear();
                     return;
                 }
-                Utils.AppManagement.AddApplication(appList, appListVaultLVL.Text, Utils.GlobalVariables.applicationName, Utils.GlobalVariables.accountName, Utils.GlobalVariables.accountPassword, Utils.GlobalVariables.masterPassword);
-                Utils.ClearVariables.VariablesClear();
+                AppManagement.AddApplication(appList, appListVaultLVL.Text, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, GlobalVariables.masterPassword);
+                ClearVariables.VariablesClear();
             }
         }
 
@@ -433,7 +435,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DelAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
+            AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
         }
 
         /// <summary>
@@ -443,7 +445,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
-            Utils.AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
+            AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
         }
 
         /// <summary>
@@ -453,8 +455,8 @@ namespace PwM
         /// <param name="e"></param>
         private void DeleteVault_Click(object sender, RoutedEventArgs e)
         {
-            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
-            Utils.VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
         }
 
         /// <summary>
@@ -466,9 +468,9 @@ namespace PwM
         {
             AddVault addVault = new AddVault();
             addVault.ShowDialog();
-            if (Utils.GlobalVariables.createConfirmation == "yes")
+            if (GlobalVariables.createConfirmation == "yes")
             {
-                Utils.VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
+                VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
             }
         }
 
@@ -479,8 +481,8 @@ namespace PwM
         /// <param name="e"></param>
         private void DelVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
-            Utils.VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
         }
 
         /// <summary>
@@ -490,7 +492,7 @@ namespace PwM
         /// <param name="e"></param>
         private void ImportVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.ImportExport.Import(vaultList, s_passwordManagerDirectory);
+            ImportExport.Import(vaultList, s_passwordManagerDirectory);
         }
 
 
@@ -501,7 +503,7 @@ namespace PwM
         /// <param name="e"></param>
         private void ExportVault_Click(object sender, RoutedEventArgs e)
         {
-            Utils.ImportExport.Export(vaultList, s_passwordManagerDirectory);
+            ImportExport.Export(vaultList, s_passwordManagerDirectory);
         }
 
         /// <summary>
@@ -511,9 +513,7 @@ namespace PwM
         /// <param name="e"></param>
         private void Pwm_Closing(object sender, CancelEventArgs e)
         {
-            ClipBoardUtil.ClearClipboard(Utils.GlobalVariables.accountPassword);
+            ClipBoardUtil.ClearClipboard(GlobalVariables.accountPassword);
         }
-
-
     }
 }
