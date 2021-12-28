@@ -8,13 +8,11 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         Name="Pwm"
         xmlns:adorners="http://gu.se/Adorners"
         Title="PwM" Icon="pack://application:,,,/Resources/Logo.ico"  Height="704.594" Width="1074.808" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Visibility="Visible" MouseDown="Window_MouseDown" AllowsTransparency="True"  Background="Transparent" WindowStyle="None" Closing="Pwm_Closing">
-
     <Window.Resources>
         <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type TextBox}">
-
                         <Grid>
                             <Border Background="White" BorderBrush="#FF7D8683" BorderThickness="1" CornerRadius="10"/>
                             <ScrollViewer x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
@@ -43,11 +41,8 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             <Setter Property="FontFamily" Value="Segoe UI" />
             <Setter Property="FontSize" Value="12" />
         </Style>
-
     </Window.Resources>
-
     <Border BorderThickness="1,1,1,1" Background="White" BorderBrush="#690fc2">
-
         <Grid RenderTransformOrigin="0.819,0.497" Margin="0,0,0,0" Background="#f3f5f2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
