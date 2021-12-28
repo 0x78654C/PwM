@@ -6,7 +6,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("PwM")]
-[assembly: AssemblyDescription("Simple password manager to store locally sensitive authentication data for a specific application. It uses Rijndael AES-256bit encryption for data and Argon2id for master password hash.")]
+[assembly: AssemblyDescription("Simple offline password manager to store locally sensitive authentication data for a specific application. It uses Rijndael AES-256bit encryption for data and Argon2id for master password hash.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PwM")]
