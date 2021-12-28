@@ -35,14 +35,14 @@ namespace PwM.Utils
                 }
                 if (masterPassword == null)
                 {
-                    Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                    Notification.ShowNotificationInfo("red", "Master password must be entered!");
                     return false;
                 }
                 string readVault = File.ReadAllText(pathToVault);
                 string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
                 if (decryptVault.Contains("Error decrypting"))
                 {
-                    Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                    Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
                     return false;
                 }
                 vaultSecure = Encryption.PasswordValidator.StringToSecureString(decryptVault);
@@ -94,7 +94,7 @@ namespace PwM.Utils
             {
                 string app = item.ToString().SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
                 string acc = item.ToString().SplitByText(", ", 1).Replace("Account = ", string.Empty);
-                if (app==(application) && acc==(accountName))
+                if (app == (application) && acc == (accountName))
                 {
                     Notification.ShowNotificationInfo("orange", $"Application {application} already contins {accountName} account!");
                     return;
@@ -104,7 +104,7 @@ namespace PwM.Utils
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
                 return;
             }
             if (accountName.Length < 3)
@@ -158,7 +158,7 @@ namespace PwM.Utils
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
                 return;
             }
             if (accountName.Length < 3)
@@ -241,7 +241,7 @@ namespace PwM.Utils
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Check master password or vault name!");
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
                 return;
             }
             if (accountName.Length < 3)
@@ -411,7 +411,7 @@ namespace PwM.Utils
                         if (outJson["site/application"] == application && outJson["account"] == account)
                         {
                             outPass = outJson["password"];
-                            GlobalVariables.accountPassword= outJson["password"];
+                            GlobalVariables.accountPassword = outJson["password"];
                             Notification.ShowNotificationInfo("green", $"Password for {account} is copied to clipboard!");
                         }
                     }
@@ -523,7 +523,7 @@ namespace PwM.Utils
                         ClearVariables.VariablesClear();
                         return;
                     }
-                    UpdateAccount(listView, vaultName, application, account, newPassword,GlobalVariables.masterPassword);
+                    UpdateAccount(listView, vaultName, application, account, newPassword, GlobalVariables.masterPassword);
                     ClearVariables.VariablesClear();
                 }
             }
