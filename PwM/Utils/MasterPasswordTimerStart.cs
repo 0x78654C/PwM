@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Threading;
 
 namespace PwM.Utils
@@ -13,7 +11,6 @@ namespace PwM.Utils
         /// </summary>
         public static void MasterPasswordCheck_Timer(DispatcherTimer masterPaswordTimer)
         {
-            masterPaswordTimer = new DispatcherTimer();
             masterPaswordTimer.Tick += MasterPasswordCheck_Tick;
             masterPaswordTimer.Interval = new TimeSpan(0, 30, 0);
             masterPaswordTimer.Start();
