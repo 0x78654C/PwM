@@ -9,11 +9,11 @@ namespace Unit.Tests.Utils
         [Theory]
         [InlineData(SetText, true)]
         [InlineData("test1", false)]
-        public void ClearSpecificTextOnlyClipboard(string password,bool shouldBeClear)
+        public void ClearSpecificTextOnlyClipboard(string password, bool shouldBeClear)
         {
             ClipBoardManager.SetText(SetText);
             PwM.Utils.ClipBoardUtil.ClearClipboard(password);
-            Assert.Equal(shouldBeClear ? "": SetText, ClipBoardManager.GetText());
+            Assert.Equal(shouldBeClear ? "" : SetText, ClipBoardManager.GetText());
         }
     }
 }
