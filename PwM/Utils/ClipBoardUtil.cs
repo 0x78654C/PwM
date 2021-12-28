@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace PwM.Utils
+﻿namespace PwM.Utils
 {
     public class ClipBoardUtil
     {
@@ -17,9 +11,8 @@ namespace PwM.Utils
             if (Mkb.ClipBoardManager.GetText() == accPassword)
             {
                 Mkb.ClipBoardManager.Clear();
-                Utils.GlobalVariables.accountPassword = "";
+                GlobalVariables.accountPassword = "";
             }
-
         }
     }
 }
