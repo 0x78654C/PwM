@@ -9,11 +9,23 @@ namespace PwM.Utils
         /// <summary>
         /// Master password timer check for promt every 30 minutes the master password pop window.
         /// </summary>
-        public static void MasterPasswordCheck_Timer(DispatcherTimer masterPaswordTimer)
+        public static void MasterPasswordCheck_TimerStart(DispatcherTimer masterPaswordTimer)
         {
             masterPaswordTimer.Tick += MasterPasswordCheck_Tick;
             masterPaswordTimer.Interval = new TimeSpan(0, 30, 0);
             masterPaswordTimer.Start();
+        }
+
+        /// <summary>
+        /// Stop master password timer check for promt every 30 minutes the master password pop window.
+        /// </summary>
+        /// <param name="masterPaswordTimer"></param>
+        public static void MasterPasswordCheck_TimerStop(DispatcherTimer masterPaswordTimer)
+        {
+            if (masterPaswordTimer.IsEnabled)
+            {
+                masterPaswordTimer.Stop();
+            }
         }
 
         /// <summary>
