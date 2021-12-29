@@ -43,6 +43,8 @@ namespace PwM.Utils
                 if (decryptVault.Contains("Error decrypting"))
                 {
                     Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
+                    GlobalVariables.masterPasswordCheck = false;
+                    MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                     return false;
                 }
                 vaultSecure = Encryption.PasswordValidator.StringToSecureString(decryptVault);
@@ -105,6 +107,8 @@ namespace PwM.Utils
             if (decryptVault.Contains("Error decrypting"))
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
+                GlobalVariables.masterPasswordCheck = false;
+                MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
             }
             if (accountName.Length < 3)
@@ -159,6 +163,8 @@ namespace PwM.Utils
             if (decryptVault.Contains("Error decrypting"))
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
+                GlobalVariables.masterPasswordCheck = false;
+                MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
             }
             if (accountName.Length < 3)
@@ -241,6 +247,8 @@ namespace PwM.Utils
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
+                MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
+                GlobalVariables.masterPasswordCheck = false;
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
                 return;
             }
@@ -249,7 +257,7 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("orange", "The length of account name should be at least 3 characters!");
                 return;
             }
-            if (password.Length < 3)
+            if (password.Length < 1)
             {
                 Notification.ShowNotificationInfo("orange", "New password field should not be empty!");
                 return;
