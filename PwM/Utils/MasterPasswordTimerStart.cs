@@ -23,9 +23,7 @@ namespace PwM.Utils
         public static void MasterPasswordCheck_TimerStop(DispatcherTimer masterPaswordTimer)
         {
             if (masterPaswordTimer.IsEnabled)
-            {
                 masterPaswordTimer.Stop();
-            }
         }
 
         /// <summary>
