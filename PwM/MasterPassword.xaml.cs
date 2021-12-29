@@ -83,7 +83,7 @@ namespace PwM
                 return;
             }
             Utils.GlobalVariables.masterPasswordCheck = true;
-            Utils.MasterPasswordTimerStart.MasterPasswordCheck_Timer(MainWindow.s_masterPassCheckTimer);
+            Utils.MasterPasswordTimerStart.MasterPasswordCheck_TimerStart(MainWindow.s_masterPassCheckTimer);
             masterPassword = masterPasswordPWD.SecurePassword;
             this.Close();
         }
