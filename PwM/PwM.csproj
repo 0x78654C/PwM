@@ -98,7 +98,6 @@
     <Compile Include="DeleteVault.xaml.cs">
       <DependentUpon>DeleteVault.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Encryption\MD5Check.cs" />
     <Compile Include="Encryption\PaswordGenerator.cs" />
     <Compile Include="ImportNotification.xaml.cs">
       <DependentUpon>ImportNotification.xaml</DependentUpon>

@@ -63,7 +63,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Encryption\MD5Tests.cs" />
     <Compile Include="Utils\ClipboardClearTest.cs" />
     <Compile Include="Encryption\Argon2Tests.cs" />
     <Compile Include="Encryption\PasswordGeneratorTests.cs" />
