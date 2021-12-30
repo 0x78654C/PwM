@@ -42,7 +42,7 @@ namespace PwM.Utils
                 string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
                 if (decryptVault.Contains("Error decrypting"))
                 {
-                    Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
+                    Notification.ShowNotificationInfo("red", "Something went wrong. Master is password incorect or vault issue!");
                     GlobalVariables.masterPasswordCheck = false;
                     MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                     return false;
@@ -249,7 +249,7 @@ namespace PwM.Utils
             {
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 GlobalVariables.masterPasswordCheck = false;
-                Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorect or vault issue!");
                 return;
             }
             if (accountName.Length < 3)
@@ -257,12 +257,6 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("orange", "The length of account name should be at least 3 characters!");
                 return;
             }
-            if (password.Length < 1)
-            {
-                Notification.ShowNotificationInfo("orange", "New password field should not be empty!");
-                return;
-            }
-
             if (!decryptVault.Contains(application))
             {
                 Notification.ShowNotificationInfo("orange", $"Application {application} does not exist!");
@@ -484,12 +478,12 @@ namespace PwM.Utils
             }
             return account;
         }
+
         /// <summary>
         /// Get application name from selected item in listview.
         /// </summary>
         /// <param name="listView"></param>
         /// <returns></returns>
-
         private static string GetApplicationFromListView(ListView listView)
         {
             string application = string.Empty;
@@ -510,7 +504,6 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="listView"></param>
         /// <param name="vaultName"></param>
-
         public static void UpdateSelectedItemPassword(ListView listView, string vaultName)
         {
             string application = GetApplicationFromListView(listView);
