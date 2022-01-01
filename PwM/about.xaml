@@ -19,6 +19,6 @@
         <Label Name="versionNameLBL" Content="Version" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,96,326,0" VerticalAlignment="Top" Height="46" Width="262" />
         <Label Name="copyRightLBL" Content="CopyRight" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,147,10,0" VerticalAlignment="Top" Height="46" Width="578" />
         <TextBox Background="#f3f5f2"  Foreground="Black"  Name="descriptionTXT" IsReadOnly="True" FontSize="16" Text="Description" HorizontalAlignment="Left" Height="216" Margin="10,205,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="578"/>
-        <Image Name="BuyMeACoffe_Image" Source="pack://application:,,,/Resources/buymeacoffe.png" Margin="10,428,443,11" PreviewMouseDown="BuyMeACoffe_Image_PreviewMouseDown"/>
+        <Image Name="BuyMeACoffe_Image" Source="pack://application:,,,/Resources/buymeacoffe.png" Margin="10,429,443,10" PreviewMouseDown="BuyMeACoffe_Image_PreviewMouseDown"/>
     </Grid>
 </Window>
