@@ -21,18 +21,18 @@ The ideea of creation for this Password Manager came from the simple fact to use
 
 # How it works
 
-     Vaults:
-     Creating a vault: press on '+' sign down bellow and you will be prompted for vault name and master password. Every vault is created in Windows user profile.
-     Delete a vault: select the vault that you want to delete and press on '-' sign down bellow or right click on vault and choose 'Delete vault'
-     Import vault: press on 'I' letter down bellow and a file dialog will be opened for selecting the vault file. Usually the file extensions is '.x'
-     Export vault: right click on the vault name from list that you want to export and choose 'Export vault'. You will be prompted with a file save dialog.
+  Vaults:
+   Creating a vault: press on '+' sign down bellow and you will be prompted for vault name and master password. Every vault is created in Windows user profile.
+   Delete a vault: select the vault that you want to delete and press on '-' sign down bellow or right click on vault and choose 'Delete vault'
+   Import vault: press on 'I' letter down bellow and a file dialog will be opened for selecting the vault file. Usually the file extensions is '.x'
+   Export vault: right click on the vault name from list that you want to export and choose 'Export vault'. You will be prompted with a file save dialog.
  
-     Applications:
-     Add application: press on '+' sign down bellow and you will be prompted with a window for adding application name, account name and password.
-     Delete account: select the account from specific application that you want to delete and press on '-' sign down bellow or right click on application/account and choose 'Delete Account'
-     Update account password: right click on account and choose update 'Update account password'. You will be prompted with a pop window to enter new password for account.
-     Show password: right click on account and choose update 'Show password'. Password will be visible on application list.
-     Copy to Clipboard: right click on account and choose update 'Copy to clipboard (15 seconds available)'. Password will be copied on clipboard for 15 seconds.
+  Applications:
+   Add application: press on '+' sign down bellow and you will be prompted with a window for adding application name, account name and password.
+   Delete account: select the account from specific application that you want to delete and press on '-' sign down bellow or right click on application/account and choose 'Delete Account'
+   Update account password: right click on account and choose update 'Update account password'. You will be prompted with a pop window to enter new password for account.
+   Show password: right click on account and choose update 'Show password'. Password will be visible on application list.
+   Copy to Clipboard: right click on account and choose update 'Copy to clipboard (15 seconds available)'. Password will be copied on clipboard for 15 seconds.
 
 # Encryption
 
