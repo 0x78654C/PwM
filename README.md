@@ -11,7 +11,7 @@ PwM is still a work in progress and will be more features added to it.
 
  - Create/Delete vaults
  - Import/Export vaults
- - Add/delete account for applications to vault
+ - Add/delete account for applications in vault
  - Update application account passwords
  - Exit logged vault on entering lock screen event or suspend.
  - Generate strong passwords.
