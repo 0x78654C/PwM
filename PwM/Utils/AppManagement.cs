@@ -42,7 +42,7 @@ namespace PwM.Utils
                 string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
                 if (decryptVault.Contains("Error decrypting"))
                 {
-                    Notification.ShowNotificationInfo("red", "Something went wrong. Master is password incorect or vault issue!");
+                    Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorect or vault issue!");
                     GlobalVariables.masterPasswordCheck = false;
                     MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                     return false;
@@ -106,7 +106,7 @@ namespace PwM.Utils
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorect or vault issue!");
                 GlobalVariables.masterPasswordCheck = false;
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
@@ -162,7 +162,7 @@ namespace PwM.Utils
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Master password incorect or vault issue!");
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorect or vault issue!");
                 GlobalVariables.masterPasswordCheck = false;
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
