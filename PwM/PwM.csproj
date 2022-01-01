@@ -108,6 +108,9 @@
     <Compile Include="UpdateApplication.xaml.cs">
       <DependentUpon>UpdateApplication.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UpdatePassNotification.xaml.cs">
+      <DependentUpon>UpdatePassNotification.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Utils\AppManagement.cs" />
     <Compile Include="Utils\ClearVariables.cs" />
     <Compile Include="Utils\ClipBoardUtil.cs" />
@@ -178,6 +181,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="UpdatePassNotification.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -228,6 +235,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\logot.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\buymeacoffe.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
