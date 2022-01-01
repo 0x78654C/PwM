@@ -13,6 +13,7 @@ namespace PwM.Utils
         public static string deleteConfirmation { get; set; }
         public static string createConfirmation { get; set; }
         public static string importConfirmation { get; set; }
+        public static string updatePwdConfirmation { get; set; }
         public static string closeAppConfirmation { get; set; }
         public static string vaultName { get; set; }
         public static int vaultsCount { get; set; }
