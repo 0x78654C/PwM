@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace PwM
 {
@@ -10,7 +12,6 @@ namespace PwM
     /// </summary>
     public partial class about : Window
     {
-
         public about()
         {
             InitializeComponent();
@@ -136,5 +137,14 @@ namespace PwM
         }
         #endregion
 
+        /// <summary>
+        /// Buy me a coffe image link button.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BuyMeACoffe_Image_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+          Task.Run(()=> Process.Start("http://google.ro"));
+        }
     }
 }
