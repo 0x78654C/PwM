@@ -122,5 +122,15 @@ namespace PwM
         {
             updateAccPassBTN.IsEnabled = (newPassAccBox.Password.Length > 0) ? true : false;
         }
+
+        /// <summary>
+        /// Hide masster password when mouse is oved over from eye icon.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowNewPassword_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            Utils.TextPassBoxChanges.HidePassword(newPassAccBox, NewPasswordShow);
+        }
     }
 }

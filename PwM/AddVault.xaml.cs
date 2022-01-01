@@ -120,5 +120,16 @@ namespace PwM
             Utils.GlobalVariables.closeAppConfirmation = "yes";
             this.Close();
         }
+
+        /// <summary>
+        /// Hide masster password when mouse is oved over from eye icon.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowNewVaultPassword_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            Utils.TextPassBoxChanges.HidePassword(addVPassword, vaultMassterPass);
+            Utils.TextPassBoxChanges.HidePassword(confirmVPassword, vaultConfirmMassterPass);
+        }
     }
 }

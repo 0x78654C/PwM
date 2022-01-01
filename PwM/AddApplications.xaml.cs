@@ -139,6 +139,16 @@ namespace PwM
         {
             Utils.TextPassBoxChanges.TextPassBoxChanged(appNameTXT, accountNameTXT, accPasswordBox, addAppBTN);
         }
+
+        /// <summary>
+        /// Hide masster password when mouse is oved over from eye icon.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ShowPassword_PreviewMouseMove(object sender, MouseEventArgs e)
+        {
+            Utils.TextPassBoxChanges.HidePassword(accPasswordBox, PasswordShow);
+        }
         //-----------------------------
     }
 }
