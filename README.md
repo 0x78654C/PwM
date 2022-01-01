@@ -3,7 +3,7 @@
 </p>
 
 # PwM
-Simple offline password manager in C# WPF  to store locally sensitive authentication data for a specific application. 
+Simple offline password manager for Windows in C# WPF  to store locally sensitive authentication data for a specific application. 
 The ideea of creation for this Password Manager came from the simple fact to use something simple and fast.   
 PwM is still a work in progress and will be more features added to it.
 
@@ -23,7 +23,7 @@ PwM is still a work in progress and will be more features added to it.
 # How it works
 
      Vaults:
-     Creating a vault: press on '+' sign down bellow and you will be prompted for vault name and master password.
+     Creating a vault: press on '+' sign down bellow and you will be prompted for vault name and master password. Every vault is created in Windows user profile.
      Delete a vault: select the vault that you want to delete and press on '-' sign down bellow or right click on vault and choose 'Delete vault'
      Import vault: press on 'I' letter down bellow and a file dialog will be opened for selecting the vault file. Usually the file extensions is '.x'
      Export vault: right click on the vault name from list that you want to export and choose 'Export vault'. You will be prompted with a file save dialog.
