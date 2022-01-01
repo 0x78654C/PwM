@@ -114,8 +114,13 @@ namespace PwM
         /// <param name="e"></param>
         private void updateAccPassBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.accountPassword = newPassAccBox.Password;
-            this.Close();
+            UpdatePassNotification updatePassNotification = new UpdatePassNotification();
+            updatePassNotification.ShowDialog();
+            if (Utils.GlobalVariables.updatePwdConfirmation == "yes")
+            {
+                Utils.GlobalVariables.accountPassword = newPassAccBox.Password;
+                this.Close();
+            }
         }
 
         private void newPassAccBox_PasswordChanged(object sender, RoutedEventArgs e)
