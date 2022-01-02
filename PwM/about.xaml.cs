@@ -144,7 +144,8 @@ namespace PwM
         /// <param name="e"></param>
         private void BuyMeACoffe_Image_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-          Task.Run(()=> Process.Start("http://google.ro"));
+            Support support = new Support();
+            support.ShowDialog();
         }
     }
 }

@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:local="clr-namespace:PwM"
         mc:Ignorable="d"
        Title="About Me" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="476.636" Width="598.087" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
@@ -19,6 +20,7 @@
         <Label Name="versionNameLBL" Content="Version" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,96,326,0" VerticalAlignment="Top" Height="46" Width="262" />
         <Label Name="copyRightLBL" Content="CopyRight" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,147,10,0" VerticalAlignment="Top" Height="46" Width="578" />
         <TextBox Background="#f3f5f2"  Foreground="Black"  Name="descriptionTXT" IsReadOnly="True" FontSize="16" Text="Description" HorizontalAlignment="Left" Height="216" Margin="10,205,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="578"/>
-        <Image Name="BuyMeACoffe_Image" Source="pack://application:,,,/Resources/buymeacoffe.png" Margin="10,429,443,10" PreviewMouseDown="BuyMeACoffe_Image_PreviewMouseDown"/>
+        <Image Name="BuyMeACoffe_Image" Source="pack://application:,,,/Resources/support.png" Margin="35,436,448,17" PreviewMouseDown="BuyMeACoffe_Image_PreviewMouseDown"/>
+        <materialDesign:PackIcon x:Name="CryptoCoffeIcon" ToolTip="Support" Foreground="#690fc2" Kind="Bitcoin" Margin="12,434,0,17" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="BuyMeACoffe_Image_PreviewMouseDown"/>
     </Grid>
 </Window>
