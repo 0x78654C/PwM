@@ -18,7 +18,7 @@ namespace PwM
 
             //loading information in labels and text box
             assamblyNameLBL.Content = $"Name: {AssemblyTitle}";
-            versionNameLBL.Content = String.Format("Version: {0}", AssemblyVersion);
+            versionNameLBL.Content = String.Format("Version: {0}", AssemblyVersion.Substring(0, AssemblyVersion.Length - 2));
             copyRightLBL.Content = AssemblyCopyright;
             descriptionTXT.Text = AssemblyDescription;
             //--------------------------------------
