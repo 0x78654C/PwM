@@ -14,7 +14,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             </Grid>
             <Button Name="confirmBTN" Foreground="#FFE1DDEE" Style="{DynamicResource RoundCorner2}"  Content="YES" HorizontalAlignment="Left" Margin="165,152,0,0" VerticalAlignment="Top" Width="89" Height="36" Click="confirmBTN_Click" IsDefault="True"/>
             <Button Name="cancelBTN" Foreground="#FFE1DDEE" Style="{DynamicResource RoundCorner2}"  Content="NO" HorizontalAlignment="Left" Margin="286,152,0,0" VerticalAlignment="Top" Width="89" Height="36" Click="CancelBTN_Click" IsDefault="True"/>
-            <TextBox Name="notificationLBL" Background="#f3f5f2"  BorderThickness="0" Text="notificationArea" HorizontalAlignment="Left" Margin="21,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" Height="97" TextWrapping="Wrap" AcceptsReturn="True" RenderTransformOrigin="0.469,1.118" Width="341"/>
+            <TextBox Name="notificationLBL" IsReadOnly="True" Background="#f3f5f2"  BorderThickness="0" Text="notificationArea" HorizontalAlignment="Left" Margin="21,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" Height="97" TextWrapping="Wrap" AcceptsReturn="True" RenderTransformOrigin="0.469,1.118" Width="341"/>
         </Grid>
     </Border>
 </Window>
