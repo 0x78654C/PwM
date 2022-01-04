@@ -115,7 +115,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         </Border>
                     </materialDesign:PopupBox>
                 </StackPanel>
-                <Label Name="miniMizeLBL" Content="_" PreviewMouseDown="miniMizeLBL_PreviewMouseDown" FontSize="25" Foreground="Black" HorizontalAlignment="Left" Margin="1020,-3,0,0" VerticalAlignment="Top"/>
+                <Label Name="miniMizeLBL" Content="_" PreviewMouseDown="minimizeLBL_PreviewMouseDown" FontSize="25" Foreground="Black" HorizontalAlignment="Left" Margin="1020,-3,0,0" VerticalAlignment="Top"/>
                 <materialDesign:PackIcon Kind="Key" Margin="503,9,0,0" Width="31" Height="33" Foreground="Black" RenderTransformOrigin="1.547,0.52"/>
             </Grid>
             <Grid x:Name="GridMenu" HorizontalAlignment="Left"  Width="221">
