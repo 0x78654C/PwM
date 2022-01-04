@@ -28,7 +28,7 @@ namespace PwM.Utils
 
                 if (vaultName.Length < 3)
                 {
-                    Notification.ShowNotificationInfo("orange", "Vault name should have at least 3 characters long.");
+                    Notification.ShowNotificationInfo("orange", "Vault name must be at least 3 characters long.");
                     GlobalVariables.vaultChecks = true;
                     return;
                 }
@@ -95,7 +95,7 @@ namespace PwM.Utils
             string application = string.Empty;
             if (listView.SelectedItem == null)
             {
-                Notification.ShowNotificationInfo("orange", "You must select a vault for delete!");
+                Notification.ShowNotificationInfo("orange", "You must select a vault to delete!");
                 return application;
             }
             else
@@ -146,7 +146,7 @@ namespace PwM.Utils
         }
 
         /// <summary>
-        /// Function for clear applist, and all passwords boxes and text boxes from applicaiton tab, closes it and moves to vault tab.
+        /// Function for clear applist, and all passwords boxes and text boxes from application tab, closes it and moves to vault tab.
         /// </summary>
         /// <param name="homeListView"></param>
         /// <param name="vaultListView"></param>

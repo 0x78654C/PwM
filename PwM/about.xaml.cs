@@ -36,11 +36,11 @@ namespace PwM
 
 
         /// <summary>
-        /// Label button function for minimiza window
+        /// Label button function for minimize window
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miniMizeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void minimizeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
         }
@@ -138,11 +138,11 @@ namespace PwM
         #endregion
 
         /// <summary>
-        /// Buy me a coffe image link button.
+        /// Buy me a coffee image link button.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void BuyMeACoffe_Image_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void BuyMeACoffee_Image_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             Support support = new Support();
             support.ShowDialog();
