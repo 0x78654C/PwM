@@ -98,11 +98,8 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("orange", "You must select a vault to delete!");
                 return application;
             }
-            else
-            {
-                string selectedItem = listView.SelectedItem.ToString();
-                application = selectedItem.SplitByText(", ", 0).Replace("{ Name = ", string.Empty);
-            }
+            string selectedItem = listView.SelectedItem.ToString();
+            application = selectedItem.SplitByText(", ", 0).Replace("{ Name = ", string.Empty);
             return application;
         }
 
