@@ -12,8 +12,9 @@ namespace PwM.Utils
         /// Create initial vaults files.
         /// </summary>
         /// <param name="vaultName">Vault name.</param>
+        /// <param name="password">Password</param>
         /// <param name="confirmPassword">Confirm password.</param>
-        public static void CreateVault(string vaultName, string confirmPassword, string vaultDirectory)
+        public static void CreateVault(string vaultName, string password, string confirmPassword, string vaultDirectory)
         {
             try
             {
@@ -97,8 +98,11 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("orange", "You must select a vault for delete!");
                 return application;
             }
-            string selectedItem = listView.SelectedItem.ToString();
-            application = selectedItem.SplitByText(", ", 0).Replace("{ Name = ", string.Empty);
+            else
+            {
+                string selectedItem = listView.SelectedItem.ToString();
+                application = selectedItem.SplitByText(", ", 0).Replace("{ Name = ", string.Empty);
+            }
             return application;
         }
 
