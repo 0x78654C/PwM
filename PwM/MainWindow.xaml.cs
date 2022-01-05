@@ -206,7 +206,6 @@ namespace PwM
 
 
         // Tab Switch
-
         private void Vault_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             ListViewSettings.SetListViewColor(vaultsListVI, false);
