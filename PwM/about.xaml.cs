@@ -2,6 +2,8 @@
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
+using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace PwM
 {
