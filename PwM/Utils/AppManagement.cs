@@ -98,7 +98,7 @@ namespace PwM.Utils
                 string acc = item.ToString().SplitByText(", ", 1).Replace("Account = ", string.Empty);
                 if (app == (application) && acc == (accountName))
                 {
-                    Notification.ShowNotificationInfo("orange", $"Application {application} already contains {accountName} account!");
+                    Notification.ShowNotificationInfo("orange", $"Application {application} already contins {accountName} account!");
                     return;
                 }
             }
@@ -471,8 +471,11 @@ namespace PwM.Utils
             {
                 return account;
             }
-            string selectedItem = listView.SelectedItem.ToString();
-            account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
+            else
+            {
+                string selectedItem = listView.SelectedItem.ToString();
+                account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
+            }
             return account;
         }
 
@@ -488,8 +491,11 @@ namespace PwM.Utils
             {
                 return application;
             }
-            string selectedItem = listView.SelectedItem.ToString();
-            application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
+            else
+            {
+                string selectedItem = listView.SelectedItem.ToString();
+                application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
+            }
             return application;
         }
 
