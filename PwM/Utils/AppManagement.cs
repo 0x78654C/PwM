@@ -471,11 +471,8 @@ namespace PwM.Utils
             {
                 return account;
             }
-            else
-            {
-                string selectedItem = listView.SelectedItem.ToString();
-                account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
-            }
+            string selectedItem = listView.SelectedItem.ToString();
+            account = selectedItem.SplitByText(", ", 1).Replace("Account = ", string.Empty);
             return account;
         }
 
@@ -491,11 +488,8 @@ namespace PwM.Utils
             {
                 return application;
             }
-            else
-            {
-                string selectedItem = listView.SelectedItem.ToString();
-                application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
-            }
+            string selectedItem = listView.SelectedItem.ToString();
+            application = selectedItem.SplitByText(", ", 0).Replace("{ Application = ", string.Empty);
             return application;
         }
 
