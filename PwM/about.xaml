@@ -13,14 +13,14 @@
         </Border>
         <Grid VerticalAlignment="Top" Height="39" Background="#551cc7" >
             <TextBlock Text="About Me"  TextAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="18" Margin="246,6,261,4" Width="91"/>
-            <Label Name="miniMizeLBL" Content="_" FontSize="26" Foreground="#FFE1DDE2" HorizontalAlignment="Right" Margin="0,-15,12,0" VerticalAlignment="Top" Height="46" PreviewMouseDown="miniMizeLBL_PreviewMouseDown" />
+            <Label Name="miniMizeLBL" Content="_" FontSize="26" Foreground="#FFE1DDE2" HorizontalAlignment="Right" Margin="0,-15,12,0" VerticalAlignment="Top" Height="46" PreviewMouseDown="minimizeLBL_PreviewMouseDown" />
         </Grid>
         <Button Name="closeBTNMSG" Foreground="#FFE1DDEE" Style="{DynamicResource RoundCorner2}"  Content="Close" HorizontalAlignment="Left" Margin="488,426,0,0" VerticalAlignment="Top" Width="100" Height="41" Click="closeBTNMSG_Click"/>
         <Label Name="assamblyNameLBL" Content="Name" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,50,296,0" VerticalAlignment="Top" Height="46" Width="292" />
         <Label Name="versionNameLBL" Content="Version" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,96,326,0" VerticalAlignment="Top" Height="46" Width="262" />
         <Label Name="copyRightLBL" Content="CopyRight" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,147,10,0" VerticalAlignment="Top" Height="46" Width="578" />
         <TextBox Background="#f3f5f2"  Foreground="Black"  Name="descriptionTXT" IsReadOnly="True" FontSize="16" Text="Description" HorizontalAlignment="Left" Height="216" Margin="10,205,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="578"/>
-        <Image Name="BuyMeACoffe_Image" Source="pack://application:,,,/Resources/support.png" Margin="35,437,448,16" PreviewMouseDown="BuyMeACoffe_Image_PreviewMouseDown"/>
-        <materialDesign:PackIcon x:Name="CryptoCoffeIcon" ToolTip="Support" Foreground="#690fc2" Kind="Bitcoin" Margin="12,434,0,17" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="BuyMeACoffe_Image_PreviewMouseDown"/>
+        <Image Name="BuyMeACoffe_Image" Source="pack://application:,,,/Resources/support.png" Margin="35,437,448,16" PreviewMouseDown="BuyMeACoffee_Image_PreviewMouseDown"/>
+        <materialDesign:PackIcon x:Name="CryptoCoffeIcon" ToolTip="Support" Foreground="#690fc2" Kind="Bitcoin" Margin="12,434,0,17" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="BuyMeACoffee_Image_PreviewMouseDown"/>
     </Grid>
 </Window>

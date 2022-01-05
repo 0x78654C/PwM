@@ -46,7 +46,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Check aplication start instace and close if is already opened.
+        /// Check application start instance and close if is already opened.
         /// </summary>
         private void Application_Startup()
         {
@@ -59,7 +59,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Create vautls directory.
+        /// Create vaults directory.
         /// </summary>
         /// <param name="directoryName">Directory name.</param>
         private void InitializeVaultsDirectory(string directoryName)
@@ -184,11 +184,11 @@ namespace PwM
 
 
         /// <summary>
-        /// Minimizr button(label)
+        /// Minimize button(label)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void miniMizeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        private void minimizeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
         }
@@ -224,7 +224,7 @@ namespace PwM
 
 
         /// <summary>
-        /// Acceptin only custom characters
+        /// Accepting only custom characters
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -243,7 +243,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Prevent pasting letterts 
+        /// Prevent pasting letters 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -308,7 +308,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Clear applist, and all passwords boxes and text boxes from applicaiton tab, closes it and moves to vault tab.
+        /// Clear applist, and all passwords boxes and text boxes from application tab, closes it and moves to vault tab.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -406,7 +406,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Add new applicaiton icon event (+).
+        /// Add new application icon event (+).
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -429,7 +429,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Delete applicaiton icon event (-).
+        /// Delete application icon event (-).
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

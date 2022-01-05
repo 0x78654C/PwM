@@ -71,7 +71,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Label button function for minimiza window
+        /// Label button function for minimize window
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -108,7 +108,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Update account password from a applicaiton.
+        /// Update account password from a application.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -129,7 +129,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Hide masster password when mouse is oved over from eye icon.
+        /// Hide master password when mouse is moved over from eye icon.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

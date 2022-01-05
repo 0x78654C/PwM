@@ -115,7 +115,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Password generator for new added applicaiton accounts.
+        /// Password generator for new added application accounts.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -141,7 +141,7 @@ namespace PwM
         }
 
         /// <summary>
-        /// Hide masster password when mouse is oved over from eye icon.
+        /// Hide master password when mouse is moved over from eye icon.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

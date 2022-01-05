@@ -8,7 +8,7 @@ using System.Windows.Controls;
 
 namespace PwM.Utils
 {
-    /* Applicaiton tab management class */
+    /* Application tab management class */
     public class AppManagement
     {
         private static JavaScriptSerializer s_serializer;
@@ -16,7 +16,7 @@ namespace PwM.Utils
         private static string passMask = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
 
         /// <summary>
-        /// Decrypt vault and populate applist with applicaitons info.
+        /// Decrypt vault and populate applist with applications info.
         /// </summary>
         /// <param name="listView"></param>
         /// <param name="vaultName"></param>
@@ -42,7 +42,7 @@ namespace PwM.Utils
                 string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
                 if (decryptVault.Contains("Error decrypting"))
                 {
-                    Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorect or vault issue!");
+                    Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                     GlobalVariables.masterPasswordCheck = false;
                     MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                     return false;
@@ -98,7 +98,7 @@ namespace PwM.Utils
                 string acc = item.ToString().SplitByText(", ", 1).Replace("Account = ", string.Empty);
                 if (app == (application) && acc == (accountName))
                 {
-                    Notification.ShowNotificationInfo("orange", $"Application {application} already contins {accountName} account!");
+                    Notification.ShowNotificationInfo("orange", $"Application {application} already contains {accountName} account!");
                     return;
                 }
             }
@@ -106,7 +106,7 @@ namespace PwM.Utils
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorect or vault issue!");
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 GlobalVariables.masterPasswordCheck = false;
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
@@ -162,7 +162,7 @@ namespace PwM.Utils
             string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
-                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorect or vault issue!");
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 GlobalVariables.masterPasswordCheck = false;
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
@@ -249,7 +249,7 @@ namespace PwM.Utils
             {
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 GlobalVariables.masterPasswordCheck = false;
-                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorect or vault issue!");
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 return;
             }
             if (accountName.Length < 3)
@@ -455,7 +455,7 @@ namespace PwM.Utils
             }
             else
             {
-                Notification.ShowNotificationInfo("orange", "You must select an application for delete!");
+                Notification.ShowNotificationInfo("orange", "You must select an application to delete!");
             }
         }
 

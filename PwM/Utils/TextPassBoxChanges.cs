@@ -6,7 +6,7 @@ namespace PwM.Utils
     public class TextPassBoxChanges
     {
         /// <summary>
-        /// Check password and textboxess length and enable button if greater than 0.
+        /// Check password and textboxes length and enable button if greater than 0.
         /// </summary>
         /// <param name="application"></param>
         /// <param name="account"></param>
@@ -18,7 +18,7 @@ namespace PwM.Utils
         }
 
         /// <summary>
-        /// Check password and textboxess length and enable button if greater than 0.
+        /// Check password and textboxes length and enable button if greater than 0.
         /// </summary>
         /// <param name="application"></param>
         /// <param name="account"></param>
@@ -31,12 +31,12 @@ namespace PwM.Utils
         /// <summary>
         /// Clear textboxes and password boxes.
         /// </summary>
-        /// <param name="applicaiton"></param>
+        /// <param name="application"></param>
         /// <param name="account"></param>
         /// <param name="password"></param>
-        public static void ClearTextPassBox(TextBox applicaiton, TextBox account, PasswordBox password)
+        public static void ClearTextPassBox(TextBox application, TextBox account, PasswordBox password)
         {
-            applicaiton.Clear();
+            application.Clear();
             account.Clear();
             password.Clear();
         }
@@ -44,11 +44,11 @@ namespace PwM.Utils
         /// <summary>
         /// Clear textboxes and password boxes.
         /// </summary>
-        /// <param name="applicaiton"></param>
+        /// <param name="application"></param>
         /// <param name="account"></param>
-        public static void ClearTextPassBox(TextBox applicaiton, TextBox account)
+        public static void ClearTextPassBox(TextBox application, TextBox account)
         {
-            applicaiton.Clear();
+            application.Clear();
             account.Clear();
         }
         /// <summary>
