@@ -81,6 +81,7 @@ namespace PwM.Utils
             string vault = VaultManagement.GetVaultNameFromListView(vaultList);
             s_saveFileDialog.Filter = "Vault Files (*.x)|*.x";
             s_saveFileDialog.Title = $"Export vault: {vault}";
+            s_saveFileDialog.FileName = vault+".x";
             DialogResult dr = s_saveFileDialog.ShowDialog();
             if (dr == DialogResult.OK)
             {
