@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PwM")]
-[assembly: AssemblyCopyright("Copyright ©  2022 0x078654c")]
+[assembly: AssemblyCopyright("Copyright ©  2021 - 2022 0x078654c")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
