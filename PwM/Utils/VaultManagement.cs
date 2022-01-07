@@ -64,6 +64,18 @@ namespace PwM.Utils
         }
 
         /// <summary>
+        /// Clear PasswordBoxes input.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="confirmPassword"></param>
+        public static void ClearPBoxesInput(PasswordBox oldPassword, PasswordBox newPassword, PasswordBox confirmPassword)
+        {
+            oldPassword.Clear();
+            newPassword.Clear();
+            confirmPassword.Clear();
+        }
+
+        /// <summary>
         /// Delete vault by item selection on vault list.
         /// </summary>
         /// <param name="listView"></param>
@@ -160,9 +172,49 @@ namespace PwM.Utils
             appListView.Foreground = Brushes.Red;
             appListView.IsEnabled = false;
             GlobalVariables.masterPassword = null;
+            GlobalVariables.vaultOpen = false;
             AppManagement.vaultSecure = null;
             MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(masterPasswordTimer);
             GC.Collect();
+        }
+
+        /// <summary>
+        /// Change Master Password for a vault!
+        /// </summary>
+        /// <param name="vaultList"></param>
+        /// <param name="oldMasterPassword"></param>
+        /// <param name="newMasterPassword"></param>
+        public static void ChangeMassterPassword(ListView vaultList)
+        {
+            string oldMasterPassword = Encryption.PasswordValidator.ConvertSecureStringToString(GlobalVariables.masterPassword);
+            string newMasterPassword = Encryption.PasswordValidator.ConvertSecureStringToString(GlobalVariables.newMasterPassword);
+            if (vaultList.SelectedItem == null)
+            {
+                Notification.ShowNotificationInfo("orange", "You must select a vault for changeing the Master Password!");
+                return;
+            }
+            string vaultName = GetVaultNameFromListView(vaultList);
+            string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            if (!File.Exists(pathToVault))
+            {
+                Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
+                return;
+            }
+            string readVault = File.ReadAllText(pathToVault);
+            string decryptVault = Encryption.AES.Decrypt(readVault, oldMasterPassword);
+            if (decryptVault.Contains("Error decrypting"))
+            {
+                Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
+                return;
+            }
+            string encryptdata = Encryption.AES.Encrypt(decryptVault, newMasterPassword);
+            if (!File.Exists(pathToVault))
+            {
+                Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
+                return;
+            }
+            File.WriteAllText(pathToVault, encryptdata);
+            Notification.ShowNotificationInfo("green", $"New Master Password was set for {vaultName} vault!");
         }
     }
 }
