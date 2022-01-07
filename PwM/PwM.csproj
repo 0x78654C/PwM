@@ -102,6 +102,9 @@
     <Compile Include="ImportNotification.xaml.cs">
       <DependentUpon>ImportNotification.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MPasswordChanger.xaml.cs">
+      <DependentUpon>MPasswordChanger.xaml</DependentUpon>
+    </Compile>
     <Compile Include="PopMessage.xaml.cs">
       <DependentUpon>PopMessage.xaml</DependentUpon>
     </Compile>
@@ -175,6 +178,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="MPasswordChanger.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="PopMessage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
