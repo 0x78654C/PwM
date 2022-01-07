@@ -10,7 +10,7 @@ namespace PwM.Utils
         {
             GlobalVariables.applicationName = "";
             GlobalVariables.accountName = "";
-            GlobalVariables.accountPassword = "";
+            GlobalVariables.newAccountPassword = "";
             GlobalVariables.closeAppConfirmation = "";
             GlobalVariables.deleteConfirmation = "";
         }
