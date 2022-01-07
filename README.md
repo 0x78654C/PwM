@@ -10,6 +10,7 @@ The ideea of creation for this Password Manager came from the simple fact to use
 
  - Create/Delete vaults
  - Import/Export vaults
+ - Change Master Password for vaults
  - Add/delete account for applications in vault
  - Update application account passwords
  - Exit logged vault on entering lock screen event or suspend.
@@ -26,6 +27,7 @@ The ideea of creation for this Password Manager came from the simple fact to use
   - Delete a vault: select the vault that you want to delete and press on '-' sign down bellow or right click on vault and choose 'Delete vault'
   - Import vault: press on 'I' letter down bellow and a file dialog will be opened for selecting the vault file. Usually the file extensions is '.x'
   - Export vault: right click on the vault name from list that you want to export and choose 'Export vault'. You will be prompted with a file save dialog.
+  - Change Master Password: right click on the vault name from list that you want to change the password and choose 'Change Master Password'.
  
   Applications:
   - Add application: press on '+' sign down bellow and you will be prompted with a window for adding application name, account name and password.
