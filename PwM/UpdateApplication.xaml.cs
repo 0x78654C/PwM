@@ -118,7 +118,7 @@ namespace PwM
             updatePassNotification.ShowDialog();
             if (Utils.GlobalVariables.updatePwdConfirmation == "yes")
             {
-                Utils.GlobalVariables.accountPassword = newPassAccBox.Password;
+                Utils.GlobalVariables.newAccountPassword = newPassAccBox.Password;
                 this.Close();
             }
         }
