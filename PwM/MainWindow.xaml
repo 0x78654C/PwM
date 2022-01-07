@@ -61,6 +61,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                             <ListView.ContextMenu>
                                 <ContextMenu HasDropShadow="False" StaysOpen="True" >
                                     <MenuItem Header="Export Vault" Click="ExportVault_Click" Foreground="Black" Tag="2" />
+                                    <MenuItem Header="Change Master Password" Click="ChangeMasterPassword_Click" Foreground="Black" Tag="2" />
                                     <MenuItem Header="Delete Vault" Click="DeleteVault_Click" Foreground="Red" Tag="2" />
                                 </ContextMenu>
                             </ListView.ContextMenu>
