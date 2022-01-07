@@ -508,7 +508,7 @@ namespace PwM.Utils
                 GlobalVariables.applicationName = application;
                 UpdateApplication updateApplication = new UpdateApplication();
                 updateApplication.ShowDialog();
-                string newPassword = GlobalVariables.accountPassword;
+                string newPassword = GlobalVariables.newAccountPassword;
                 if (!string.IsNullOrEmpty(newPassword))
                 {
                     if (!GlobalVariables.masterPasswordCheck)
