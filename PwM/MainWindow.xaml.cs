@@ -297,6 +297,7 @@ namespace PwM
                         ListViewSettings.SetListViewColorApp(appListVI, false);
                         tabControl.SelectedIndex = 1;
                         appListVaultLVL.Text = vaultName;
+                        GlobalVariables.vaultOpen = true;
                     }
                 }
             }
@@ -324,6 +325,12 @@ namespace PwM
         /// <param name="e"></param>
         private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
+            if (appList.SelectedIndex == -1)
+            {
+                Notification.ShowNotificationInfo("orange", "You must select a application account for Copy to Clipboard option!");
+                return;
+            }
+
             Clipboard.SetText(AppManagement.CopyPassToClipBoard(appList));
             _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
             _dispatcherTimer.Tick += dispatcherTimer_Tick;
@@ -339,6 +346,7 @@ namespace PwM
         private void dispatcherTimer_Tick(object sender, EventArgs e)
         {
             ClipBoardUtil.ClearClipboard(GlobalVariables.accountPassword);
+            GlobalVariables.accountPassword = null;
             _dispatcherTimer.Stop();
         }
 
@@ -402,6 +410,11 @@ namespace PwM
         /// <param name="e"></param>
         private void UpdateAccountPass_Click(object sender, RoutedEventArgs e)
         {
+            if (appList.SelectedIndex == -1)
+            {
+                Notification.ShowNotificationInfo("orange", "You must select a application line for updateing account password!");
+                return;
+            }
             AppManagement.UpdateSelectedItemPassword(appList, appListVaultLVL.Text);
         }
 
@@ -504,6 +517,32 @@ namespace PwM
         private void ExportVault_Click(object sender, RoutedEventArgs e)
         {
             ImportExport.Export(vaultList, s_passwordManagerDirectory);
+        }
+        
+        /// <summary>
+        /// Change master password for a specific vault.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ChangeMasterPassword_Click(object sender, RoutedEventArgs e)
+        {
+            if (vaultList.SelectedIndex == -1)
+            {
+                Notification.ShowNotificationInfo("orange", "You must select a vault for changeing Master Password!");
+                return;
+            }
+            GlobalVariables.vaultName = VaultManagement.GetVaultNameFromListView(vaultList);
+            if (GlobalVariables.vaultOpen)
+            {
+                Notification.ShowNotificationInfo("orange", "You cannot change Master Password when vault is open!");
+                return;
+            }
+            MPasswordChanger mPasswordChanger = new MPasswordChanger();
+            mPasswordChanger.ShowDialog();
+            if(GlobalVariables.closeAppConfirmation != "yes")
+            {
+                VaultManagement.ChangeMassterPassword(vaultList);
+            }
         }
 
         /// <summary>
