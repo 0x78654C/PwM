@@ -27,7 +27,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.updatePwdConfirmation = "";
+                    Utils.GlobalVariables.updatePwdConfirmation = false;
                     this.Close();
                     break;
             }
@@ -42,7 +42,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.updatePwdConfirmation = "";
+                Utils.GlobalVariables.updatePwdConfirmation = false;
                 this.Close();
             }
         }
@@ -54,7 +54,7 @@ namespace PwM
         /// <param name="e"></param>
         private void confirmBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.updatePwdConfirmation = "yes";
+            Utils.GlobalVariables.updatePwdConfirmation = true;
             this.Close();
         }
 
@@ -65,7 +65,7 @@ namespace PwM
         /// <param name="e"></param>
         private void CancelBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.updatePwdConfirmation = "";
+            Utils.GlobalVariables.updatePwdConfirmation = false;
             this.Close();
         }
     }

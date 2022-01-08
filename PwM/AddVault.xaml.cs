@@ -26,7 +26,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.closeAppConfirmation = "yes";
+                    Utils.GlobalVariables.closeAppConfirmation = true;
                     this.Close();
                     break;
             }
@@ -42,7 +42,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.closeAppConfirmation = "yes";
+                Utils.GlobalVariables.closeAppConfirmation = true;
                 this.Close();
             }
         }
@@ -75,12 +75,17 @@ namespace PwM
             }
         }
 
+        /// <summary>
+        /// Create vault button!
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void saveBTN_Click(object sender, RoutedEventArgs e)
         {
             Utils.VaultManagement.CreateVault(vaultNameTXT.Text, addVPassword.Password, confirmVPassword.Password, Utils.GlobalVariables.passwordManagerDirectory);
             if (Utils.GlobalVariables.vaultChecks)
             {
-                Utils.VaultManagement.ClearPBoxesInput(addVPassword, confirmVPassword);
+                Utils.TextPassBoxChanges.ClearPBoxesInput(addVPassword, confirmVPassword);
                 Utils.GlobalVariables.vaultChecks = false;
             }
             else
@@ -117,7 +122,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.GlobalVariables.closeAppConfirmation = "yes";
+            Utils.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
 

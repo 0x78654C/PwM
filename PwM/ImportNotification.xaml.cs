@@ -28,7 +28,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.importConfirmation = "";
+                    Utils.GlobalVariables.importConfirmation = false;
                     this.Close();
                     break;
             }
@@ -43,7 +43,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.importConfirmation = "";
+                Utils.GlobalVariables.importConfirmation = false;
                 this.Close();
             }
         }
@@ -55,7 +55,7 @@ namespace PwM
         /// <param name="e"></param>
         private void confirmBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.importConfirmation = "yes";
+            Utils.GlobalVariables.importConfirmation = true;
             this.Close();
         }
 
@@ -66,7 +66,7 @@ namespace PwM
         /// <param name="e"></param>
         private void CancelBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.importConfirmation = "";
+            Utils.GlobalVariables.importConfirmation = false;
             this.Close();
         }
     }

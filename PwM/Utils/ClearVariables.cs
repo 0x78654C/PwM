@@ -11,8 +11,8 @@ namespace PwM.Utils
             GlobalVariables.applicationName = "";
             GlobalVariables.accountName = "";
             GlobalVariables.newAccountPassword = "";
-            GlobalVariables.closeAppConfirmation = "";
-            GlobalVariables.deleteConfirmation = "";
+            GlobalVariables.closeAppConfirmation = false;
+            GlobalVariables.deleteConfirmation = false;
         }
     }
 }

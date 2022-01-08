@@ -29,7 +29,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.updatePwdConfirmation = "";
+                    Utils.GlobalVariables.updatePwdConfirmation = false;
                     this.Close();
                     break;
             }
@@ -44,7 +44,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.updatePwdConfirmation = "";
+                Utils.GlobalVariables.updatePwdConfirmation = false;
                 this.Close();
             }
         }

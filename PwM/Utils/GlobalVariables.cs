@@ -12,11 +12,11 @@ namespace PwM.Utils
         public static string accountName { get; set; }
         public static string accountPassword { get; set; }
         public static string newAccountPassword { get; set; }
-        public static string deleteConfirmation { get; set; }
-        public static string createConfirmation { get; set; }
-        public static string importConfirmation { get; set; }
-        public static string updatePwdConfirmation { get; set; }
-        public static string closeAppConfirmation { get; set; }
+        public static bool deleteConfirmation = false;
+        public static bool createConfirmation = false;
+        public static bool importConfirmation = false;
+        public static bool updatePwdConfirmation = false;
+        public static bool closeAppConfirmation = false;
         public static string vaultName { get; set; }
         public static int vaultsCount { get; set; }
         public static string gridColor { get; set; }

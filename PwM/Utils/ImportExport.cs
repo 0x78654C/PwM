@@ -39,13 +39,13 @@ namespace PwM.Utils
                         string vaultPwMLocation = vaultDirPath + vault;
                         if (File.Exists(vaultPwMLocation))
                         {
-                            if (VaultImportOverwriteFile(vault) == "yes")
+                            if (VaultImportOverwriteFile(vault))
                             {
                                 count++;
                                 copyOverwrite = true;
                                 vaultOverwrite = vault;
                                 File.Copy(vaultfile, vaultPwMLocation, true);
-                                GlobalVariables.importConfirmation = "";
+                                GlobalVariables.importConfirmation = false;
                             }
                         }
                         else
@@ -131,7 +131,7 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="vaultName"></param>
         /// <returns></returns>
-        private static string VaultImportOverwriteFile(string vaultName)
+        private static bool VaultImportOverwriteFile(string vaultName)
         {
             GlobalVariables.vaultName = vaultName;
             ImportNotification importNotification = new ImportNotification();

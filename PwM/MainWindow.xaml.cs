@@ -427,7 +427,7 @@ namespace PwM
         {
             AddApplications addApplications = new AddApplications();
             addApplications.ShowDialog();
-            if (GlobalVariables.closeAppConfirmation != "yes")
+            if (GlobalVariables.closeAppConfirmation == false)
             {
                 if (!GlobalVariables.masterPasswordCheck)
                 {
@@ -481,7 +481,7 @@ namespace PwM
         {
             AddVault addVault = new AddVault();
             addVault.ShowDialog();
-            if (GlobalVariables.createConfirmation == "yes")
+            if (GlobalVariables.createConfirmation)
             {
                 VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
             }
@@ -539,7 +539,7 @@ namespace PwM
             }
             MPasswordChanger mPasswordChanger = new MPasswordChanger();
             mPasswordChanger.ShowDialog();
-            if(GlobalVariables.closeAppConfirmation != "yes")
+            if(GlobalVariables.closeAppConfirmation == false)
             {
                 VaultManagement.ChangeMassterPassword(vaultList);
             }

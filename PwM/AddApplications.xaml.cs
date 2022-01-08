@@ -29,7 +29,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.closeAppConfirmation = "yes";
+                    Utils.GlobalVariables.closeAppConfirmation = true;
                     this.Close();
                     break;
             }
@@ -45,7 +45,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.closeAppConfirmation = "yes";
+                Utils.GlobalVariables.closeAppConfirmation = true;
                 this.Close();
             }
         }
@@ -60,7 +60,7 @@ namespace PwM
             Utils.GlobalVariables.applicationName = appNameTXT.Text;
             Utils.GlobalVariables.accountName = accountNameTXT.Text;
             Utils.GlobalVariables.accountPassword = accPasswordBox.Password;
-            Utils.GlobalVariables.closeAppConfirmation = "";
+            Utils.GlobalVariables.closeAppConfirmation = false;
             Utils.TextPassBoxChanges.ClearTextPassBox(appNameTXT, accountNameTXT, accPasswordBox);
             this.Close();
         }
@@ -83,7 +83,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.GlobalVariables.closeAppConfirmation = "yes";
+            Utils.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
 

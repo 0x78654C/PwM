@@ -439,7 +439,7 @@ namespace PwM.Utils
                     GlobalVariables.applicationName = application;
                     DelApplications delApplications = new DelApplications();
                     delApplications.ShowDialog();
-                    if (GlobalVariables.deleteConfirmation == "yes")
+                    if (GlobalVariables.deleteConfirmation)
                     {
                         if (!GlobalVariables.masterPasswordCheck)
                         {
