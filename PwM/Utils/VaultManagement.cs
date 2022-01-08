@@ -43,7 +43,7 @@ namespace PwM.Utils
                 string sealVault = Encryption.AES.Encrypt(string.Empty, confirmPassword);
                 File.WriteAllText(pathToVault, sealVault);
                 Notification.ShowNotificationInfo("green", $"Vault {vaultName} was created!");
-                GlobalVariables.createConfirmation = "yes";
+                GlobalVariables.createConfirmation = true;
             }
             catch (Exception e)
             {
@@ -52,28 +52,6 @@ namespace PwM.Utils
         }
 
 
-        /// <summary>
-        /// Clear PasswordBoxes input.
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="confirmPassword"></param>
-        public static void ClearPBoxesInput(PasswordBox password, PasswordBox confirmPassword)
-        {
-            password.Clear();
-            confirmPassword.Clear();
-        }
-
-        /// <summary>
-        /// Clear PasswordBoxes input.
-        /// </summary>
-        /// <param name="password"></param>
-        /// <param name="confirmPassword"></param>
-        public static void ClearPBoxesInput(PasswordBox oldPassword, PasswordBox newPassword, PasswordBox confirmPassword)
-        {
-            oldPassword.Clear();
-            newPassword.Clear();
-            confirmPassword.Clear();
-        }
 
         /// <summary>
         /// Delete vault by item selection on vault list.
@@ -88,7 +66,7 @@ namespace PwM.Utils
                 GlobalVariables.vaultName = vault;
                 DeleteVault deleteVault = new DeleteVault();
                 deleteVault.ShowDialog();
-                if (GlobalVariables.deleteConfirmation == "yes")
+                if (GlobalVariables.deleteConfirmation)
                 {
                     DeleteVault(vault, vaultDirectory, listView);
                     ClearVariables.VariablesClear();

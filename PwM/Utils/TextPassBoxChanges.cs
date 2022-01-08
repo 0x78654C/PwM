@@ -74,5 +74,28 @@ namespace PwM.Utils
             textBox.Visibility = System.Windows.Visibility.Collapsed;
             textBox.Clear();
         }
+
+        /// <summary>
+        /// Clear PasswordBoxes input.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="confirmPassword"></param>
+        public static void ClearPBoxesInput(PasswordBox password, PasswordBox confirmPassword)
+        {
+            password.Clear();
+            confirmPassword.Clear();
+        }
+
+        /// <summary>
+        /// Clear PasswordBoxes input.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="confirmPassword"></param>
+        public static void ClearPBoxesInput(PasswordBox oldPassword, PasswordBox newPassword, PasswordBox confirmPassword)
+        {
+            oldPassword.Clear();
+            newPassword.Clear();
+            confirmPassword.Clear();
+        }
     }
 }
