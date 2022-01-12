@@ -10,7 +10,7 @@ namespace Unit.Tests.Encryption.PasswordValidator
         [InlineData("!fwe235423GE")]
         public void Ensure_we_get_a_string_from_secure_string(string item)
         {
-            var ss = PwM.Encryption.PasswordValidator.StringToSecureString(item);
+            var ss = PwMLib.PasswordValidator.StringToSecureString(item);
             Assert.Equal(item, new System.Net.NetworkCredential(string.Empty, ss).Password);
         }
     }

@@ -7,7 +7,7 @@ namespace Unit.Tests.Encryption.PasswordValidator
         [Fact]
         public void Ensure_we_can_succeed()
         {
-            Assert.True(PwM.Encryption.PasswordValidator.ValidatePassword("Abc123%^&&2145"));
+            Assert.True(PwMLib.PasswordValidator.ValidatePassword("Abc123%^&&2145"));
         }
 
         [Theory]
@@ -15,7 +15,7 @@ namespace Unit.Tests.Encryption.PasswordValidator
         [InlineData(null)]
         public void Ensure_we_Fail_if_passowrd_is_null_or_empty(string item)
         {
-            Assert.False(PwM.Encryption.PasswordValidator.ValidatePassword(item));
+            Assert.False(PwMLib.PasswordValidator.ValidatePassword(item));
         }
 
         [Theory]
@@ -23,7 +23,7 @@ namespace Unit.Tests.Encryption.PasswordValidator
         [InlineData("£", true)]
         public void Ensure_if_we_miss_special_char_we_fail(string append, bool expected)
         {
-            Assert.Equal(expected, PwM.Encryption.PasswordValidator.ValidatePassword(append + "Abc152362cdevr34eGR"));
+            Assert.Equal(expected, PwMLib.PasswordValidator.ValidatePassword(append + "Abc152362cdevr34eGR"));
         }
 
         [Theory]
@@ -31,7 +31,7 @@ namespace Unit.Tests.Encryption.PasswordValidator
         [InlineData("3", true)]
         public void Ensure_if_we_miss_Number_char_we_fail(string append, bool expected)
         {
-            Assert.Equal(expected, PwM.Encryption.PasswordValidator.ValidatePassword(append + "agvrberer&%*$bnNDNR"));
+            Assert.Equal(expected, PwMLib.PasswordValidator.ValidatePassword(append + "agvrberer&%*$bnNDNR"));
         }
 
         [Theory]
@@ -39,7 +39,7 @@ namespace Unit.Tests.Encryption.PasswordValidator
         [InlineData("ABC", true)]
         public void Ensure_if_we_miss_a_upper_case_char_we_fail(string append, bool expected)
         {
-            Assert.Equal(expected, PwM.Encryption.PasswordValidator.ValidatePassword(append + "agrekjjger£$^&£&$%23235"));
+            Assert.Equal(expected, PwMLib.PasswordValidator.ValidatePassword(append + "agrekjjger£$^&£&$%23235"));
         }
 
         [Theory]
@@ -47,7 +47,7 @@ namespace Unit.Tests.Encryption.PasswordValidator
         [InlineData("abc", true)]
         public void Ensure_if_we_miss_a_lower_case_char_we_fail(string append, bool expected)
         {
-            Assert.Equal(expected, PwM.Encryption.PasswordValidator.ValidatePassword(append + "AVBDSG65346346@^£$$"));
+            Assert.Equal(expected, PwMLib.PasswordValidator.ValidatePassword(append + "AVBDSG65346346@^£$$"));
         }
     }
 }

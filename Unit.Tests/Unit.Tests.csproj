@@ -78,6 +78,10 @@
     <Analyzer Include="..\packages\xunit.analyzers.0.10.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PwMLib\PwMLib.csproj">
+      <Project>{a222cb64-fd79-41c2-bca3-1380007336c8}</Project>
+      <Name>PwMLib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PwM\PwM.csproj">
       <Project>{757597ec-ce6f-4648-b0c8-e71cb31b73bc}</Project>
       <Name>PwM</Name>

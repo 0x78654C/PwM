@@ -11,7 +11,7 @@ namespace Unit.Tests.Encryption
         [InlineData("herherhtrjrjj543y34y3", "??.c?????=?G???e?\\%s?nPf?:??")]
         public void Ensure_we_can_(string inParam, string expected)
         {
-            var bytes = PwM.Encryption.Argon2.Argon2HashPassword(inParam);
+            var bytes = PwMLib.Argon2.Argon2HashPassword(inParam);
             string asciiString = Encoding.ASCII.GetString(bytes, 0, bytes.Length);
 
             Assert.Equal(expected, asciiString);
