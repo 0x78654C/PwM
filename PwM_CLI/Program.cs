@@ -17,8 +17,11 @@ namespace PwM
         private static int s_tries = 0;
         private static JavaScriptSerializer s_serializer;
         private static string s_vaultsDir;
-        private static readonly string s_helpMessage = @"A simple password manager to store localy the authentification data encrypted for a application using Rijndael AES-256 and Argon2 for password hash.
-Usage of Password Manager commands:
+        private static readonly string s_helpMessage = $@"PwM Copyright @ 2020-2022 0x078654c
+PwM - A simple password manager to store localy the authentification data encrypted for a application using Rijndael AES-256 and Argon2 for password hash.
+Contact: xcoding.dev@gmail.com
+
+[x] Usage of Password Manager commands:
   -h       : Display this message.
   -createv : Create a new vault.
   -delv    : Deletes an existing vault.
@@ -27,6 +30,12 @@ Usage of Password Manager commands:
   -dela    : Deletes an existing application in a vault.
   -updatea : Updates account's password for an application in a vault.
   -lista   : Displays the existing applications in a vault.
+
+[x] Support:
+If you like this application and want to support the project you can always buy me a crypto coffee :D. Thank you very much for your support, I appreciate it!
+    
+    Bitcoin:   bc1qe6z79u5f62c3v5lh6nt3hfcj683etyx65s5nch
+    Ethereum:  0x7Aedd83d94b350624f4FDb4dF7eC3a2A7caA9952
 ";
 
         /// <summary>
@@ -36,6 +45,7 @@ Usage of Password Manager commands:
         public static void Main(string[] args)
         {
             s_vaultsDir = CheckOSType();
+
             if (!Directory.Exists(s_vaultsDir))
             {
                 Directory.CreateDirectory(s_vaultsDir);
