@@ -3,7 +3,7 @@
 </p>
 
 # PwM
-Simple offline password manager for Windows in C# WPF  to store locally sensitive authentication data for a specific application. 
+Simple offline password manager for Windows in C# WPF and Linux as command line interface to store locally sensitive authentication data for a specific application. 
 The ideea of creation for this Password Manager came from the simple fact to use something simple and fast.   
 
 # Features
@@ -19,6 +19,7 @@ The ideea of creation for this Password Manager came from the simple fact to use
  - Copy password from applications to clipboard for a duration of 15 seconds.
    (If in the 15 seconds interval is copied something else on clipboard, PwM will not clear the clipboard whe time expired or app is closed) 
  - After log in vault, master password required window will be prompted every 30 minutes if a action is made. Example: update password, delete account , etc.
+ - Command line interface for Windows and Linux.
 
 # How it works
 
@@ -35,6 +36,51 @@ The ideea of creation for this Password Manager came from the simple fact to use
   - Update account password: right click on account and choose update 'Update account password'. You will be prompted with a pop window to enter new password for account.
   - Show password: right click on account and choose update 'Show password'. Password will be visible on application list.
   - Copy to Clipboard: right click on account and choose update 'Copy to clipboard (15 seconds available)'. Password will be copied on clipboard for 15 seconds.
+
+# Usage of commands:
+ 
+ For creating a vault just type:
+ ```
+  -createv
+ ```
+ You will be asked for the vault name and master password. Master password must meet the following complexity:
+ ```
+ Password must be at least 12 characters, and must include at least one upper case letter, one lower case letter, one numeric digit, one special character and no space!
+ ````
+
+ To see if the vault is created we list the current existing vaults by typing in console the following command:
+ ```
+  -listv
+ ```
+
+ Adding the application information just type:
+ ```
+  -addapp
+ ```
+ You will be prompted for vault name, master password to login in it, application name to be added, account name and password to be stored.
+
+ To list the accounts from a specific application or entire vault lists type: 
+ ```
+  -lista
+ ```
+ 
+ To delete a specific account from an application just use:
+ ```
+  -dela
+ ```
+
+ To update password for a specific account in a application type:
+ ```
+  -updatea
+ ```
+
+ To delete a vault type:
+ ```
+  -delv
+ ```
+ 
+ Example commands use: pwm_cli.exe -createv
+  
 
 # Encryption
 
