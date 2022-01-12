@@ -2,6 +2,7 @@
 using System.Security;
 using System.Windows;
 using System.Windows.Input;
+using PwMLib;
 
 namespace PwM
 {
@@ -76,7 +77,7 @@ namespace PwM
         /// <param name="e"></param>
         private void confirmBTN_Click(object sender, RoutedEventArgs e)
         {
-            if (!Encryption.PasswordValidator.ValidatePassword(masterPasswordPWD.Password))
+            if (!PasswordValidator.ValidatePassword(masterPasswordPWD.Password))
             {
                 Utils.Notification.ShowNotificationInfo("orange", "Password must be at least 12 characters, and must include at least one upper case letter, one lower case letter, one numeric digit, one special character and no space!");
                 masterPasswordPWD.Clear();

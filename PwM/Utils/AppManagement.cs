@@ -5,6 +5,7 @@ using System.IO;
 using System.Security;
 using System.Web.Script.Serialization;
 using System.Windows.Controls;
+using PwMLib;
 
 namespace PwM.Utils
 {
@@ -39,7 +40,7 @@ namespace PwM.Utils
                     return false;
                 }
                 string readVault = File.ReadAllText(pathToVault);
-                string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
+                string decryptVault = AES.Decrypt(readVault, PasswordValidator.ConvertSecureStringToString(masterPassword));
                 if (decryptVault.Contains("Error decrypting"))
                 {
                     Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
@@ -47,7 +48,7 @@ namespace PwM.Utils
                     MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                     return false;
                 }
-                vaultSecure = Encryption.PasswordValidator.StringToSecureString(decryptVault);
+                vaultSecure = PasswordValidator.StringToSecureString(decryptVault);
                 using (var reader = new StringReader(decryptVault))
                 {
                     string line;
@@ -103,7 +104,7 @@ namespace PwM.Utils
                 }
             }
             string readVault = File.ReadAllText(pathToVault);
-            string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
+            string decryptVault = AES.Decrypt(readVault, PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
@@ -123,8 +124,8 @@ namespace PwM.Utils
                     { "password", accountPassword },
                 };
             s_serializer = new JavaScriptSerializer();
-            string encryptdata = Encryption.AES.Encrypt(decryptVault + "\n" + s_serializer.Serialize(keyValues), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
-            vaultSecure = Encryption.PasswordValidator.StringToSecureString(decryptVault + "\n" + s_serializer.Serialize(keyValues));
+            string encryptdata = AES.Encrypt(decryptVault + "\n" + s_serializer.Serialize(keyValues), PasswordValidator.ConvertSecureStringToString(masterPassword));
+            vaultSecure = PasswordValidator.StringToSecureString(decryptVault + "\n" + s_serializer.Serialize(keyValues));
             if (File.Exists(pathToVault))
             {
                 File.WriteAllText(pathToVault, encryptdata);
@@ -159,7 +160,7 @@ namespace PwM.Utils
                 return;
             }
             string readVault = File.ReadAllText(pathToVault);
-            string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
+            string decryptVault = AES.Decrypt(readVault, PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
@@ -201,8 +202,8 @@ namespace PwM.Utils
                         }
                     }
                 }
-                string encryptdata = Encryption.AES.Encrypt(string.Join("\n", listApps), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
-                vaultSecure = Encryption.PasswordValidator.StringToSecureString(string.Join("\n", listApps));
+                string encryptdata = AES.Encrypt(string.Join("\n", listApps), PasswordValidator.ConvertSecureStringToString(masterPassword));
+                vaultSecure = PasswordValidator.StringToSecureString(string.Join("\n", listApps));
                 listApps.Clear();
                 if (File.Exists(pathToVault))
                 {
@@ -244,7 +245,7 @@ namespace PwM.Utils
                 return;
             }
             string readVault = File.ReadAllText(pathToVault);
-            string decryptVault = Encryption.AES.Decrypt(readVault, Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
+            string decryptVault = AES.Decrypt(readVault, PasswordValidator.ConvertSecureStringToString(masterPassword));
             if (decryptVault.Contains("Error decrypting"))
             {
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
@@ -291,8 +292,8 @@ namespace PwM.Utils
                         }
                     }
                 }
-                string encryptdata = Encryption.AES.Encrypt(string.Join("\n", listApps), Encryption.PasswordValidator.ConvertSecureStringToString(masterPassword));
-                vaultSecure = Encryption.PasswordValidator.StringToSecureString(string.Join("\n", listApps));
+                string encryptdata = AES.Encrypt(string.Join("\n", listApps), PasswordValidator.ConvertSecureStringToString(masterPassword));
+                vaultSecure = PasswordValidator.StringToSecureString(string.Join("\n", listApps));
                 listApps.Clear();
                 if (File.Exists(pathToVault))
                 {
@@ -326,10 +327,10 @@ namespace PwM.Utils
             selectedItem = selectedItem.Replace("{ Application = ", string.Empty);
             selectedItem = selectedItem.Replace(", Account = ", "|");
             var parsedData = selectedItem.Split('|');
-            var vault = Encryption.PasswordValidator.ConvertSecureStringToString(vaultSecure);
+            var vault = PasswordValidator.ConvertSecureStringToString(vaultSecure);
             if (CountLines(vault) >= 2)
             {
-                var vaultToLines = Encryption.PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
+                var vaultToLines = PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
                 foreach (var line in vaultToLines)
                 {
                     s_serializer = new JavaScriptSerializer();
@@ -403,7 +404,7 @@ namespace PwM.Utils
             string account = GetAccountFromListView(listView);
             if (account.Length > 0 && application.Length > 0)
             {
-                var vaultToLines = Encryption.PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
+                var vaultToLines = PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
                 foreach (var line in vaultToLines)
                 {
                     s_serializer = new JavaScriptSerializer();

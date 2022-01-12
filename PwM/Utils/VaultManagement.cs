@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-
+using PwMLib;
 namespace PwM.Utils
 {
     public class VaultManagement
@@ -33,14 +33,14 @@ namespace PwM.Utils
                     return;
                 }
 
-                if (!Encryption.PasswordValidator.ValidatePassword(confirmPassword))
+                if (!PasswordValidator.ValidatePassword(confirmPassword))
                 {
                     Notification.ShowNotificationInfo("orange", "Password must be at least 12 characters, and must include at least one upper case letter, one lower case letter, one numeric digit, one special character and no space!");
                     GlobalVariables.vaultChecks = true;
                     return;
                 }
 
-                string sealVault = Encryption.AES.Encrypt(string.Empty, confirmPassword);
+                string sealVault = AES.Encrypt(string.Empty, confirmPassword);
                 File.WriteAllText(pathToVault, sealVault);
                 Notification.ShowNotificationInfo("green", $"Vault {vaultName} was created!");
                 GlobalVariables.createConfirmation = true;
@@ -164,8 +164,8 @@ namespace PwM.Utils
         /// <param name="newMasterPassword"></param>
         public static void ChangeMassterPassword(ListView vaultList)
         {
-            string oldMasterPassword = Encryption.PasswordValidator.ConvertSecureStringToString(GlobalVariables.masterPassword);
-            string newMasterPassword = Encryption.PasswordValidator.ConvertSecureStringToString(GlobalVariables.newMasterPassword);
+            string oldMasterPassword = PasswordValidator.ConvertSecureStringToString(GlobalVariables.masterPassword);
+            string newMasterPassword = PasswordValidator.ConvertSecureStringToString(GlobalVariables.newMasterPassword);
             if (vaultList.SelectedItem == null)
             {
                 Notification.ShowNotificationInfo("orange", "You must select a vault for changeing the Master Password!");
@@ -179,13 +179,13 @@ namespace PwM.Utils
                 return;
             }
             string readVault = File.ReadAllText(pathToVault);
-            string decryptVault = Encryption.AES.Decrypt(readVault, oldMasterPassword);
+            string decryptVault = AES.Decrypt(readVault, oldMasterPassword);
             if (decryptVault.Contains("Error decrypting"))
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 return;
             }
-            string encryptdata = Encryption.AES.Encrypt(decryptVault, newMasterPassword);
+            string encryptdata = AES.Encrypt(decryptVault, newMasterPassword);
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");

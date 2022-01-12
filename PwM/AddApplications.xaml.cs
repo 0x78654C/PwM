@@ -1,9 +1,8 @@
 ﻿using Microsoft.Win32;
-using PwM.Encryption;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-
+using PwMLib;
 
 namespace PwM
 {

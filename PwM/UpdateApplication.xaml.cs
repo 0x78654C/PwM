@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
-using PwM.Encryption;
 using System.Windows;
+using PwMLib;
 using System.Windows.Input;
 
 namespace PwM
