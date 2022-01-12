@@ -37,7 +37,11 @@ The ideea of creation for this Password Manager came from the simple fact to use
   - Show password: right click on account and choose update 'Show password'. Password will be visible on application list.
   - Copy to Clipboard: right click on account and choose update 'Copy to clipboard (15 seconds available)'. Password will be copied on clipboard for 15 seconds.
 
-# Usage of commands:
+# Usage of command line interface:
+ 
+ Example commands use: pwm_cli.exe COMMAND
+ 
+ List of commands:
  
  For creating a vault just type:
  ```
@@ -78,8 +82,6 @@ The ideea of creation for this Password Manager came from the simple fact to use
  ```
   -delv
  ```
- 
- Example commands use: pwm_cli.exe -createv
   
 
 # Encryption
