@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace PwM.Utils
@@ -16,7 +17,7 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="vaultList"></param>
         /// <param name="vaultDirPath"></param>
-        public static void Import(System.Windows.Controls.ListView vaultList, string vaultDirPath)
+        public static void Import(System.Windows.Controls.ListView vaultList, string vaultDirPath, bool sharedVault)
         {
             s_openFileDialog.Filter = "Vault Files (*.x)|*.x";
             s_openFileDialog.Multiselect = true;
@@ -29,30 +30,38 @@ namespace PwM.Utils
                 string vaultOverwrite = string.Empty;
                 bool copyOverwrite = false;
                 bool copyClean = false;
+                
                 foreach (var vaultfile in s_openFileDialog.FileNames)
                 {
                     try
                     {
-
                         FileInfo fileInfo = new FileInfo(vaultfile);
                         vault = fileInfo.Name;
+                        string vaultPath = fileInfo.DirectoryName;
                         string vaultPwMLocation = vaultDirPath + vault;
-                        if (File.Exists(vaultPwMLocation))
+                        if (sharedVault)
                         {
-                            if (VaultImportOverwriteFile(vault))
-                            {
-                                count++;
-                                copyOverwrite = true;
-                                vaultOverwrite = vault;
-                                File.Copy(vaultfile, vaultPwMLocation, true);
-                                GlobalVariables.importConfirmation = false;
-                            }
+                            AddSharedVault(GlobalVariables.jsonPath, vault, vaultPath);
                         }
                         else
                         {
-                            count++;
-                            copyClean = true;
-                            File.Copy(vaultfile, vaultPwMLocation);
+                            if (File.Exists(vaultPwMLocation))
+                            {
+                                if (VaultImportOverwriteFile(vault))
+                                {
+                                    count++;
+                                    copyOverwrite = true;
+                                    vaultOverwrite = vault;
+                                    File.Copy(vaultfile, vaultPwMLocation, true);
+                                    GlobalVariables.importConfirmation = false;
+                                }
+                            }
+                            else
+                            {
+                                count++;
+                                copyClean = true;
+                                File.Copy(vaultfile, vaultPwMLocation);
+                            }
                         }
                     }
                     catch (Exception e)
@@ -61,7 +70,7 @@ namespace PwM.Utils
                     }
                 }
                 NotificaitonImport(count, vault, vaultOverwrite, copyOverwrite, copyClean);
-                VaultManagement.ListVaults(vaultDirPath, vaultList);
+                VaultManagement.ListVaults(vaultDirPath, vaultList, sharedVault);
             }
         }
 
@@ -81,7 +90,7 @@ namespace PwM.Utils
             string vault = VaultManagement.GetVaultNameFromListView(vaultList);
             s_saveFileDialog.Filter = "Vault Files (*.x)|*.x";
             s_saveFileDialog.Title = $"Export vault: {vault}";
-            s_saveFileDialog.FileName = vault+".x";
+            s_saveFileDialog.FileName = vault + ".x";
             DialogResult dr = s_saveFileDialog.ShowDialog();
             if (dr == DialogResult.OK)
             {
@@ -137,6 +146,35 @@ namespace PwM.Utils
             ImportNotification importNotification = new ImportNotification();
             importNotification.ShowDialog();
             return GlobalVariables.importConfirmation;
+        }
+
+        private static bool CheckJsonVault(string filePath, string vaultName, string sharedPath)
+        {
+            var item = JsonManage.ReadJsonFromFile<VaultDetails[]>(filePath);
+            return (item.Any(t => t.VaultName == vaultName && t.SharedPath == sharedPath));
+        }
+
+        /// <summary>
+        /// Add shared vault path and name to json file.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="vaultName"></param>
+        /// <param name="sharedPath"></param>
+        private static void AddSharedVault(string filePath, string vaultName, string sharedPath)
+        {
+            if (File.Exists(filePath) && CheckJsonVault(filePath, vaultName, sharedPath))
+            {
+                Notification.ShowNotificationInfo("orange", $"Shared vault {vaultName} is already added to list!");
+                return;
+            }
+            JsonManage.UpdateJsonFile(GlobalVariables.jsonPath, new VaultDetails { VaultName = vaultName, SharedPath = sharedPath });
+            Notification.ShowNotificationInfo("green", $"{vaultName} vault was imported!");
+        }
+
+        private class VaultDetails
+        {
+            public string VaultName { get; set; }
+            public string SharedPath { get; set; }
         }
     }
 }
