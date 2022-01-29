@@ -23,12 +23,21 @@ namespace PwM.Utils
         /// <param name="vaultName"></param>
         /// <param name="masterPassword"></param>
         /// <returns></returns>
-        public static bool DecryptAndPopulateList(ListView listView, string vaultName, SecureString masterPassword)
+        public static bool DecryptAndPopulateList(ListView listView, string vaultName, SecureString masterPassword, string vaultPath)
         {
             try
             {
                 listView.Items.Clear();
-                string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                string pathToVault = string.Empty;
+                if (vaultPath.StartsWith("Local"))
+                {
+                    pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                }
+                else
+                {
+                    pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                }
+
                 if (!File.Exists(pathToVault))
                 {
                     Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
@@ -80,9 +89,17 @@ namespace PwM.Utils
         /// <param name="accountName"></param>
         /// <param name="accountPassword"></param>
         /// <param name="masterPassword"></param>
-        public static void AddApplication(ListView listView, string vaultName, string application, string accountName, string accountPassword, SecureString masterPassword)
+        public static void AddApplication(ListView listView, string vaultName, string application, string accountName, string accountPassword, SecureString masterPassword, string vaultPath)
         {
-            string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            string pathToVault;
+            if (vaultPath.StartsWith("Local"))
+            {
+                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            }
+            else
+            {
+                pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            }
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
@@ -144,11 +161,19 @@ namespace PwM.Utils
         /// <param name="application"></param>
         /// <param name="accountName"></param>
         /// <param name="masterPassword"></param>
-        public static void DeleteApplicaiton(ListView listView, string vaultName, string application, string accountName, SecureString masterPassword)
+        public static void DeleteApplicaiton(ListView listView, string vaultName, string application, string accountName, SecureString masterPassword,string vaultPath)
         {
             List<string> listApps = new List<string>();
             bool accountCheck = false;
-            string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            string pathToVault;
+            if (vaultPath.StartsWith("Local"))
+            {
+                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            }
+            else
+            {
+                pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            }
             if (masterPassword == null)
             {
                 ClearVariables.VariablesClear();
@@ -229,11 +254,19 @@ namespace PwM.Utils
         /// <param name="accountName"></param>
         /// <param name="password"></param>
         /// <param name="masterPassword"></param>
-        public static void UpdateAccount(ListView listView, string vaultName, string application, string accountName, string password, SecureString masterPassword)
+        public static void UpdateAccount(ListView listView, string vaultName, string application, string accountName, string password, SecureString masterPassword, string vaultPath)
         {
             List<string> listApps = new List<string>();
             bool accountCheck = false;
-            string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            string pathToVault;
+            if (vaultPath.StartsWith("Local"))
+            {
+                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            }
+            else
+            {
+                pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            }
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
@@ -428,7 +461,7 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="listView"></param>
         /// <param name="vaultName"></param>
-        public static void DeleteSelectedItem(ListView listView, string vaultName)
+        public static void DeleteSelectedItem(ListView listView, string vaultName, string vaultPath)
         {
             string application = GetApplicationFromListView(listView);
             if (application.Length > 0)
@@ -445,11 +478,11 @@ namespace PwM.Utils
                         if (!GlobalVariables.masterPasswordCheck)
                         {
                             var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
-                            DeleteApplicaiton(listView, vaultName, application, account, masterPassword);
+                            DeleteApplicaiton(listView, vaultName, application, account, masterPassword, vaultPath);
                             ClearVariables.VariablesClear();
                             return;
                         }
-                        DeleteApplicaiton(listView, vaultName, application, account, GlobalVariables.masterPassword);
+                        DeleteApplicaiton(listView, vaultName, application, account, GlobalVariables.masterPassword, vaultPath);
                         ClearVariables.VariablesClear();
                     }
                 }
@@ -499,7 +532,7 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="listView"></param>
         /// <param name="vaultName"></param>
-        public static void UpdateSelectedItemPassword(ListView listView, string vaultName)
+        public static void UpdateSelectedItemPassword(ListView listView, string vaultName, string vaultPath)
         {
             string application = GetApplicationFromListView(listView);
             string account = GetAccountFromListView(listView);
@@ -515,11 +548,11 @@ namespace PwM.Utils
                     if (!GlobalVariables.masterPasswordCheck)
                     {
                         var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
-                        UpdateAccount(listView, vaultName, application, account, newPassword, masterPassword);
+                        UpdateAccount(listView, vaultName, application, account, newPassword, masterPassword, vaultPath);
                         ClearVariables.VariablesClear();
                         return;
                     }
-                    UpdateAccount(listView, vaultName, application, account, newPassword, GlobalVariables.masterPassword);
+                    UpdateAccount(listView, vaultName, application, account, newPassword, GlobalVariables.masterPassword, vaultPath);
                     ClearVariables.VariablesClear();
                 }
             }
