@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -100,35 +101,75 @@ namespace PwM.Utils
         /// <param name="password">Master password.</param>
         private static void DeleteVault(string vaultName, string vaultDirectory, ListView vaultsList)
         {
-            string pathToVault = Path.Combine(vaultDirectory, $"{vaultName}.x");
-            if (!File.Exists(pathToVault))
+            try
             {
-                Notification.ShowNotificationInfo("orange", $"Vault {vaultName} does not exist!");
-                return;
+                if (vaultDirectory.StartsWith("Local"))
+                {
+                    string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                    if (!File.Exists(pathToVault))
+                    {
+                        Notification.ShowNotificationInfo("orange", $"Vault {vaultName} does not exist!");
+                        return;
+                    }
+                    File.Delete(pathToVault);
+                    Notification.ShowNotificationInfo("green", $"Vault { vaultName} was deleted!");
+                    ListVaults(GlobalVariables.passwordManagerDirectory, vaultsList, false);
+                    return;
+                }
+                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonPath, f => f.Where(t => t.VaultName == vaultName+".x"));
+                Notification.ShowNotificationInfo("green", $"Shared vault { vaultName} was removed from list!");
+                ListVaults(vaultDirectory, vaultsList, true);
+            }catch(Exception e)
+            {
+                Notification.ShowNotificationInfo("red", e.ToString());//TODO remove after stest
             }
-            File.Delete(pathToVault);
-            Notification.ShowNotificationInfo("green", $"Vault { vaultName} was deleted!");
-            ListVaults(vaultDirectory, vaultsList);
         }
 
         /// <summary>
         /// List current vaults in listView object.
         /// </summary>
         /// <param name="vaultsDirectory">Path to vault directory.</param>
-        public static void ListVaults(string vaultsDirectory, ListView listView)
+        public static void ListVaults(string vaultsDirectory, ListView listView, bool enableShare)
         {
             GlobalVariables.vaultsCount = 0;
             listView.Items.Clear();
+
+            if (enableShare)
+                vaultsDirectory = GlobalVariables.passwordManagerDirectory;
+
             if (!Directory.Exists(vaultsDirectory))
             {
                 Notification.ShowNotificationInfo("red", "Vaults directory does not exist");
                 return;
             }
+
             var getFiles = new DirectoryInfo(vaultsDirectory).GetFiles();
             foreach (var file in getFiles)
             {
                 GlobalVariables.vaultsCount++;
-                listView.Items.Add(new { Name = file.Name.Substring(0, file.Name.Length - 2), CreateDate = file.CreationTime });
+                if (file.Name.EndsWith(".x"))
+                {
+                    listView.Items.Add(new { Name = file.Name.Substring(0, file.Name.Length - 2), CreateDate = file.CreationTime, SharePoint = "Local Stored" });
+                }
+            }
+            if (File.Exists(GlobalVariables.jsonPath))
+            {
+                string jsonData = File.ReadAllText(GlobalVariables.jsonPath);
+                if (jsonData.Length < 4 && string.IsNullOrEmpty(jsonData))
+                {
+                    Notification.ShowNotificationInfo("red", "Shared vault list is corrupted. Try import again the shared vaults!");
+                    File.Delete(GlobalVariables.jsonPath);
+                    return;
+                }
+
+                var items = JsonManage.ReadJsonFromFile<VaultDetails[]>(GlobalVariables.jsonPath);
+                FileInfo fileInfo;
+                foreach (var item in items)
+                {
+                    string vaultPathFile = Path.Combine(item.SharedPath, item.VaultName);
+                    fileInfo = new FileInfo(vaultPathFile);
+                    listView.Items.Add(new { Name = item.VaultName.Substring(0, item.VaultName.Length - 2), CreateDate = fileInfo.CreationTime, SharePoint = item.SharedPath });
+                }
             }
         }
 
