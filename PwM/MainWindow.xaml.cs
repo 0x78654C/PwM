@@ -20,13 +20,13 @@ namespace PwM
     public partial class MainWindow : Window
     {
         private static readonly Regex _regex = new Regex("[^!-*.-]+");
-        private static string s_rootPath = Path.GetPathRoot(Environment.SystemDirectory);
         private static readonly string s_accountName = Environment.UserName;
-        private static string s_passwordManagerDirectory = $"{s_rootPath}Users\\{s_accountName}\\AppData\\Local\\PwM\\";
+        private static string s_passwordManagerDirectory = GlobalVariables.passwordManagerDirectory;
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
         private System.Windows.Threading.DispatcherTimer _dispatcherTimer;
         public static System.Windows.Threading.DispatcherTimer s_masterPassCheckTimer;
+        private string _vaultPath;
         Mutex MyMutex;
 
         public MainWindow()
@@ -36,13 +36,13 @@ namespace PwM
             InitializeVaultsDirectory(s_passwordManagerDirectory);
             s_masterPassCheckTimer = new System.Windows.Threading.DispatcherTimer();
             versionLabel.Content = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
+            VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList, false);
             userTXB.Text = " " + s_accountName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
-            
+
         }
 
         /// <summary>
@@ -283,13 +283,15 @@ namespace PwM
             if (vaultList.SelectedItem != null)
             {
                 VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
-                string vaultName = vaultList.SelectedItem.ToString();
-                vaultName = vaultName.Split(',')[0].Replace("{ Name = ", "");
+                string item = vaultList.SelectedItem.ToString();
+                string vaultPath = GetVaultPathFromList(vaultList);
+                _vaultPath = vaultPath;
+                string vaultName = item.Split(',')[0].Replace("{ Name = ", "");
                 var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                 GlobalVariables.masterPassword = masterPassword;
                 if (masterPassword != null && masterPassword.Length > 0)
                 {
-                    if (AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword))
+                    if (AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword, vaultPath))
                     {
                         appListVI.IsEnabled = true;
                         appListVI.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
@@ -308,6 +310,18 @@ namespace PwM
             }
         }
 
+        /// <summary>
+        /// Get vault path from vault list.
+        /// </summary>
+        /// <param name="listView"></param>
+        /// <returns></returns>
+        private string GetVaultPathFromList(ListView listView)
+        {
+            string item = listView.SelectedItem.ToString();
+            string vaultPath = item.Split(',')[2].Replace(" SharePoint = ", "");
+            vaultPath = vaultPath.Replace(" }", "");
+            return vaultPath;
+        }
         /// <summary>
         /// Clear applist, and all passwords boxes and text boxes from application tab, closes it and moves to vault tab.
         /// </summary>
@@ -415,7 +429,7 @@ namespace PwM
                 Notification.ShowNotificationInfo("orange", "You must select a application line for updateing account password!");
                 return;
             }
-            AppManagement.UpdateSelectedItemPassword(appList, appListVaultLVL.Text);
+            AppManagement.UpdateSelectedItemPassword(appList, appListVaultLVL.Text, _vaultPath);
         }
 
         /// <summary>
@@ -432,11 +446,11 @@ namespace PwM
                 if (!GlobalVariables.masterPasswordCheck)
                 {
                     var masterPassword = MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
-                    AppManagement.AddApplication(appList, appListVaultLVL.Text, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, masterPassword);
+                    AppManagement.AddApplication(appList, appListVaultLVL.Text, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, masterPassword, _vaultPath);
                     ClearVariables.VariablesClear();
                     return;
                 }
-                AppManagement.AddApplication(appList, appListVaultLVL.Text, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, GlobalVariables.masterPassword);
+                AppManagement.AddApplication(appList, appListVaultLVL.Text, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, GlobalVariables.masterPassword, _vaultPath);
                 ClearVariables.VariablesClear();
             }
         }
@@ -448,7 +462,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DelAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
+            AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text, _vaultPath);
         }
 
         /// <summary>
@@ -458,7 +472,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
-            AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text);
+            AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text, _vaultPath);
         }
 
         /// <summary>
@@ -469,7 +483,7 @@ namespace PwM
         private void DeleteVault_Click(object sender, RoutedEventArgs e)
         {
             VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
-            VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
+            VaultManagement.DeleteVaultItem(vaultList, GetVaultPathFromList(vaultList));
         }
 
         /// <summary>
@@ -483,7 +497,7 @@ namespace PwM
             addVault.ShowDialog();
             if (GlobalVariables.createConfirmation)
             {
-                VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList);
+                VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList, false);
             }
         }
 
@@ -495,7 +509,7 @@ namespace PwM
         private void DelVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
-            VaultManagement.DeleteVaultItem(vaultList, s_passwordManagerDirectory);
+            VaultManagement.DeleteVaultItem(vaultList, GetVaultPathFromList(vaultList));
         }
 
         /// <summary>
@@ -505,7 +519,26 @@ namespace PwM
         /// <param name="e"></param>
         private void ImportVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            ImportExport.Import(vaultList, s_passwordManagerDirectory);
+            ImportShared importShared = new ImportShared();
+            importShared.ShowDialog();
+            if (GlobalVariables.closeAppConfirmation == false)
+                PopulateListView(vaultList);
+            else
+                GlobalVariables.closeAppConfirmation = true;
+
+        }
+
+
+        private void PopulateListView(ListView listView)
+        {
+            if (listView.Items.Count > 0)
+            {
+                listView.Items.Clear();
+                foreach (var item in GlobalVariables.listView.Items)
+                {
+                    listView.Items.Add(item);
+                }
+            }
         }
 
 
@@ -518,7 +551,7 @@ namespace PwM
         {
             ImportExport.Export(vaultList, s_passwordManagerDirectory);
         }
-        
+
         /// <summary>
         /// Change master password for a specific vault.
         /// </summary>
@@ -539,7 +572,7 @@ namespace PwM
             }
             MPasswordChanger mPasswordChanger = new MPasswordChanger();
             mPasswordChanger.ShowDialog();
-            if(GlobalVariables.closeAppConfirmation == false)
+            if (GlobalVariables.closeAppConfirmation == false)
             {
                 VaultManagement.ChangeMassterPassword(vaultList);
             }
@@ -554,5 +587,20 @@ namespace PwM
         {
             ClipBoardUtil.ClearClipboard(GlobalVariables.accountPassword);
         }
+
+
+        /*TODO: implemet on import window
+             private void SharePointCHK_Checked(object sender, RoutedEventArgs e)
+             {
+                 string sharePointVaultPath = SharePoint.GetSharePointVault();
+                 if (!string.IsNullOrEmpty(sharePointVaultPath))
+                 {
+                     SharePointPathLbl.Visibility = Visibility.Visible;
+                     SharePointPathLbl.Content = sharePointVaultPath;
+                     JsonManage.CreateJsonFile(GlobalVariables.jsonPath, new { SharePointVault = sharePointVaultPath});
+                 }
+             }
+        */
+
     }
 }
