@@ -70,6 +70,8 @@
     <Compile Include="Encryption\PasswordValidator\StringToSecureStringTests.cs" />
     <Compile Include="Encryption\PasswordValidator\ValidatePasswordsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\RegistryTest.cs" />
+    <Compile Include="Utils\JsonTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
