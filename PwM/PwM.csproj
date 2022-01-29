@@ -93,6 +93,9 @@
     <Compile Include="ImportNotification.xaml.cs">
       <DependentUpon>ImportNotification.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ImportShared.xaml.cs">
+      <DependentUpon>ImportShared.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MPasswordChanger.xaml.cs">
       <DependentUpon>MPasswordChanger.xaml</DependentUpon>
     </Compile>
@@ -114,11 +117,14 @@
     <Compile Include="Utils\Extensions.cs" />
     <Compile Include="Utils\GlobalVariables.cs" />
     <Compile Include="Utils\ImportExport.cs" />
+    <Compile Include="Utils\JsonManage.cs" />
     <Compile Include="Utils\ListViewSettings.cs" />
     <Compile Include="Utils\MasterPasswordLoad.cs" />
     <Compile Include="Utils\MasterPasswordTimerStart.cs" />
     <Compile Include="Utils\Notification.cs" />
+    <Compile Include="Utils\RegistryManagement.cs" />
     <Compile Include="Utils\TextPassBoxChanges.cs" />
+    <Compile Include="Utils\VaultDetails.cs" />
     <Compile Include="Utils\VaultManagement.cs" />
     <Page Include="AddApplications.xaml">
       <SubType>Designer</SubType>
@@ -137,6 +143,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ImportNotification.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ImportShared.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
