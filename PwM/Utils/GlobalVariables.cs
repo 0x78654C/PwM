@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Security;
+using System.Windows.Controls;
 
 namespace PwM.Utils
 {
@@ -24,8 +26,11 @@ namespace PwM.Utils
         public static bool vaultChecks = false;
         public static bool vaultOpen = false;
         public static bool masterPasswordCheck = true;
-        private static string s_rootPath = System.IO.Path.GetPathRoot(Environment.SystemDirectory);
+        private static string s_rootPath = Path.GetPathRoot(Environment.SystemDirectory);
         private static readonly string s_accountName = Environment.UserName;
         public static readonly string passwordManagerDirectory = $"{s_rootPath}Users\\{s_accountName}\\AppData\\Local\\PwM\\";
+        public static readonly string registryPath = @"HKEY_CURRENT_USER\SOFTWARE\PwM";
+        public static readonly string jsonPath = Path.Combine(passwordManagerDirectory, "PwM.Json");
+        public static ListView listView = new ListView();
     }
 }
