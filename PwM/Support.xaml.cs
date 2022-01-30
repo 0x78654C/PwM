@@ -1,8 +1,8 @@
-﻿using System.Windows;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using Mkb;
-using System.Windows.Threading;
 using System;
+using System.Windows;
+using System.Windows.Threading;
 
 namespace PwM
 {
@@ -11,7 +11,7 @@ namespace PwM
     /// </summary>
     public partial class Support : Window
     {
-        DispatcherTimer dispatcherTimer = new DispatcherTimer(); 
+        DispatcherTimer dispatcherTimer = new DispatcherTimer();
         public Support()
         {
             InitializeComponent();
@@ -67,7 +67,7 @@ namespace PwM
         private void BitCopyLbl_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             ClipBoardManager.SetText(BitCoinTextBox.Text);
-            HashCopyResultLbl.Content="Bitcoin address was copied!";
+            HashCopyResultLbl.Content = "Bitcoin address was copied!";
             StartHashLabelClean();
         }
 

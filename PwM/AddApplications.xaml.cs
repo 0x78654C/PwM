@@ -1,8 +1,8 @@
 ﻿using Microsoft.Win32;
+using PwMLib;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using PwMLib;
 
 namespace PwM
 {

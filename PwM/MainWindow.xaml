@@ -63,17 +63,17 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                                 <ContextMenu HasDropShadow="False" StaysOpen="True" >
                                     <MenuItem Header="Export Vault" Click="ExportVault_Click" Foreground="Black" Tag="2" />
                                     <MenuItem Header="Change Master Password" Click="ChangeMasterPassword_Click" Foreground="Black" Tag="2" />
-                                    <MenuItem Header="Delete Vault" Click="DeleteVault_Click" Foreground="Red" Tag="2" />
+                                    <MenuItem Header="Delete/Remove Vault" Click="DeleteVault_Click" Foreground="Red" Tag="2" />
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
                         <Label Content="_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" Margin="10,55,10,0" VerticalAlignment="Top" Height="26" Width="827" Foreground="Red" />
                         <Label Content="Vaults List" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold"/>
                         <Label Content="  " ToolTip="Add Vault" HorizontalAlignment="Left" Margin="21,578,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="AddVaultIcon_PreviewMouseDown" />
-                        <Label Content="  " ToolTip="Delete Vault" HorizontalAlignment="Left" Margin="60,578,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="DelVaultIcon_PreviewMouseDown" />
+                        <Label Content="  " ToolTip="Delete/Remove Vault" HorizontalAlignment="Left" Margin="60,578,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="DelVaultIcon_PreviewMouseDown" />
                         <Label Content="  " ToolTip="Import Vault" HorizontalAlignment="Left" Margin="96,578,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="ImportVaultIcon_PreviewMouseDown" />
                         <materialDesign:PackIcon Name="AddVaultIcon" ToolTip="Add Vault" Foreground="#690fc2" Kind="Plus" Margin="18,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" FontWeight="Bold" PreviewMouseDown="AddVaultIcon_PreviewMouseDown" />
-                        <materialDesign:PackIcon x:Name="DelVaultIcon" ToolTip="Delete Vault" Foreground="#690fc2" Kind="Minus" Margin="56,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelVaultIcon_PreviewMouseDown" />
+                        <materialDesign:PackIcon x:Name="DelVaultIcon" ToolTip="Delete/Remove Vault" Foreground="#690fc2" Kind="Minus" Margin="56,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelVaultIcon_PreviewMouseDown" />
                         <materialDesign:PackIcon x:Name="ImportVaultIcon" ToolTip="Import Vault" Foreground="#690fc2" Kind="LetterI" Margin="92,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="ImportVaultIcon_PreviewMouseDown" />
                     </Grid>
                 </TabItem>

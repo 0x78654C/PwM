@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using PwM.Utils;
+using System.Windows;
+using System.Windows.Input;
 
 namespace PwM
 {
@@ -72,8 +61,8 @@ namespace PwM
         /// <param name="e"></param>
         private void LocalBtn_Click(object sender, RoutedEventArgs e)
         {
-           ImportExport.Import(GlobalVariables.listView, _passwordManagerDirectory,false);
-           this.Close();
+            ImportExport.Import(GlobalVariables.listView, _passwordManagerDirectory, false);
+            this.Close();
         }
 
         /// <summary>

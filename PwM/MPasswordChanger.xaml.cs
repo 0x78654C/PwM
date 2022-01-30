@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using Microsoft.Win32;
+using System.Windows;
 using System.Windows.Input;
-using Microsoft.Win32;
 
 namespace PwM
 {
@@ -15,7 +15,7 @@ namespace PwM
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
             vaultNameTB.Text = Utils.GlobalVariables.vaultName;
-            Utils.GlobalVariables.closeAppConfirmation =false;
+            Utils.GlobalVariables.closeAppConfirmation = false;
         }
 
         /// <summary>

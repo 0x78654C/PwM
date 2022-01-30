@@ -1,12 +1,12 @@
-﻿using System;
+﻿using PwMLib;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Web.Script.Serialization;
 using System.Runtime.InteropServices;
-using PasswordValidator = PwMLib.PasswordValidator;
+using System.Web.Script.Serialization;
 using static PwM.Utils.UI;
-using PwMLib;
+using PasswordValidator = PwMLib.PasswordValidator;
 
 namespace PwM
 {

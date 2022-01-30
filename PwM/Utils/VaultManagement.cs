@@ -1,10 +1,10 @@
-﻿using System;
+﻿using PwMLib;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
-using PwMLib;
 namespace PwM.Utils
 {
     public class VaultManagement
@@ -116,12 +116,13 @@ namespace PwM.Utils
                     ListVaults(GlobalVariables.passwordManagerDirectory, vaultsList, false);
                     return;
                 }
-                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonPath, f => f.Where(t => t.VaultName == vaultName+".x"));
+                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonPath, f => f.Where(t => t.VaultName == vaultName + ".x"));
                 Notification.ShowNotificationInfo("green", $"Shared vault { vaultName} was removed from list!");
                 ListVaults(vaultDirectory, vaultsList, true);
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
-                Notification.ShowNotificationInfo("red", e.ToString());//TODO remove after stest
+                Notification.ShowNotificationInfo("red", e.Message);
             }
         }
 

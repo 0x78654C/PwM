@@ -36,7 +36,7 @@ namespace PwMLib
         private static string GeneratePassword(char[] chars, int attempt, int length = 16, bool useUpper = true, bool useLower = true,
              bool useSymbols = true, bool useNumbers = true)
         {
-          
+
             var bytes = new byte[length * 8];
             new RNGCryptoServiceProvider().GetBytes(bytes);
             var result = new char[length];

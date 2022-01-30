@@ -49,7 +49,7 @@ namespace PwM
             {
                 Utils.GlobalVariables.applicationName = "";
                 Utils.GlobalVariables.accountName = "";
-                Utils.GlobalVariables.deleteConfirmation =false;
+                Utils.GlobalVariables.deleteConfirmation = false;
                 this.Close();
             }
         }
@@ -69,7 +69,7 @@ namespace PwM
         {
             Utils.GlobalVariables.applicationName = "";
             Utils.GlobalVariables.accountName = "";
-            Utils.GlobalVariables.deleteConfirmation =false;
+            Utils.GlobalVariables.deleteConfirmation = false;
             this.Close();
         }
     }

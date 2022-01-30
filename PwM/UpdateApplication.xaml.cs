@@ -1,6 +1,6 @@
 ﻿using Microsoft.Win32;
-using System.Windows;
 using PwMLib;
+using System.Windows;
 using System.Windows.Input;
 
 namespace PwM

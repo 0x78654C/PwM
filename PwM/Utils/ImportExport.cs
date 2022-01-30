@@ -30,7 +30,7 @@ namespace PwM.Utils
                 string vaultOverwrite = string.Empty;
                 bool copyOverwrite = false;
                 bool copyClean = false;
-                
+
                 foreach (var vaultfile in s_openFileDialog.FileNames)
                 {
                     try

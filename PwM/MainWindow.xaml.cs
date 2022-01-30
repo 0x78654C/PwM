@@ -528,7 +528,10 @@ namespace PwM
 
         }
 
-
+        /// <summary>
+        /// Populate listview with items form global var listview.
+        /// </summary>
+        /// <param name="listView"></param>
         private void PopulateListView(ListView listView)
         {
             if (listView.Items.Count > 0)
@@ -587,20 +590,5 @@ namespace PwM
         {
             ClipBoardUtil.ClearClipboard(GlobalVariables.accountPassword);
         }
-
-
-        /*TODO: implemet on import window
-             private void SharePointCHK_Checked(object sender, RoutedEventArgs e)
-             {
-                 string sharePointVaultPath = SharePoint.GetSharePointVault();
-                 if (!string.IsNullOrEmpty(sharePointVaultPath))
-                 {
-                     SharePointPathLbl.Visibility = Visibility.Visible;
-                     SharePointPathLbl.Content = sharePointVaultPath;
-                     JsonManage.CreateJsonFile(GlobalVariables.jsonPath, new { SharePointVault = sharePointVaultPath});
-                 }
-             }
-        */
-
     }
 }
