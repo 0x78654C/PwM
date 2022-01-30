@@ -1,11 +1,11 @@
-﻿using System;
+﻿using PwMLib;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Security;
 using System.Web.Script.Serialization;
 using System.Windows.Controls;
-using PwMLib;
 
 namespace PwM.Utils
 {
@@ -145,10 +145,18 @@ namespace PwM.Utils
             vaultSecure = PasswordValidator.StringToSecureString(decryptVault + "\n" + s_serializer.Serialize(keyValues));
             if (File.Exists(pathToVault))
             {
-                File.WriteAllText(pathToVault, encryptdata);
-                Notification.ShowNotificationInfo("green", $"Data for { application} is encrypted and added to vault!");
-                listView.Items.Add(new { Application = application, Account = accountName, Password = passMask });
-                return;
+                try
+                {
+                    File.WriteAllText(pathToVault, encryptdata);
+                    Notification.ShowNotificationInfo("green", $"Data for { application} is encrypted and added to vault!");
+                    listView.Items.Add(new { Application = application, Account = accountName, Password = passMask });
+                    return;
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    Notification.ShowNotificationInfo("red", $"Access denied: Vault is write protected for this user.");
+                    return;
+                }
             }
             Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
         }
@@ -161,7 +169,7 @@ namespace PwM.Utils
         /// <param name="application"></param>
         /// <param name="accountName"></param>
         /// <param name="masterPassword"></param>
-        public static void DeleteApplicaiton(ListView listView, string vaultName, string application, string accountName, SecureString masterPassword,string vaultPath)
+        public static void DeleteApplicaiton(ListView listView, string vaultName, string application, string accountName, SecureString masterPassword, string vaultPath)
         {
             List<string> listApps = new List<string>();
             bool accountCheck = false;
@@ -234,9 +242,17 @@ namespace PwM.Utils
                 {
                     if (accountCheck)
                     {
-                        File.WriteAllText(pathToVault, encryptdata);
-                        Notification.ShowNotificationInfo("green", $"Account {accountName} for {application} was deleted");
-                        return;
+                        try
+                        {
+                            File.WriteAllText(pathToVault, encryptdata);
+                            Notification.ShowNotificationInfo("green", $"Account {accountName} for {application} was deleted");
+                            return;
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                            Notification.ShowNotificationInfo("red", $"Access denied: Vault is write protected for this user.");
+                            return;
+                        }
                     }
                     Notification.ShowNotificationInfo("orange", $"Account {accountName} does not exist!");
                     return;
@@ -332,9 +348,17 @@ namespace PwM.Utils
                 {
                     if (accountCheck)
                     {
-                        File.WriteAllText(pathToVault, encryptdata);
-                        Notification.ShowNotificationInfo("green", $"Password for account {accountName} for {application} application was updated!");
-                        return;
+                        try
+                        {
+                            File.WriteAllText(pathToVault, encryptdata);
+                            Notification.ShowNotificationInfo("green", $"Password for account {accountName} for {application} application was updated!");
+                            return;
+                        }
+                        catch (UnauthorizedAccessException)
+                        {
+                            Notification.ShowNotificationInfo("red", $"Access denied: Vault is write protected for this user.");
+                            return;
+                        }
                     }
                     Notification.ShowNotificationInfo("orange", $"Account {accountName} does not exist!");
                     return;
