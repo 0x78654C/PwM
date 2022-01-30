@@ -116,7 +116,7 @@ namespace PwM.Utils
                     ListVaults(GlobalVariables.passwordManagerDirectory, vaultsList, false);
                     return;
                 }
-                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonPath, f => f.Where(t => t.VaultName == vaultName + ".x"));
+                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonPath, f => f.Where(t => t.VaultName == vaultName + ".x" && t.SharedPath==vaultDirectory));
                 Notification.ShowNotificationInfo("green", $"Shared vault { vaultName} was removed from list!");
                 ListVaults(vaultDirectory, vaultsList, true);
             }
