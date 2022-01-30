@@ -284,7 +284,7 @@ namespace PwM
             {
                 VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
                 string item = vaultList.SelectedItem.ToString();
-                string vaultPath = GetVaultPathFromList(vaultList);
+                string vaultPath =VaultManagement.GetVaultPathFromList(vaultList);
                 _vaultPath = vaultPath;
                 string vaultName = item.Split(',')[0].Replace("{ Name = ", "");
                 var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
@@ -310,18 +310,7 @@ namespace PwM
             }
         }
 
-        /// <summary>
-        /// Get vault path from vault list.
-        /// </summary>
-        /// <param name="listView"></param>
-        /// <returns></returns>
-        private string GetVaultPathFromList(ListView listView)
-        {
-            string item = listView.SelectedItem.ToString();
-            string vaultPath = item.Split(',')[2].Replace(" SharePoint = ", "");
-            vaultPath = vaultPath.Replace(" }", "");
-            return vaultPath;
-        }
+        
         /// <summary>
         /// Clear applist, and all passwords boxes and text boxes from application tab, closes it and moves to vault tab.
         /// </summary>
@@ -483,7 +472,7 @@ namespace PwM
         private void DeleteVault_Click(object sender, RoutedEventArgs e)
         {
             VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
-            VaultManagement.DeleteVaultItem(vaultList, GetVaultPathFromList(vaultList));
+            VaultManagement.DeleteVaultItem(vaultList, VaultManagement.GetVaultPathFromList(vaultList));
         }
 
         /// <summary>
@@ -509,7 +498,7 @@ namespace PwM
         private void DelVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
-            VaultManagement.DeleteVaultItem(vaultList, GetVaultPathFromList(vaultList));
+            VaultManagement.DeleteVaultItem(vaultList, VaultManagement.GetVaultPathFromList(vaultList));
         }
 
         /// <summary>
