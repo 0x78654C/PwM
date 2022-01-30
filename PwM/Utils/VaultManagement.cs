@@ -116,7 +116,7 @@ namespace PwM.Utils
                     ListVaults(GlobalVariables.passwordManagerDirectory, vaultsList, false);
                     return;
                 }
-                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonPath, f => f.Where(t => t.VaultName == vaultName + ".x" && t.SharedPath==vaultDirectory));
+                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonPath, f => f.Where(t => t.VaultName == vaultName + ".x" && t.SharedPath == vaultDirectory));
                 Notification.ShowNotificationInfo("green", $"Shared vault { vaultName} was removed from list!");
                 ListVaults(vaultDirectory, vaultsList, true);
             }
@@ -199,6 +199,18 @@ namespace PwM.Utils
         }
 
         /// <summary>
+        /// Get vault path from vault list.
+        /// </summary>
+        /// <param name="listView"></param>
+        /// <returns></returns>
+        public static string GetVaultPathFromList(ListView listView)
+        {
+            string item = listView.SelectedItem.ToString();
+            string vaultPath = item.Split(',')[2].Replace(" SharePoint = ", "");
+            vaultPath = vaultPath.Replace(" }", "");
+            return vaultPath;
+        }
+        /// <summary>
         /// Change Master Password for a vault!
         /// </summary>
         /// <param name="vaultList"></param>
@@ -214,7 +226,16 @@ namespace PwM.Utils
                 return;
             }
             string vaultName = GetVaultNameFromListView(vaultList);
-            string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            string pathToVault;
+            string vaultPath = GetVaultPathFromList(vaultList);
+            if (vaultPath.StartsWith("Local"))
+            {
+                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+            }
+            else
+            {
+                pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            }
             if (!File.Exists(pathToVault))
             {
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
@@ -233,7 +254,15 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
                 return;
             }
-            File.WriteAllText(pathToVault, encryptdata);
+            try
+            {
+                File.WriteAllText(pathToVault, encryptdata);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Notification.ShowNotificationInfo("red", $"Access denied: Vault is write protected for this user.");
+                return;
+            }
             Notification.ShowNotificationInfo("green", $"New Master Password was set for {vaultName} vault!");
         }
     }
