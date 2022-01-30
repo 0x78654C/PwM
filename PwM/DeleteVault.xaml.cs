@@ -12,7 +12,7 @@ namespace PwM
         {
             InitializeComponent();
             string vault = Utils.GlobalVariables.vaultName;
-            notificationLBL.Text = $"Do you want tot delete {vault} vault?";
+            notificationLBL.Text = $"Do you want tot delete/remove {vault} vault?";
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
         }
