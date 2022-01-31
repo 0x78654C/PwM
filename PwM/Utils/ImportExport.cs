@@ -170,11 +170,5 @@ namespace PwM.Utils
             JsonManage.UpdateJsonFile(GlobalVariables.jsonPath, new VaultDetails { VaultName = vaultName, SharedPath = sharedPath });
             Notification.ShowNotificationInfo("green", $"{vaultName} vault was imported!");
         }
-
-        private class VaultDetails
-        {
-            public string VaultName { get; set; }
-            public string SharedPath { get; set; }
-        }
     }
 }
