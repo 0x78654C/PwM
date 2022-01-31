@@ -155,21 +155,23 @@ namespace PwM.Utils
             }
             if (File.Exists(GlobalVariables.jsonPath))
             {
-                string jsonData = File.ReadAllText(GlobalVariables.jsonPath);
-                if (jsonData.Length < 4 && string.IsNullOrEmpty(jsonData))
+                VaultDetails[] items;
+                try
+                {
+                    items = JsonManage.ReadJsonFromFile<VaultDetails[]>(GlobalVariables.jsonPath);
+                    FileInfo fileInfo;
+                    foreach (var item in items)
+                    {
+                        string vaultPathFile = Path.Combine(item.SharedPath, item.VaultName);
+                        fileInfo = new FileInfo(vaultPathFile);
+                        listView.Items.Add(new { Name = item.VaultName.Substring(0, item.VaultName.Length - 2), CreateDate = fileInfo.CreationTime, SharePoint = item.SharedPath });
+                    }
+                }
+                catch
                 {
                     Notification.ShowNotificationInfo("red", "Shared vault list is corrupted. Try import again the shared vaults!");
                     File.Delete(GlobalVariables.jsonPath);
                     return;
-                }
-
-                var items = JsonManage.ReadJsonFromFile<VaultDetails[]>(GlobalVariables.jsonPath);
-                FileInfo fileInfo;
-                foreach (var item in items)
-                {
-                    string vaultPathFile = Path.Combine(item.SharedPath, item.VaultName);
-                    fileInfo = new FileInfo(vaultPathFile);
-                    listView.Items.Add(new { Name = item.VaultName.Substring(0, item.VaultName.Length - 2), CreateDate = fileInfo.CreationTime, SharePoint = item.SharedPath });
                 }
             }
         }
