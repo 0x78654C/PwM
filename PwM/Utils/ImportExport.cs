@@ -19,6 +19,7 @@ namespace PwM.Utils
         /// <param name="vaultDirPath"></param>
         public static void Import(System.Windows.Controls.ListView vaultList, string vaultDirPath, bool sharedVault)
         {
+            GlobalVariables.closeAppConfirmation = false;
             s_openFileDialog.Filter = "Vault Files (*.x)|*.x";
             s_openFileDialog.Multiselect = true;
             s_openFileDialog.Title = "Select PwM vault files to Import";
@@ -71,7 +72,9 @@ namespace PwM.Utils
                 }
                 NotificaitonImport(count, vault, vaultOverwrite, copyOverwrite, copyClean);
                 VaultManagement.ListVaults(vaultDirPath, vaultList, sharedVault);
+                return;
             }
+            GlobalVariables.closeAppConfirmation = true;
         }
 
 
