@@ -42,7 +42,6 @@ namespace PwM
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
-
         }
 
         /// <summary>
@@ -284,7 +283,7 @@ namespace PwM
             {
                 VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
                 string item = vaultList.SelectedItem.ToString();
-                string vaultPath =VaultManagement.GetVaultPathFromList(vaultList);
+                string vaultPath = VaultManagement.GetVaultPathFromList(vaultList);
                 _vaultPath = vaultPath;
                 string vaultName = item.Split(',')[0].Replace("{ Name = ", "");
                 var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
@@ -310,7 +309,7 @@ namespace PwM
             }
         }
 
-        
+
         /// <summary>
         /// Clear applist, and all passwords boxes and text boxes from application tab, closes it and moves to vault tab.
         /// </summary>
@@ -523,13 +522,10 @@ namespace PwM
         /// <param name="listView"></param>
         private void PopulateListView(ListView listView)
         {
-            if (listView.Items.Count > 0)
+            listView.Items.Clear();
+            foreach (var item in GlobalVariables.listView.Items)
             {
-                listView.Items.Clear();
-                foreach (var item in GlobalVariables.listView.Items)
-                {
-                    listView.Items.Add(item);
-                }
+                listView.Items.Add(item);
             }
         }
 
