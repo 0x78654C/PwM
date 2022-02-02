@@ -207,9 +207,13 @@ namespace PwM.Utils
         /// <returns></returns>
         public static string GetVaultPathFromList(ListView listView)
         {
-            string item = listView.SelectedItem.ToString();
-            string vaultPath = item.Split(',')[2].Replace(" SharePoint = ", "");
-            vaultPath = vaultPath.Replace(" }", "");
+            string vaultPath=string.Empty;
+            if (listView.SelectedItem != null)
+            {
+                string item = listView.SelectedItem.ToString();
+                vaultPath = item.Split(',')[2].Replace(" SharePoint = ", "");
+                vaultPath = vaultPath.Replace(" }", "");
+            }
             return vaultPath;
         }
         /// <summary>
