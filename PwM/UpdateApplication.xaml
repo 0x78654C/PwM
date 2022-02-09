@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="PwM - Password Manager" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="214.998" Width="296" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
+        Title="PwM - Password Manager" Name="UpdateApplicationWPF" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="214.998" Width="296" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
 
     <Border BorderBrush="#690fc2" BorderThickness="1">
         <Grid Background="#f3f5f2" >
