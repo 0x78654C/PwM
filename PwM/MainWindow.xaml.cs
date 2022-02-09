@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace PwM
 {
@@ -25,6 +26,7 @@ namespace PwM
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
         private System.Windows.Threading.DispatcherTimer _dispatcherTimer;
+        private System.Windows.Threading.DispatcherTimer _dispatcherTimerCloseVault;
         public static System.Windows.Threading.DispatcherTimer s_masterPassCheckTimer;
         private string _vaultPath;
         Mutex MyMutex;
@@ -299,6 +301,7 @@ namespace PwM
                         tabControl.SelectedIndex = 1;
                         appListVaultLVL.Text = vaultName;
                         GlobalVariables.vaultOpen = true;
+                        StartTimerVaultClose();
                     }
                 }
             }
@@ -318,6 +321,8 @@ namespace PwM
         public void vaultCloseLBL_Click(object sender, RoutedEventArgs e)
         {
             VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            if (_dispatcherTimerCloseVault.IsEnabled)
+                _dispatcherTimerCloseVault.Stop();
         }
 
         /// <summary>
@@ -334,10 +339,48 @@ namespace PwM
             }
 
             Clipboard.SetText(AppManagement.CopyPassToClipBoard(appList));
-            _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+            _dispatcherTimer = new DispatcherTimer();
             _dispatcherTimer.Tick += dispatcherTimer_Tick;
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 15);
             _dispatcherTimer.Start();
+        }
+
+
+        /// <summary>
+        /// Timer start for innactivity check. Time set until close is 2h.
+        /// </summary>
+        private void StartTimerVaultClose()
+        {
+            _dispatcherTimerCloseVault = new DispatcherTimer();
+            _dispatcherTimerCloseVault.Tick += VaultCloseTimer;
+            _dispatcherTimerCloseVault.Interval = new TimeSpan(0, 1, 0);
+            _dispatcherTimerCloseVault.Start();
+        }
+
+        /// <summary>
+        /// Restart timer event. Used on applications actions to reset the inactivity timer.
+        /// </summary>
+        private void RestartTimerVaultClose()
+        {
+            if (_dispatcherTimerCloseVault.IsEnabled)
+                _dispatcherTimerCloseVault.Stop();
+            StartTimerVaultClose();
+        }
+
+        /// <summary>
+        /// Vault close event and opened window from PwM in that current state.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void VaultCloseTimer(object sender, EventArgs e)
+        {
+            string[] listOpenWindow = { "UpdateApplicationWPF", "AddApplicationWPF", "MasterPasswordWPF", "DelApplicationWpf" };
+            foreach (var window in listOpenWindow)
+            {
+                WindowCloser.CloseWindow(window);
+            }
+            VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            _dispatcherTimerCloseVault.Stop();
         }
 
         /// <summary>
@@ -359,6 +402,7 @@ namespace PwM
         /// <param name="e"></param>
         private void ShowPassword_Click(object sender, RoutedEventArgs e)
         {
+            RestartTimerVaultClose();
             AppManagement.ShowPassword(appList);
         }
 
@@ -412,6 +456,7 @@ namespace PwM
         /// <param name="e"></param>
         private void UpdateAccountPass_Click(object sender, RoutedEventArgs e)
         {
+            RestartTimerVaultClose();
             if (appList.SelectedIndex == -1)
             {
                 Notification.ShowNotificationInfo("orange", "You must select a application line for updateing account password!");
@@ -427,6 +472,7 @@ namespace PwM
         /// <param name="e"></param>
         private void AddAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            RestartTimerVaultClose();
             AddApplications addApplications = new AddApplications();
             addApplications.ShowDialog();
             if (GlobalVariables.closeAppConfirmation == false)
@@ -450,6 +496,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DelAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            RestartTimerVaultClose();
             AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text, _vaultPath);
         }
 
@@ -460,6 +507,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
+            RestartTimerVaultClose();
             AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text, _vaultPath);
         }
 
