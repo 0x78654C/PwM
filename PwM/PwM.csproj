@@ -126,6 +126,7 @@
     <Compile Include="Utils\TextPassBoxChanges.cs" />
     <Compile Include="Utils\VaultDetails.cs" />
     <Compile Include="Utils\VaultManagement.cs" />
+    <Compile Include="Utils\WindowCloser.cs" />
     <Page Include="AddApplications.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
