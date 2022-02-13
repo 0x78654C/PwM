@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Timers;
 
 namespace PwM
 {
@@ -25,9 +26,12 @@ namespace PwM
         private static string s_passwordManagerDirectory = GlobalVariables.passwordManagerDirectory;
         GridViewColumnHeader _lastHeaderClicked = null;
         ListSortDirection _lastDirection = ListSortDirection.Ascending;
-        private System.Windows.Threading.DispatcherTimer _dispatcherTimer;
-        private System.Windows.Threading.DispatcherTimer _dispatcherTimerCloseVault;
-        public static System.Windows.Threading.DispatcherTimer s_masterPassCheckTimer;
+        private DispatcherTimer _dispatcherTimer;
+        private DispatcherTimer _dispatcherTimerCloseVault;
+        private DispatcherTimer _dispatcherTimerElapsed;
+        private int _vaultCloseSesstionInterval = 60;
+        private int _vaultCloseSesstion;
+        public static DispatcherTimer s_masterPassCheckTimer;
         private string _vaultPath;
         Mutex MyMutex;
 
@@ -36,7 +40,7 @@ namespace PwM
             Application_Startup(); // Check if PwM is already running.
             InitializeComponent();
             InitializeVaultsDirectory(s_passwordManagerDirectory);
-            s_masterPassCheckTimer = new System.Windows.Threading.DispatcherTimer();
+            s_masterPassCheckTimer = new DispatcherTimer();
             versionLabel.Content = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
             VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList, false);
             userTXB.Text = " " + s_accountName;
@@ -44,6 +48,7 @@ namespace PwM
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
+            _vaultCloseSesstion = _vaultCloseSesstionInterval;
         }
 
         /// <summary>
@@ -321,8 +326,20 @@ namespace PwM
         public void vaultCloseLBL_Click(object sender, RoutedEventArgs e)
         {
             VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultCloseTimersStop();
+        }
+
+        /// <summary>
+        /// Close vault session and elapesed timer and hide warning message and icon.
+        /// </summary>
+        private void VaultCloseTimersStop()
+        {
             if (_dispatcherTimerCloseVault.IsEnabled)
                 _dispatcherTimerCloseVault.Stop();
+            if (_dispatcherTimerElapsed.IsEnabled)
+                _dispatcherTimerElapsed.Stop();
+            vaultExpireTb.Visibility = Visibility.Hidden;
+            vaultElapsed.Visibility = Visibility.Hidden;
         }
 
         /// <summary>
@@ -332,6 +349,7 @@ namespace PwM
         /// <param name="e"></param>
         private void CopyToClipboard_Click(object sender, RoutedEventArgs e)
         {
+            RestartTimerVaultClose();
             if (appList.SelectedIndex == -1)
             {
                 Notification.ShowNotificationInfo("orange", "You must select a application account for Copy to Clipboard option!");
@@ -355,6 +373,29 @@ namespace PwM
             _dispatcherTimerCloseVault.Tick += VaultCloseTimer;
             _dispatcherTimerCloseVault.Interval = new TimeSpan(0, 1, 0);
             _dispatcherTimerCloseVault.Start();
+
+            _dispatcherTimerElapsed = new DispatcherTimer();
+            _dispatcherTimerElapsed.Tick += DisplayElapsedTimeVaultClose;
+            _dispatcherTimerElapsed.Interval = new TimeSpan(0, 0, 1);
+            _dispatcherTimerElapsed.Start();
+        }
+
+        /// <summary>
+        /// Show warning message and icon when interval is less than a minute.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DisplayElapsedTimeVaultClose(object sender, EventArgs e)
+        {
+            _vaultCloseSesstion--;
+            if (_vaultCloseSesstion == 30)
+            {
+                vaultExpireTb.Visibility = Visibility.Visible;
+                vaultElapsed.Visibility = Visibility.Visible;
+                vaultExpireTb.Text = $"Vault will close in less than a \r\n" +
+                    $"minute if no action is made on it!";
+                _vaultCloseSesstion = _vaultCloseSesstionInterval;
+            }
         }
 
         /// <summary>
@@ -362,8 +403,7 @@ namespace PwM
         /// </summary>
         private void RestartTimerVaultClose()
         {
-            if (_dispatcherTimerCloseVault.IsEnabled)
-                _dispatcherTimerCloseVault.Stop();
+            VaultCloseTimersStop();
             StartTimerVaultClose();
         }
 
@@ -380,7 +420,7 @@ namespace PwM
                 WindowCloser.CloseWindow(window);
             }
             VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
-            _dispatcherTimerCloseVault.Stop();
+            VaultCloseTimersStop();
         }
 
         /// <summary>
