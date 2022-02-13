@@ -10,7 +10,7 @@ The ideea of creation for this Password Manager came from the simple fact to use
 
  - Create/Delete vaults
  - Import/Export vaults
- - Sared vaults
+ - Shared vaults
  - Change Master Password for vaults
  - Add/delete account for applications in vault
  - Update application account passwords
