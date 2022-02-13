@@ -130,6 +130,8 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     <ImageBrush ImageSource="pack://application:,,,/Resources/Menu.jpg"/>
                 </Grid.Background>
                 <Label Content="_____________________________________________________________________________" Foreground="#f3f5f2" HorizontalAlignment="Center" Margin="7,53,9,0" VerticalAlignment="Top" Height="26" Width="205"/>
+                <TextBlock Name="vaultExpireTb" Visibility="Hidden" Text="Vault Expire" Foreground="#f3f5f2" Background="Transparent" HorizontalAlignment="Center" Margin="30,593,12,0" VerticalAlignment="Top" Height="66" Width="179"/>
+                <materialDesign:PackIcon Name="vaultElapsed" Visibility="Hidden" Foreground="Orange" Kind="Warning" Margin="9,593,0,92" Width="18" Height="18" VerticalAlignment="Center"/>
                 <TextBlock Text=" user" Name="userTXB" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="15" Margin="8,50,10,626" Width="203"></TextBlock>
                 <ListViewItem  Name="appListVI" ToolTip="Applications" Height="39" Foreground="Red" FontSize="18" PreviewMouseDown="App_PreviewMouseDown" Margin="0,166,0,498" IsEnabled="False">
                     <StackPanel Orientation="Horizontal" >
