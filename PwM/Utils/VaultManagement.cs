@@ -196,7 +196,7 @@ namespace PwM.Utils
             GlobalVariables.masterPassword = null;
             GlobalVariables.vaultOpen = false;
             AppManagement.vaultSecure = null;
-            MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(masterPasswordTimer);;
+            MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(masterPasswordTimer);
             GC.Collect();
         }
 
