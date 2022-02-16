@@ -21,6 +21,7 @@ The ideea of creation for this Password Manager came from the simple fact to use
    (If in the 15 seconds interval is copied something else on clipboard, PwM will not clear the clipboard whe time expired or app is closed) 
  - After log in vault, master password required window will be prompted every 30 minutes if a action is made. Example: update password, delete account , etc.
  - Command line interface for Windows and Linux.
+ - Open vault session expires after a certain time if no action is made on it. Default: after 10 minutes.
 
 # How it works
 
@@ -39,6 +40,9 @@ The ideea of creation for this Password Manager came from the simple fact to use
   - Update account password: right click on account and choose update 'Update account password'. You will be prompted with a pop window to enter new password for account.
   - Show password: right click on account and choose update 'Show password'. Password will be visible on application list.
   - Copy to Clipboard: right click on account and choose update 'Copy to clipboard (15 seconds available)'. Password will be copied on clipboard for 15 seconds.
+
+  Settings:
+  - You can set the vault session expiration time. The default value is set on 10 minutes.
 
 # Usage of command line interface:
  
