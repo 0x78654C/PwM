@@ -112,6 +112,7 @@
       <DependentUpon>UpdatePassNotification.xaml</DependentUpon>
     </Compile>
     <Compile Include="Utils\AppManagement.cs" />
+    <Compile Include="Utils\VaultSessionExpire.cs" />
     <Compile Include="Utils\ClearVariables.cs" />
     <Compile Include="Utils\ClipBoardUtil.cs" />
     <Compile Include="Utils\Extensions.cs" />

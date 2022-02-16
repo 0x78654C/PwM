@@ -116,7 +116,7 @@ namespace PwM.Utils
                     ListVaults(GlobalVariables.passwordManagerDirectory, vaultsList, false);
                     return;
                 }
-                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonPath, f => f.Where(t => t.VaultName == vaultName + ".x" && t.SharedPath == vaultDirectory));
+                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonSharedVaults, f => f.Where(t => t.VaultName == vaultName + ".x" && t.SharedPath == vaultDirectory));
                 Notification.ShowNotificationInfo("green", $"Shared vault { vaultName} was removed from list!");
                 ListVaults(vaultDirectory, vaultsList, true);
             }
@@ -153,12 +153,12 @@ namespace PwM.Utils
                     listView.Items.Add(new { Name = file.Name.Substring(0, file.Name.Length - 2), CreateDate = file.CreationTime, SharePoint = "Local Stored" });
                 }
             }
-            if (File.Exists(GlobalVariables.jsonPath))
+            if (File.Exists(GlobalVariables.jsonSharedVaults))
             {
                 VaultDetails[] items;
                 try
                 {
-                    items = JsonManage.ReadJsonFromFile<VaultDetails[]>(GlobalVariables.jsonPath);
+                    items = JsonManage.ReadJsonFromFile<VaultDetails[]>(GlobalVariables.jsonSharedVaults);
                     FileInfo fileInfo;
                     foreach (var item in items)
                     {
@@ -170,7 +170,7 @@ namespace PwM.Utils
                 catch
                 {
                     Notification.ShowNotificationInfo("red", "Shared vault list is corrupted. Try import again the shared vaults!");
-                    File.Delete(GlobalVariables.jsonPath);
+                    File.Delete(GlobalVariables.jsonSharedVaults);
                     return;
                 }
             }
@@ -184,11 +184,12 @@ namespace PwM.Utils
         /// <param name="appListView"></param>
         /// <param name="appList"></param>
         /// <param name="tabControl"></param>
-        public static void VaultClose(ListViewItem vaultListView, ListViewItem appListView,
+        public static void VaultClose(ListViewItem vaultListView, ListViewItem appListView, ListViewItem settingsListView,
             ListView appList, TabControl tabControl, DispatcherTimer masterPasswordTimer)
         {
             ListViewSettings.SetListViewColor(vaultListView, false);
             ListViewSettings.SetListViewColorApp(appListView, true);
+            ListViewSettings.SetListViewColor(settingsListView, true);
             appList.Items.Clear();
             tabControl.SelectedIndex = 0;
             appListView.Foreground = Brushes.Red;

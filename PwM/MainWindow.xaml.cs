@@ -12,7 +12,6 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
-using System.Timers;
 
 namespace PwM
 {
@@ -21,7 +20,8 @@ namespace PwM
     /// </summary>
     public partial class MainWindow : Window
     {
-        private static readonly Regex _regex = new Regex("[^!-*.-]+");
+        private static readonly Regex s_regex = new Regex("[^!-*.-]+");
+        private static readonly Regex s_regexNumber = new Regex("[^0-9.-]+"); //regex that matches disallowed text
         private static readonly string s_accountName = Environment.UserName;
         private static string s_passwordManagerDirectory = GlobalVariables.passwordManagerDirectory;
         GridViewColumnHeader _lastHeaderClicked = null;
@@ -29,8 +29,7 @@ namespace PwM
         private DispatcherTimer _dispatcherTimer;
         private DispatcherTimer _dispatcherTimerCloseVault;
         private DispatcherTimer _dispatcherTimerElapsed;
-        private int _vaultCloseSesstionInterval = 60;
-        private int _vaultCloseSesstion;
+        private int _vaultCloseSesstion=0;
         public static DispatcherTimer s_masterPassCheckTimer;
         private string _vaultPath;
         Mutex MyMutex;
@@ -48,7 +47,7 @@ namespace PwM
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
-            _vaultCloseSesstion = _vaultCloseSesstionInterval;
+            VaultSessionExpire.LoadExpireTime(GlobalVariables.registryPath, GlobalVariables.vaultExpireReg, "10", expirePeriodTxT);
         }
 
         /// <summary>
@@ -217,13 +216,23 @@ namespace PwM
         {
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
+            ListViewSettings.SetListViewColorApp(settingsListVI, true);
             tabControl.SelectedIndex = 0;
         }
         private void App_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             ListViewSettings.SetListViewColor(vaultsListVI, true);
             ListViewSettings.SetListViewColorApp(appListVI, false);
+            ListViewSettings.SetListViewColorApp(settingsListVI, true);
             tabControl.SelectedIndex = 1;
+        }
+
+        private void Settings_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ListViewSettings.SetListViewColor(vaultsListVI, true);
+            ListViewSettings.SetListViewColorApp(appListVI, true);
+            ListViewSettings.SetListViewColorApp(settingsListVI, false);
+            tabControl.SelectedIndex = 2;
         }
         //--------------------
 
@@ -245,7 +254,7 @@ namespace PwM
         /// <returns></returns>
         private static bool IsTextAllowed(string text)
         {
-            return !_regex.IsMatch(text);
+            return !s_regex.IsMatch(text);
         }
 
         /// <summary>
@@ -288,7 +297,7 @@ namespace PwM
             var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
             {
-                VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
                 string item = vaultList.SelectedItem.ToString();
                 string vaultPath = VaultManagement.GetVaultPathFromList(vaultList);
                 _vaultPath = vaultPath;
@@ -302,6 +311,7 @@ namespace PwM
                         appListVI.IsEnabled = true;
                         appListVI.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
                         ListViewSettings.SetListViewColor(vaultsListVI, true);
+                        ListViewSettings.SetListViewColor(settingsListVI, true);
                         ListViewSettings.SetListViewColorApp(appListVI, false);
                         tabControl.SelectedIndex = 1;
                         appListVaultLVL.Text = vaultName;
@@ -325,7 +335,7 @@ namespace PwM
         /// <param name="e"></param>
         public void vaultCloseLBL_Click(object sender, RoutedEventArgs e)
         {
-            VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
             VaultCloseTimersStop();
         }
 
@@ -340,6 +350,7 @@ namespace PwM
                 _dispatcherTimerElapsed.Stop();
             vaultExpireTb.Visibility = Visibility.Hidden;
             vaultElapsed.Visibility = Visibility.Hidden;
+            _vaultCloseSesstion = GlobalVariables.vaultExpireInterval * 60;
         }
 
         /// <summary>
@@ -369,15 +380,18 @@ namespace PwM
         /// </summary>
         private void StartTimerVaultClose()
         {
+            _vaultCloseSesstion = GlobalVariables.vaultExpireInterval * 60;
+
             _dispatcherTimerCloseVault = new DispatcherTimer();
             _dispatcherTimerCloseVault.Tick += VaultCloseTimer;
-            _dispatcherTimerCloseVault.Interval = new TimeSpan(0, 1, 0);
+            _dispatcherTimerCloseVault.Interval = new TimeSpan(0, GlobalVariables.vaultExpireInterval, 0);
             _dispatcherTimerCloseVault.Start();
 
             _dispatcherTimerElapsed = new DispatcherTimer();
             _dispatcherTimerElapsed.Tick += DisplayElapsedTimeVaultClose;
             _dispatcherTimerElapsed.Interval = new TimeSpan(0, 0, 1);
             _dispatcherTimerElapsed.Start();
+
         }
 
         /// <summary>
@@ -388,13 +402,14 @@ namespace PwM
         private void DisplayElapsedTimeVaultClose(object sender, EventArgs e)
         {
             _vaultCloseSesstion--;
-            if (_vaultCloseSesstion == 30)
+
+            if (_vaultCloseSesstion < 60)
             {
                 vaultExpireTb.Visibility = Visibility.Visible;
                 vaultElapsed.Visibility = Visibility.Visible;
                 vaultExpireTb.Text = $"Vault will close in less than a \r\n" +
                     $"minute if no action is made on it!";
-                _vaultCloseSesstion = _vaultCloseSesstionInterval;
+                _vaultCloseSesstion = GlobalVariables.vaultExpireInterval * 60;
             }
         }
 
@@ -419,7 +434,7 @@ namespace PwM
             {
                 WindowCloser.CloseWindow(window);
             }
-            VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
             VaultCloseTimersStop();
         }
 
@@ -456,7 +471,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+                    VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
                     break;
             }
         }
@@ -471,7 +486,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
             }
         }
 
@@ -558,7 +573,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DeleteVault_Click(object sender, RoutedEventArgs e)
         {
-            VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
             VaultManagement.DeleteVaultItem(vaultList, VaultManagement.GetVaultPathFromList(vaultList));
         }
 
@@ -584,7 +599,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DelVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            VaultManagement.VaultClose(vaultsListVI, appListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
             VaultManagement.DeleteVaultItem(vaultList, VaultManagement.GetVaultPathFromList(vaultList));
         }
 
@@ -662,6 +677,46 @@ namespace PwM
         private void Pwm_Closing(object sender, CancelEventArgs e)
         {
             ClipBoardUtil.ClearClipboard(GlobalVariables.accountPassword);
+        }
+
+        /// <summary>
+        /// Check text if contains numbers only.
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        private static bool IsNumberAllowed(string text)
+        {
+            return !s_regexNumber.IsMatch(text);
+        }
+
+        /// <summary>
+        /// Apply expiration time for vault open session.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void applyExpirePeriodBTN_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (expirePeriodTxT.Text.Length > 0 && !expirePeriodTxT.Text.StartsWith("0"))
+                {
+                    if (IsNumberAllowed(expirePeriodTxT.Text) && !expirePeriodTxT.Text.Contains("-"))
+                    {
+                        int expireTime = Int32.Parse(expirePeriodTxT.Text);
+                        RegistryManagement.RegKey_WriteSubkey(GlobalVariables.registryPath, GlobalVariables.vaultExpireReg, expirePeriodTxT.Text);
+                        GlobalVariables.vaultExpireInterval = expireTime;
+                        Notification.ShowNotificationInfo("green", $"Vault session expire time is set to {expirePeriodTxT.Text} minutes!");
+                        return;
+                    }
+                    Notification.ShowNotificationInfo("orange", "Numbers only are allowed!");
+                    return;
+                }
+                Notification.ShowNotificationInfo("orange", "You must type a vaule greather than 0 !");
+            }
+            catch (Exception x)
+            {
+                Notification.ShowNotificationInfo("red", x.Message);
+            }
         }
     }
 }
