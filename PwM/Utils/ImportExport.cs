@@ -42,7 +42,7 @@ namespace PwM.Utils
                         string vaultPwMLocation = vaultDirPath + vault;
                         if (sharedVault)
                         {
-                            AddSharedVault(GlobalVariables.jsonPath, vault, vaultPath);
+                            AddSharedVault(GlobalVariables.jsonSharedVaults, vault, vaultPath);
                         }
                         else
                         {
@@ -170,7 +170,7 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("orange", $"Shared vault {vaultName} is already added to list!");
                 return;
             }
-            JsonManage.UpdateJsonFile(GlobalVariables.jsonPath, new VaultDetails { VaultName = vaultName, SharedPath = sharedPath });
+            JsonManage.UpdateJsonFile(GlobalVariables.jsonSharedVaults, new VaultDetails { VaultName = vaultName, SharedPath = sharedPath });
             Notification.ShowNotificationInfo("green", $"{vaultName} vault was imported!");
         }
     }
