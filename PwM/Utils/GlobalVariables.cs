@@ -29,8 +29,10 @@ namespace PwM.Utils
         private static string s_rootPath = Path.GetPathRoot(Environment.SystemDirectory);
         private static readonly string s_accountName = Environment.UserName;
         public static readonly string passwordManagerDirectory = $"{s_rootPath}Users\\{s_accountName}\\AppData\\Local\\PwM\\";
-        public static readonly string registryPath = @"HKEY_CURRENT_USER\SOFTWARE\PwM";
-        public static readonly string jsonPath = Path.Combine(passwordManagerDirectory, "PwM.Json");
+        public static readonly string registryPath = "SOFTWARE\\PwM";
+        public static readonly string jsonSharedVaults = Path.Combine(passwordManagerDirectory, "PwM.Json");
+        public static readonly string vaultExpireReg = "VaultExpireSession";
+        public static int vaultExpireInterval { get; set; }
         public static ListView listView = new ListView();
     }
 }
