@@ -18,11 +18,15 @@ namespace PwM.Utils
             try
             {
                 string value = RegistryManagement.RegKey_Read("HKEY_CURRENT_USER\\"+registryPath, key);
-                expireTime = Int32.Parse(value);
-                if (expireTime >= 1)
+                if (!string.IsNullOrEmpty(value))
                 {
-                    periodBox.Text = value;
-                    GlobalVariables.vaultExpireInterval = expireTime;
+                    expireTime = Int32.Parse(value);
+                    if (expireTime >= 1)
+                    {
+                        periodBox.Text = value;
+                        GlobalVariables.vaultExpireInterval = expireTime;
+                        return;
+                    }
                     return;
                 }
                 RegistryManagement.RegKey_CreateKey(registryPath, key, keyValue);
