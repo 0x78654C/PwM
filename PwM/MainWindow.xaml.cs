@@ -82,6 +82,7 @@ namespace PwM
         /// <param name="e"></param>
         private void AppListColumnHeaderClickedHandler(object sender, RoutedEventArgs e)
         {
+            RestartTimerVaultClose();
             GridViewColumnHeader headerClicked = e.OriginalSource as GridViewColumnHeader;
             ListSortDirection direction;
 
@@ -344,13 +345,16 @@ namespace PwM
         /// </summary>
         private void VaultCloseTimersStop()
         {
-            if (_dispatcherTimerCloseVault.IsEnabled)
-                _dispatcherTimerCloseVault.Stop();
-            if (_dispatcherTimerElapsed.IsEnabled)
-                _dispatcherTimerElapsed.Stop();
-            vaultExpireTb.Visibility = Visibility.Hidden;
-            vaultElapsed.Visibility = Visibility.Hidden;
-            _vaultCloseSesstion = GlobalVariables.vaultExpireInterval * 60;
+            if (_dispatcherTimerCloseVault != null)
+            {
+                if (_dispatcherTimerCloseVault.IsEnabled)
+                    _dispatcherTimerCloseVault.Stop();
+                if (_dispatcherTimerElapsed.IsEnabled)
+                    _dispatcherTimerElapsed.Stop();
+                vaultExpireTb.Visibility = Visibility.Hidden;
+                vaultElapsed.Visibility = Visibility.Hidden;
+                _vaultCloseSesstion = GlobalVariables.vaultExpireInterval * 60;
+            }
         }
 
         /// <summary>
@@ -472,6 +476,7 @@ namespace PwM
             {
                 case PowerModes.Suspend:
                     VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
+                    VaultCloseTimersStop();
                     break;
             }
         }
@@ -487,6 +492,7 @@ namespace PwM
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
                 VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
+                VaultCloseTimersStop();
             }
         }
 
@@ -573,6 +579,7 @@ namespace PwM
         /// <param name="e"></param>
         private void DeleteVault_Click(object sender, RoutedEventArgs e)
         {
+            VaultCloseTimersStop();
             VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
             VaultManagement.DeleteVaultItem(vaultList, VaultManagement.GetVaultPathFromList(vaultList));
         }
