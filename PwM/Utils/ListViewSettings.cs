@@ -1,4 +1,5 @@
-﻿using System.Windows.Controls;
+﻿using System.ComponentModel;
+using System.Windows.Controls;
 using System.Windows.Media;
 
 namespace PwM.Utils
@@ -40,6 +41,18 @@ namespace PwM.Utils
                 }
                 listViewItem.Background = (Brush)converter.ConvertFromString("#6f2be3");
             }
+        }
+
+        /// <summary>
+        /// List view sorting ascending by column name.
+        /// </summary>
+        /// <param name="listView"></param>
+        /// <param name="liveSort"></param>
+        public static void ListViewSortSetting(ListView listView,string columnName, bool liveSort)
+        {
+            listView.Items.SortDescriptions.Add(new SortDescription(columnName, ListSortDirection.Ascending));
+            listView.Items.IsLiveSorting = liveSort;
+            listView.Items.LiveSortingProperties.Add(columnName);
         }
     }
 }
