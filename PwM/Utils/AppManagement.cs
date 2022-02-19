@@ -365,7 +365,10 @@ namespace PwM.Utils
                 }
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
             }
+            ListViewSettings.ListViewSortSetting(listView, "site/application", false);
         }
+
+
 
         /// <summary>
         /// Show password function for right click context menu event on applist.
@@ -427,9 +430,7 @@ namespace PwM.Utils
                 listView.Items.Add(item);
             }
             tempListView.Items.Clear();
-            listView.Items.SortDescriptions.Add(new SortDescription("site/application", ListSortDirection.Ascending));
-            listView.Items.IsLiveSorting = true;
-            listView.Items.LiveSortingProperties.Add("site/application");
+            ListViewSettings.ListViewSortSetting(listView, "site/application", false);
         }
 
         /// <summary>
@@ -580,6 +581,7 @@ namespace PwM.Utils
                     ClearVariables.VariablesClear();
                 }
             }
+            ListViewSettings.ListViewSortSetting(listView, "site/application", false);
         }
     }
 }
