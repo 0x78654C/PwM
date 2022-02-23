@@ -14,7 +14,7 @@ namespace PwM.Utils
     {
         private static JavaScriptSerializer s_serializer;
         public static SecureString vaultSecure = null;
-        private static string passMask = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
+        private static string passMask = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
 
         /// <summary>
         /// Decrypt vault and populate applist with applications info.
@@ -159,6 +159,7 @@ namespace PwM.Utils
                 }
             }
             Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
+            ListViewSettings.ListViewSortSetting(listView, "site/application", false);
         }
 
         /// <summary>
@@ -516,6 +517,7 @@ namespace PwM.Utils
             {
                 Notification.ShowNotificationInfo("orange", "You must select an application to delete!");
             }
+            ListViewSettings.ListViewSortSetting(listView, "site/application", false);
         }
 
         /// <summary>
