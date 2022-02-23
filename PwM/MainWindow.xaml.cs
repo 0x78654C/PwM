@@ -63,6 +63,7 @@ namespace PwM
             }
         }
 
+
         /// <summary>
         /// Create vaults directory.
         /// </summary>
@@ -318,6 +319,7 @@ namespace PwM
                         appListVaultLVL.Text = vaultName;
                         GlobalVariables.vaultOpen = true;
                         StartTimerVaultClose();
+                        Sort("Application", appList, ListSortDirection.Ascending);
                     }
                 }
             }
