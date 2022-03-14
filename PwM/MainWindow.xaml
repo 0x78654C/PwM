@@ -61,9 +61,21 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                             </ListView.View>
                             <ListView.ContextMenu>
                                 <ContextMenu HasDropShadow="False" StaysOpen="True" >
-                                    <MenuItem Header="Export Vault" Click="ExportVault_Click" Foreground="Black" Tag="2" />
-                                    <MenuItem Header="Change Master Password" Click="ChangeMasterPassword_Click" Foreground="Black" Tag="2" />
-                                    <MenuItem Header="Delete/Remove Vault" Click="DeleteVault_Click" Foreground="Red" Tag="2" />
+                                    <MenuItem  Header="Export Vault" Click="ExportVault_Click" Foreground="Black" Tag="2" >
+                                        <MenuItem.Icon>
+                                            <materialDesign:PackIcon Name="export" Kind="Export"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Change Master Password" Click="ChangeMasterPassword_Click" Foreground="Black" Tag="2" >
+                                        <MenuItem.Icon>
+                                            <materialDesign:PackIcon Name="change" Kind="PasswordAdd"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Delete/Remove Vault" Click="DeleteVault_Click" Foreground="Red" Tag="2" >
+                                        <MenuItem.Icon>
+                                            <materialDesign:PackIcon Name="delete" Kind="Delete"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
@@ -80,6 +92,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 <TabItem Name="appTab" Header="appTab">
                     <Grid Background="#f3f5f2">
                         <ListView Name="appList" GridViewColumnHeader.Click="AppListColumnHeaderClickedHandler" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="522" Margin="21,56,21,0" VerticalAlignment="Top" Width="805" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" SelectionMode="Single">
+
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
                                     <GridViewColumn Header="Application" Width="264" DisplayMemberBinding="{Binding Application}"/>
@@ -89,10 +102,26 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                             </ListView.View>
                             <ListView.ContextMenu>
                                 <ContextMenu HasDropShadow="False" StaysOpen="True" >
-                                    <MenuItem Header="Copy to clipboard (15 seconds available)" Click="CopyToClipboard_Click" Tag="1" />
-                                    <MenuItem Header="Show Password" Click="ShowPassword_Click" Tag="2" />
-                                    <MenuItem Header="Update Account Password" Click="UpdateAccountPass_Click" Tag="2" />
-                                    <MenuItem Header="Delete Account" Click="DeleteAccount_Click" Foreground="Red" Tag="2" />
+                                    <MenuItem Header="Copy to clipboard (15 seconds available)" Click="CopyToClipboard_Click" Tag="1" >
+                                        <MenuItem.Icon>
+                                            <materialDesign:PackIcon Name="copy" Kind="ContentCopy"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Show Password" Click="ShowPassword_Click" Tag="2" >
+                                        <MenuItem.Icon>
+                                            <materialDesign:PackIcon Name="show" Kind="Show"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Update Account Password" Click="UpdateAccountPass_Click" Tag="2" >
+                                        <MenuItem.Icon>
+                                            <materialDesign:PackIcon Name="update" Kind="PasswordAdd"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
+                                    <MenuItem Header="Delete Account" Click="DeleteAccount_Click" Foreground="Red" Tag="2" >
+                                        <MenuItem.Icon>
+                                            <materialDesign:PackIcon Name="del" Kind="Delete"/>
+                                        </MenuItem.Icon>
+                                    </MenuItem>
                                 </ContextMenu>
                             </ListView.ContextMenu>
                         </ListView>
@@ -112,7 +141,7 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                         <Label Content="_________________________________________________________________________________________" HorizontalAlignment="Center" Margin="12,30,10,0" VerticalAlignment="Top" Height="26" Width="825" Foreground="Red" />
                         <Label Content="Vault Session Expire Period" HorizontalAlignment="Left" Margin="21,23,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="16" FontWeight="Bold"/>
                         <Label Content="Expire after(minutes):" HorizontalAlignment="Left" Margin="17,49,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="16" Height="30"/>
-                        <TextBox Background="#f3f5f2" Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="" TextAlignment="Center" x:Name="expirePeriodTxT" HorizontalAlignment="Left" Height="23" Margin="177,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="57">
+                        <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="" TextAlignment="Center" x:Name="expirePeriodTxT" HorizontalAlignment="Left" Height="23" Margin="177,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="57">
                             <adorners:Watermark.TextStyle>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Opacity" Value="0.5" />
