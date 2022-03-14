@@ -3,119 +3,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-
-        <Style x:Key="RoundCorner" TargetType="{x:Type Button}">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="1"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid x:Name="grid">
-                            <Border x:Name="border" CornerRadius="8" BorderBrush="White" BorderThickness="2">
-                                <Border.Background>
-                                    <RadialGradientBrush GradientOrigin="0.496,1.052">
-                                        <RadialGradientBrush.RelativeTransform>
-                                            <TransformGroup>
-                                                <ScaleTransform CenterX="0.5" CenterY="0.5" 
-                                                        ScaleX="1.5" ScaleY="1.5"/>
-                                                <TranslateTransform X="0.02" Y="0.3"/>
-                                            </TransformGroup>
-                                        </RadialGradientBrush.RelativeTransform>
-                                        <GradientStop Offset="1" Color="#690fc2"/>
-
-                                    </RadialGradientBrush>
-                                </Border.Background>
-                                <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
-                                          TextElement.FontWeight="Bold">
-                                </ContentPresenter>
-                            </Border>
-
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
-                                            <RadialGradientBrush.RelativeTransform>
-                                                <TransformGroup>
-                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
-                                                    <TranslateTransform X="0.02" Y="0.3"/>
-                                                </TransformGroup>
-                                            </RadialGradientBrush.RelativeTransform>
-                                            <GradientStop Color="#00000000" Offset="1"/>
-                                            <GradientStop Color="#FF303030" Offset="0.3"/>
-                                        </RadialGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" TargetName="border" Value="#c20faa"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
-                            </Trigger>
-
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
         <Style x:Key="RoundCorner2" TargetType="{x:Type Button}">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="1"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid x:Name="grid">
-                            <Border x:Name="border" BorderBrush="White" BorderThickness="2">
-                                <Border.Background>
-                                    <RadialGradientBrush GradientOrigin="0.496,1.052">
-                                        <RadialGradientBrush.RelativeTransform>
-                                            <TransformGroup>
-                                                <ScaleTransform CenterX="1.5" CenterY="1.5" 
-                                                        ScaleX="1.5" ScaleY="1.5"/>
-                                                <TranslateTransform X="0.02" Y="0.3"/>
-                                            </TransformGroup>
-                                        </RadialGradientBrush.RelativeTransform>
-                                        <GradientStop Offset="1" Color="#6f2be3"/>
-
-                                    </RadialGradientBrush>
-                                </Border.Background>
-                                <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
-                                          TextElement.FontWeight="Bold">
-                                </ContentPresenter>
-                            </Border>
-
-                        </Grid>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="border" Background="#690fc2" BorderThickness="0">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="7" Direction="330" Color="Black" ShadowDepth="4" Opacity="0.3"></DropShadowEffect>
+                            </Border.Effect>
+                            <ContentPresenter x:Name="cp" Content="{TemplateBinding Content}" HorizontalAlignment="Center" VerticalAlignment="Center" TextBlock.Foreground="White"></ContentPresenter>
+                        </Border>
                         <ControlTemplate.Triggers>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
-                                            <RadialGradientBrush.RelativeTransform>
-                                                <TransformGroup>
-                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
-                                                    <TranslateTransform X="0.02" Y="0.3"/>
-                                                </TransformGroup>
-                                            </RadialGradientBrush.RelativeTransform>
-                                            <GradientStop Color="#00000000" Offset="1"/>
-                                            <GradientStop Color="#FF303030" Offset="0.3"/>
-                                        </RadialGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="border" Property="Background" Value="#E0F2F1"></Setter>
+                                <Setter TargetName="cp" Property="TextBlock.Foreground" Value="Gray"></Setter>
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" TargetName="border" Value="blue"/>
+                                <Setter TargetName="border" Property="Background" Value="#9F0FC3"></Setter>
+                                <Setter TargetName="cp" Property="TextBlock.Foreground" Value="White"></Setter>
                             </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="border" Property="Background" Value="#8D0FC3"></Setter>
+                                <Setter TargetName="cp" Property="TextBlock.Foreground" Value="White"></Setter>
                             </Trigger>
-
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
@@ -169,65 +79,6 @@
                             </Trigger>
                             <Trigger Property="IsMouseOver" Value="True">
                                 <Setter Property="BorderBrush" TargetName="border" Value="#ebd3f2"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
-                            </Trigger>
-
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="StartButton" TargetType="{x:Type Button}">
-            <Setter Property="HorizontalContentAlignment" Value="Center"/>
-            <Setter Property="VerticalContentAlignment" Value="Center"/>
-            <Setter Property="Padding" Value="1"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type Button}">
-                        <Grid x:Name="grid">
-                            <Border x:Name="border" CornerRadius="60" BorderBrush="White" BorderThickness="2">
-                                <Border.Background>
-                                    <RadialGradientBrush GradientOrigin="0.496,1.052">
-                                        <RadialGradientBrush.RelativeTransform>
-                                            <TransformGroup>
-                                                <ScaleTransform CenterX="1.5" CenterY="1.5" 
-                                                        ScaleX="1.5" ScaleY="1.5"/>
-                                                <TranslateTransform X="0.02" Y="0.3"/>
-                                            </TransformGroup>
-                                        </RadialGradientBrush.RelativeTransform>
-                                        <GradientStop Offset="1" Color="#690fc2"/>
-
-                                    </RadialGradientBrush>
-                                </Border.Background>
-                                <ContentPresenter HorizontalAlignment="Center"
-                                          VerticalAlignment="Center"
-                                          TextElement.FontWeight="Bold">
-                                </ContentPresenter>
-                            </Border>
-
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
-                                            <RadialGradientBrush.RelativeTransform>
-                                                <TransformGroup>
-                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
-                                                    <TranslateTransform X="0.02" Y="0.3"/>
-                                                </TransformGroup>
-                                            </RadialGradientBrush.RelativeTransform>
-                                            <GradientStop Color="#00000000" Offset="1"/>
-                                            <GradientStop Color="#FF303030" Offset="0.3"/>
-                                        </RadialGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="BorderBrush" TargetName="border" Value="#c20faa"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
                                 <Setter Property="Opacity" TargetName="grid" Value="0.25"/>
