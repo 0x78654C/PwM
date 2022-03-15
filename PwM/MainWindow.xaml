@@ -51,12 +51,38 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
             <TabControl Name="tabControl" HorizontalAlignment="Left" Height="693" Margin="220,10,0,0" VerticalAlignment="Top" Width="853">
                 <TabItem Name="vaultTab" Header="vaultTab">
                     <Grid Background="#f3f5f2">
-                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="490" Margin="21,81,22,0" VerticalAlignment="Top" Width="804" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" SelectionMode="Single">
+                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="490" Margin="21,81,22,0" VerticalAlignment="Top" Width="804" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" SelectionMode="Single">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
+                    BorderThickness="{TemplateBinding BorderThickness}" 
+                    Background="{TemplateBinding Background}" 
+                    Padding="{TemplateBinding Padding}"
+                    SnapsToDevicePixels="true">
+                                                    <GridViewRowPresenter 
+                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="true">
+                                            <Setter Property="Background" Value="#B5A2FF"/>
+                                            <Setter Property="Foreground" Value="Black"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
-                                    <GridViewColumn Header="Vault Name" Width="264" DisplayMemberBinding="{Binding Name}"/>
-                                    <GridViewColumn Header="Creation Date" Width="264" DisplayMemberBinding="{Binding CreateDate}"/>
-                                    <GridViewColumn Header="Shared Vault Path" Width="264" DisplayMemberBinding="{Binding SharePoint}"/>
+                                    <GridViewColumn Header="Vault Name" Width="266" DisplayMemberBinding="{Binding Name}"/>
+                                    <GridViewColumn Header="Creation Date" Width="266" DisplayMemberBinding="{Binding CreateDate}"/>
+                                    <GridViewColumn Header="Shared Vault Path" Width="266" DisplayMemberBinding="{Binding SharePoint}"/>
                                 </GridView>
                             </ListView.View>
                             <ListView.ContextMenu>
@@ -91,12 +117,37 @@ xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 </TabItem>
                 <TabItem Name="appTab" Header="appTab">
                     <Grid Background="#f3f5f2">
-                        <ListView Name="appList" GridViewColumnHeader.Click="AppListColumnHeaderClickedHandler" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Auto" Height="522" Margin="21,56,21,0" VerticalAlignment="Top" Width="805" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" SelectionMode="Single">
-
+                        <ListView Name="appList"  GridViewColumnHeader.Click="AppListColumnHeaderClickedHandler" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="522" Margin="21,56,21,0" VerticalAlignment="Top" Width="805" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" SelectionMode="Single">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
+                    BorderThickness="{TemplateBinding BorderThickness}" 
+                    Background="{TemplateBinding Background}" 
+                    Padding="{TemplateBinding Padding}"
+                    SnapsToDevicePixels="true">
+                                                    <GridViewRowPresenter 
+                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="true">
+                                            <Setter Property="Background" Value="#B5A2FF"/>
+                                            <Setter Property="Foreground" Value="Black"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </ListView.ItemContainerStyle>
                             <ListView.View>
                                 <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
-                                    <GridViewColumn Header="Application" Width="264" DisplayMemberBinding="{Binding Application}"/>
-                                    <GridViewColumn Header="Account" Width="264" DisplayMemberBinding="{Binding Account}"/>
+                                    <GridViewColumn Header="Application" Width="266" DisplayMemberBinding="{Binding Application}"/>
+                                    <GridViewColumn Header="Account" Width="266" DisplayMemberBinding="{Binding Account}"/>
                                     <GridViewColumn Header="Password" Width="266" DisplayMemberBinding="{Binding Password}"/>
                                 </GridView>
                             </ListView.View>
