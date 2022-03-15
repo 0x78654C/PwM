@@ -12,8 +12,8 @@
         <Grid Background="#f3f5f2" >
             <Grid VerticalAlignment="Top" Height="39" Background="#551cc7" >
                 <TextBlock Text="Add Applications" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="18" Margin="30,6,22,4" Width="181" RenderTransformOrigin="0.5,0.5"/>
-
-                <Label x:Name="closeLBL" Content="x" FontSize="20" Foreground="#f3f5f2" HorizontalAlignment="Right" Margin="0,0,3,-7" VerticalAlignment="Top" Height="46" PreviewMouseDown="closeLBL_PreviewMouseDown" FontFamily="Verdana" />
+                <materialDesign:PackIcon Name="vaultIcon" Foreground="#f3f5f2" PreviewMouseDown="closeLBL_PreviewMouseDown" Kind="Close" Margin="205,7,0,9" Width="28" Height="23" VerticalAlignment="Center"/>
+                <Label Content="  " ToolTip="Close" HorizontalAlignment="Left" Margin="207,8,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="closeLBL_PreviewMouseDown" Width="22" />
             </Grid>
             <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="Application Name" TextAlignment="Center" x:Name="appNameTXT" HorizontalAlignment="Left" Height="30" Margin="28,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" TextChanged="appNameTXT_TextChanged">
                 <adorners:Watermark.TextStyle>

@@ -13,9 +13,8 @@
         <Grid Background="#f3f5f2" >
             <Grid VerticalAlignment="Top" Height="39" Background="#551cc7" >
                 <TextBlock Text="Update Account Password" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="16" Margin="16,8,32,2" Width="185" RenderTransformOrigin="0.5,0.5"/>
-
-                <Label x:Name="closeLBL" Content="x" FontSize="20" Foreground="#f3f5f2" HorizontalAlignment="Right" Margin="0,0,3,-7" VerticalAlignment="Top" Height="46" PreviewMouseDown="closeLBL_PreviewMouseDown" FontFamily="Verdana" />
-
+                <materialDesign:PackIcon Name="vaultIcon" Foreground="#f3f5f2" PreviewMouseDown="closeLBL_PreviewMouseDown" Kind="Close" Margin="264,8,0,8" Width="28" Height="23" VerticalAlignment="Center"/>
+                <Label Content="  " ToolTip="Close" HorizontalAlignment="Left" Margin="267,9,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="closeLBL_PreviewMouseDown" Width="22" />
             </Grid>
             <TextBlock Text="Application:" Name="ApplicationTXT" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#464747" FontSize="13" Margin="5,61,211,132" Width="77" RenderTransformOrigin="0.5,0.5" FontWeight="Bold"/>
             <TextBlock Text="Account:" Name="AccountTXT" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#464747" FontSize="13" Margin="27,92,211,101" Width="55" RenderTransformOrigin="0.5,0.5" FontWeight="Bold"/>

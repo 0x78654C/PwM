@@ -15,7 +15,8 @@
             <Button Name="LocalBtn" Foreground="#FFE1DDEE" Style="{DynamicResource RoundCorner2}"  Content="Local" HorizontalAlignment="Left" Margin="54,152,0,0" VerticalAlignment="Top" Width="89" Height="36" Click="LocalBtn_Click" IsDefault="True"/>
             <Button Name="SharedBtn" Foreground="#FFE1DDEE" Style="{DynamicResource RoundCorner2}"  Content="Shared" HorizontalAlignment="Left" Margin="240,152,0,0" VerticalAlignment="Top" Width="89" Height="36" Click="SharedBtn_Click" IsDefault="True"/>
             <TextBox Name="notificationLBL" IsReadOnly="True" Background="#f3f5f2"  BorderThickness="0" Text="Do you want the vault to be locally imported or to use as shared?" HorizontalAlignment="Left" Margin="21,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" Height="97" TextWrapping="Wrap" AcceptsReturn="True" RenderTransformOrigin="0.469,1.118" Width="341"/>
-            <Label x:Name="CloseLbl" Content="X" FontSize="18" Foreground="#FFE1DDE2" HorizontalAlignment="Right" Margin="0,1,4,0" VerticalAlignment="Top" Height="46" PreviewMouseDown="CloseLbl_PreviewMouseDown" />
+            <materialDesign1:PackIcon Name="vaultIcon" Foreground="#f3f5f2" PreviewMouseDown="CloseLbl_PreviewMouseDown" Kind="Close" Margin="350,8,0,167" Width="28" Height="23" VerticalAlignment="Center"/>
+            <Label Content="  " ToolTip="Close" HorizontalAlignment="Left" Margin="352,9,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="CloseLbl_PreviewMouseDown" Width="22" />
         </Grid>
     </Border>
 </Window>
