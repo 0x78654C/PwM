@@ -581,8 +581,12 @@ namespace PwM
         /// <param name="e"></param>
         private void DeleteVault_Click(object sender, RoutedEventArgs e)
         {
+            if (GlobalVariables.vaultOpen)
+            {
+                Notification.ShowNotificationInfo("orange", "You cannot delete when a vault is open!");
+                return;
+            }
             VaultCloseTimersStop();
-            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
             VaultManagement.DeleteVaultItem(vaultList, VaultManagement.GetVaultPathFromList(vaultList));
         }
 
@@ -608,7 +612,11 @@ namespace PwM
         /// <param name="e"></param>
         private void DelVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
+            if (GlobalVariables.vaultOpen)
+            {
+                Notification.ShowNotificationInfo("orange", "You cannot delete when a vault is open!");
+                return;
+            }
             VaultManagement.DeleteVaultItem(vaultList, VaultManagement.GetVaultPathFromList(vaultList));
         }
 
@@ -619,6 +627,11 @@ namespace PwM
         /// <param name="e"></param>
         private void ImportVaultIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
+            if (GlobalVariables.vaultOpen)
+            {
+                Notification.ShowNotificationInfo("orange", "You cannot import when a vault is open!");
+                return;
+            }
             ImportShared importShared = new ImportShared();
             importShared.ShowDialog();
             if (GlobalVariables.closeAppConfirmation == false)
@@ -649,6 +662,11 @@ namespace PwM
         /// <param name="e"></param>
         private void ExportVault_Click(object sender, RoutedEventArgs e)
         {
+            if (GlobalVariables.vaultOpen)
+            {
+                Notification.ShowNotificationInfo("orange", "You cannot export when a vault is open!");
+                return;
+            }
             ImportExport.Export(vaultList, s_passwordManagerDirectory);
         }
 
@@ -667,7 +685,7 @@ namespace PwM
             GlobalVariables.vaultName = VaultManagement.GetVaultNameFromListView(vaultList);
             if (GlobalVariables.vaultOpen)
             {
-                Notification.ShowNotificationInfo("orange", "You cannot change Master Password when vault is open!");
+                Notification.ShowNotificationInfo("orange", "You cannot change Master Password when a vault is open!");
                 return;
             }
             MPasswordChanger mPasswordChanger = new MPasswordChanger();
