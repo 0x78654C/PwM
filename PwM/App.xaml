@@ -4,8 +4,6 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
 
-       
-
         <Style x:Key="RoundCorner2" TargetType="{x:Type Button}">
             <Setter Property="Template">
                 <Setter.Value>
