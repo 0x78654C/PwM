@@ -228,10 +228,13 @@ If you like this application and want to support the project you can always buy 
             int filesCount = getFiles.Count();
             foreach (var file in getFiles)
             {
-                FileInfo fileInfo = new FileInfo(file);
-                string vaultName = fileInfo.Name.Substring(0, fileInfo.Name.Length - 2);
-                outFiles += "----------------\n";
-                outFiles += vaultName + Environment.NewLine;
+                if (file.EndsWith(".x"))
+                {
+                    FileInfo fileInfo = new FileInfo(file);
+                    string vaultName = fileInfo.Name.Substring(0, fileInfo.Name.Length - 2);
+                    outFiles += "----------------\n";
+                    outFiles += vaultName + Environment.NewLine;
+                }
             }
             if (filesCount == 0)
             {
