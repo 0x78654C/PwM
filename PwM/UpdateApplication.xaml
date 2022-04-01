@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="PwM - Password Manager" Name="UpdateApplicationWPF" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="214.998" Width="296" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
+        Title="PwM - Password Manager" Name="UpdateApplicationWPF" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="235.559" Width="296" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
 
     <Border BorderBrush="#690fc2" BorderThickness="1">
         <Grid Background="#f3f5f2" >
@@ -19,8 +19,8 @@
             <TextBlock Text="Application:" Name="ApplicationTXT" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#464747" FontSize="13" Margin="5,61,211,132" Width="77" RenderTransformOrigin="0.5,0.5" FontWeight="Bold"/>
             <TextBlock Text="Account:" Name="AccountTXT" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#464747" FontSize="13" Margin="27,92,211,101" Width="55" RenderTransformOrigin="0.5,0.5" FontWeight="Bold"/>
 
-            <materialDesign:PackIcon Name="GenerateNewPassAcc" ToolTip="Generate Password" Foreground="Gray" Kind="LockAdd" Margin="5,140,0,55" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="GenerateNewPassAcc_PreviewMouseDown"/>
-            <materialDesign:PackIcon x:Name="ShowNewPassword" ToolTip="Show Password (Right Click)" Foreground="Gray" Kind="Eye" Margin="269,140,0,55" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseRightButtonDown="ShowHideNewPassword" PreviewMouseRightButtonUp="ShowHideNewPassword" PreviewMouseMove="ShowNewPassword_PreviewMouseMove"/>
+            <materialDesign:PackIcon Name="GenerateNewPassAcc" ToolTip="Generate Password" Foreground="Gray" Kind="LockAdd" Margin="6,140,0,76" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="GenerateNewPassAcc_PreviewMouseDown"/>
+            <materialDesign:PackIcon x:Name="ShowNewPassword" ToolTip="Show Password (Right Click)" Foreground="Gray" Kind="Eye" Margin="269,140,0,76" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseRightButtonDown="ShowHideNewPassword" PreviewMouseRightButtonUp="ShowHideNewPassword" PreviewMouseMove="ShowNewPassword_PreviewMouseMove"/>
             <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="12" Visibility="Hidden" adorners:Watermark.Text ="New Account Password" VerticalContentAlignment="Center" TextAlignment="Center" x:Name="NewPasswordShow" HorizontalAlignment="Left" Height="30" Margin="29,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="235">
                 <adorners:Watermark.TextStyle>
                     <Style TargetType="{x:Type TextBlock}">
