@@ -7,7 +7,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="PwM - Password Manager" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="214.998" Width="235" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
+        Title="PwM - Password Manager" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="243.158" Width="235" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
     <Border BorderBrush="#690fc2" BorderThickness="1">
         <Grid Background="#f3f5f2" >
             <Grid VerticalAlignment="Top" Height="39" Background="#551cc7" >
@@ -15,7 +15,7 @@
                 <materialDesign:PackIcon Name="vaultIcon" Foreground="#f3f5f2" PreviewMouseDown="closeLBL_PreviewMouseDown" Kind="Close" Margin="205,7,0,9" Width="28" Height="23" VerticalAlignment="Center"/>
                 <Label Content="  " ToolTip="Close" HorizontalAlignment="Left" Margin="207,8,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="closeLBL_PreviewMouseDown" Width="22" />
             </Grid>
-            <TextBox Background="#f3f5f2"  BorderThickness="0,0,0,1" BorderBrush="#8D0FC3"  Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="Vault Name " TextAlignment="Center" Name="vaultNameTXT" HorizontalAlignment="Left" Height="30" Margin="27,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176">
+            <TextBox Background="#f3f5f2"  BorderThickness="0,0,0,1" BorderBrush="#8D0FC3"  Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="Vault Name " TextAlignment="Center" Name="vaultNameTXT" HorizontalAlignment="Left" Height="30" Margin="27,54,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" TextChanged="vaultNameTXT_TextChanged">
                 <adorners:Watermark.TextStyle>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Opacity" Value="0.5" />
@@ -42,7 +42,7 @@
                     </Style>
                 </adorners:Watermark.TextStyle>
             </TextBox>
-            <materialDesign:PackIcon Name="ShowNewVaultPassword" ToolTip="Show Password (Right Click)" Foreground="Gray" Kind="Eye" Margin="208,130,0,65" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseRightButtonDown="ShowVaultPassword" PreviewMouseRightButtonUp="ShowVaultPassword" PreviewMouseMove="ShowNewVaultPassword_PreviewMouseMove"/>
+            <materialDesign:PackIcon Name="ShowNewVaultPassword" ToolTip="Show Password (Right Click)" Foreground="Gray" Kind="Eye" Margin="205,127,0,96" Width="18" Height="18" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseRightButtonDown="ShowVaultPassword" PreviewMouseRightButtonUp="ShowVaultPassword" PreviewMouseMove="ShowNewVaultPassword_PreviewMouseMove"/>
             <PasswordBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3"  Foreground="Black" FontSize="14" adorners:Watermark.Text ="Enter Master Password " Name="addVPassword" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="27,89,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="addVPassword_PasswordChanged"  >
                 <adorners:Watermark.TextStyle>
                     <Style TargetType="{x:Type TextBlock}">
@@ -61,8 +61,8 @@
                     </Style>
                 </adorners:Watermark.TextStyle>
             </PasswordBox>
-            <Label Content="_____________________________________________________________________________" HorizontalAlignment="Center" Margin="7,50,635,0" VerticalAlignment="Top" Height="26" Width="205" Foreground="Red" />
-            <Button Name="createBTN" Style="{DynamicResource RoundCorner2}" Content="Create"  Margin="69,166,70,10" IsDefault="True" Width="94" Height="37" Foreground="#FFE1DDEE" Click="saveBTN_Click" IsEnabled="False"/>
+            <Label Name="vaultLimitLbl" BorderThickness="0" Content=" " HorizontalAlignment="Left" Margin="23,215,0,0" VerticalAlignment="Top" Width="199" Height="24" Background="#00000000" Foreground="Red"/>
+            <Button Name="createBTN" Style="{DynamicResource RoundCorner2}" Content="Create"  Margin="69,178,70,26" IsDefault="True" Width="94" Height="37" Foreground="#FFE1DDEE" Click="saveBTN_Click" IsEnabled="False"/>
         </Grid>
     </Border>
 </Window>
