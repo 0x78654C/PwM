@@ -6,6 +6,8 @@
 Simple offline password manager for Windows in C# WPF and Linux as command line interface to store locally sensitive authentication data for a specific application. 
 The ideea of creation for this Password Manager came from the simple fact to use something simple and fast.   
 
+![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1v.jpg?raw=true)
+
 # Features
 
  - Create/Delete vaults
@@ -103,8 +105,6 @@ The Passwowrd Manager generates a vault file for every user logged in system. Yo
 Mono/Mono-wine for Linux
 
 ## Samples
-
-![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1v.jpg?raw=true)
 
 
 ![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1.jpg?raw=true)
