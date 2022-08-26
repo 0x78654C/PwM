@@ -114,5 +114,6 @@ Mono/Mono-wine for Linux
 
 ## Video presentation
 
-http://www.youtube.com/watch?feature=player_embedded&v=ekZ-ZLQNDtg
+https://www.youtube.com/watch?v=ekZ-ZLQNDtg
+
 
