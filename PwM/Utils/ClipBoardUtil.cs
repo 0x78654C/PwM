@@ -11,7 +11,6 @@
             if (Mkb.ClipBoardManager.GetText() == accPassword)
             {
                 Mkb.ClipBoardManager.Clear();
-                GlobalVariables.accountPassword = "";
             }
         }
     }
