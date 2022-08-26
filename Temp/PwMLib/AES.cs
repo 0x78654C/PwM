@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
+using System.Web.Script.Serialization;
 
 namespace PwMLib
 {
@@ -41,9 +41,10 @@ namespace PwMLib
                     { "value", encryptedText },
                     { "mac", mac },
                 };
+                JavaScriptSerializer serializer = new JavaScriptSerializer();
                 Argon2.s_argon2.Reset();
                 Argon2.s_argon2.Dispose();
-                return Convert.ToBase64String(encoding.GetBytes(JsonSerializer.Serialize(keyValues)));
+                return Convert.ToBase64String(encoding.GetBytes(serializer.Serialize(keyValues)));
             }
             catch (Exception e)
             {
@@ -71,7 +72,8 @@ namespace PwMLib
                 };
                 byte[] base64Decoded = Convert.FromBase64String(plainText);
                 string base64DecodedStr = encoding.GetString(base64Decoded);
-                var payload = JsonSerializer.Deserialize<Dictionary<string, string>>(base64DecodedStr);
+                JavaScriptSerializer ser = new JavaScriptSerializer();
+                var payload = ser.Deserialize<Dictionary<string, string>>(base64DecodedStr);
                 aes.IV = Convert.FromBase64String(payload["iv"]);
                 ICryptoTransform AESDecrypt = aes.CreateDecryptor(aes.Key, aes.IV);
                 byte[] buffer = Convert.FromBase64String(payload["value"]);

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text.Json;
+using System.Web.Script.Serialization;
 using static PwM.Utils.UI;
 using PasswordValidator = PwMLib.PasswordValidator;
 
@@ -15,6 +15,7 @@ namespace PwM
         /* PwM - Command line interface*/
 
         private static int s_tries = 0;
+        private static JavaScriptSerializer s_serializer;
         private static string s_vaultsDir;
         private static readonly string s_helpMessage = $@"PwM Copyright @ 2020-2022 0x078654c
 PwM - A simple password manager to store localy the authentification data encrypted for a application using Rijndael AES-256 and Argon2 for password hash.
@@ -320,7 +321,8 @@ If you like this application and want to support the project you can always buy 
                     { "account", account },
                     { "password", password },
                 };
-            string encryptdata = AES.Encrypt(decryptVault + "\n" + JsonSerializer.Serialize(keyValues), masterPassword);
+            s_serializer = new JavaScriptSerializer();
+            string encryptdata = AES.Encrypt(decryptVault + "\n" + s_serializer.Serialize(keyValues), masterPassword);
             if (File.Exists(s_vaultsDir + $"//{vault}.x"))
             {
                 File.WriteAllText(s_vaultsDir + $"//{vault}.x", encryptdata);
@@ -366,7 +368,8 @@ If you like this application and want to support the project you can always buy 
                 {
                     if (line.Contains(application) && line.Length > 0)
                     {
-                        var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
+                        s_serializer = new JavaScriptSerializer();
+                        var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
                         if (outJson["site/application"].Contains(application))
                         {
                             Console.WriteLine("-------------------------");
@@ -474,7 +477,8 @@ If you like this application and want to support the project you can always buy 
                     if (line.Length > 0)
                     {
                         listApps.Add(line);
-                        var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
+                        s_serializer = new JavaScriptSerializer();
+                        var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
                         if (outJson["site/application"] == application && outJson["account"] == accountName)
                         {
                             listApps.Remove(line);
@@ -572,9 +576,10 @@ If you like this application and want to support the project you can always buy 
                 string line;
                 while ((line = reader.ReadLine()) != null)
                 {
+                    s_serializer = new JavaScriptSerializer();
                     if (line.Length > 0)
                     {
-                        var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
+                        var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
                         if (outJson["site/application"] == application && outJson["account"] == accountName)
                         {
                             var keyValues = new Dictionary<string, object>
@@ -584,7 +589,7 @@ If you like this application and want to support the project you can always buy 
                                  { "password", password },
                             };
                             accountCheck = true;
-                            listApps.Add(JsonSerializer.Serialize(keyValues));
+                            listApps.Add(s_serializer.Serialize(keyValues));
                         }
                         else
                         {

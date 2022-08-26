@@ -1,4 +1,6 @@
-﻿namespace PwM.Utils
+﻿using TextCopy;
+
+namespace PwM.Utils
 {
     public class ClipBoardUtil
     {
@@ -8,9 +10,9 @@
         /// <param name="accPassword"></param>
         public static void ClearClipboard(string accPassword)
         {
-            if (Mkb.ClipBoardManager.GetText() == accPassword)
+            if (ClipboardService.GetText() == accPassword)
             {
-                Mkb.ClipBoardManager.Clear();
+                ClipboardService.SetText("");
                 GlobalVariables.accountPassword = "";
             }
         }
