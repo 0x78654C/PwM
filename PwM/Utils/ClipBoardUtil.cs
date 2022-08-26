@@ -13,7 +13,6 @@ namespace PwM.Utils
             if (ClipboardService.GetText() == accPassword)
             {
                 ClipboardService.SetText("");
-                GlobalVariables.accountPassword = "";
             }
         }
     }
