@@ -704,6 +704,7 @@ namespace PwM
         private void Pwm_Closing(object sender, CancelEventArgs e)
         {
             ClipBoardUtil.ClearClipboard(GlobalVariables.accountPassword);
+            GlobalVariables.accountPassword = string.Empty;
         }
 
         /// <summary>
