@@ -6,7 +6,7 @@ namespace Unit.Tests.Utils
     public class ClipboardClearTest
     {
         private const string SetText = "brehrehrth4%Y&£%H£";
-        [Theory]
+        [StaTheory]
         [InlineData(SetText, true)]
         [InlineData("test1", false)]
         public void ClearSpecificTextOnlyClipboard(string password, bool shouldBeClear)
