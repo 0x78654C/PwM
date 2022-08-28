@@ -1,8 +1,5 @@
-﻿using Xunit;
-
-namespace Unit.Tests.Encryption.PasswordValidator
+﻿namespace PwM.Tests.Encryption.PasswordValidator
 {
-
     public class ConvertSecureStringToStringTests
     {
         [Theory]

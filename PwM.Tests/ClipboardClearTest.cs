@@ -1,7 +1,4 @@
-﻿using Mkb;
-using Xunit;
-
-namespace Unit.Tests.Utils
+﻿namespace PwM.Tests
 {
     public class ClipboardClearTest
     {
@@ -12,7 +9,7 @@ namespace Unit.Tests.Utils
         public void ClearSpecificTextOnlyClipboard(string password, bool shouldBeClear)
         {
             ClipBoardManager.SetText(SetText);
-            PwM.Utils.ClipBoardUtil.ClearClipboard(password);
+            Utils.ClipBoardUtil.ClearClipboard(password);
             Assert.Equal(shouldBeClear ? "" : SetText, ClipBoardManager.GetText());
         }
     }

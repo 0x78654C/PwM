@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Security;
-using System.Web.Script.Serialization;
+using System.Text.Json;
 using System.Windows.Controls;
 
 namespace PwM.Utils
@@ -12,7 +12,6 @@ namespace PwM.Utils
     /* Application tab management class */
     public class AppManagement
     {
-        private static JavaScriptSerializer s_serializer;
         public static SecureString vaultSecure = null;
         private static string passMask = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
 
@@ -35,6 +34,7 @@ namespace PwM.Utils
                 }
                 else
                 {
+                    GlobalVariables.sharedVault = true;
                     pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
                 }
 
@@ -65,8 +65,7 @@ namespace PwM.Utils
                     {
                         if (line.Length > 0)
                         {
-                            s_serializer = new JavaScriptSerializer();
-                            var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
+                            var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
                             listView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
                         }
                     }
@@ -140,9 +139,8 @@ namespace PwM.Utils
                     { "account", accountName },
                     { "password", accountPassword },
                 };
-            s_serializer = new JavaScriptSerializer();
-            string encryptdata = AES.Encrypt(decryptVault + "\n" + s_serializer.Serialize(keyValues), PasswordValidator.ConvertSecureStringToString(masterPassword));
-            vaultSecure = PasswordValidator.StringToSecureString(decryptVault + "\n" + s_serializer.Serialize(keyValues));
+            string encryptdata = AES.Encrypt(decryptVault + "\n" + JsonSerializer.Serialize(keyValues), PasswordValidator.ConvertSecureStringToString(masterPassword));
+            vaultSecure = PasswordValidator.StringToSecureString(decryptVault + "\n" + JsonSerializer.Serialize(keyValues));
             if (File.Exists(pathToVault))
             {
                 try
@@ -213,7 +211,6 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("orange", $"Application {application} does not exist!");
                 return;
             }
-            s_serializer = new JavaScriptSerializer();
             using (var reader = new StringReader(decryptVault))
             {
                 string line;
@@ -223,8 +220,7 @@ namespace PwM.Utils
                     if (line.Length > 0)
                     {
                         listApps.Add(line);
-                        s_serializer = new JavaScriptSerializer();
-                        var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
+                        var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
                         if (outJson["site/application"] == application && outJson["account"] == accountName)
                         {
                             listApps.Remove(line);
@@ -319,10 +315,9 @@ namespace PwM.Utils
                 listView.Items.Clear();
                 while ((line = reader.ReadLine()) != null)
                 {
-                    s_serializer = new JavaScriptSerializer();
                     if (line.Length > 0)
                     {
-                        var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
+                        var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
                         if (outJson["site/application"] == application && outJson["account"] == accountName)
                         {
                             var keyValues = new Dictionary<string, object>
@@ -332,7 +327,7 @@ namespace PwM.Utils
                                  { "password", password },
                             };
                             accountCheck = true;
-                            listApps.Add(s_serializer.Serialize(keyValues));
+                            listApps.Add(JsonSerializer.Serialize(keyValues));
                             listView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
                         }
                         else
@@ -394,10 +389,9 @@ namespace PwM.Utils
                 var vaultToLines = PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
                 foreach (var line in vaultToLines)
                 {
-                    s_serializer = new JavaScriptSerializer();
                     if (!string.IsNullOrEmpty(line))
                     {
-                        var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
+                        var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
                         if (outJson["site/application"] == parsedData[0] && outJson["account"] == parsedData[1])
                         {
                             tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
@@ -413,8 +407,7 @@ namespace PwM.Utils
             {
                 if (!string.IsNullOrEmpty(vault))
                 {
-                    s_serializer = new JavaScriptSerializer();
-                    var outJson = s_serializer.Deserialize<Dictionary<string, string>>(vault);
+                    var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(vault);
                     if (outJson["site/application"] == parsedData[0] && outJson["account"] == parsedData[1])
                     {
                         tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
@@ -466,10 +459,9 @@ namespace PwM.Utils
                 var vaultToLines = PasswordValidator.ConvertSecureStringToString(vaultSecure).Split(new[] { '\r', '\n' });
                 foreach (var line in vaultToLines)
                 {
-                    s_serializer = new JavaScriptSerializer();
                     if (line.Length > 0)
                     {
-                        var outJson = s_serializer.Deserialize<Dictionary<string, string>>(line);
+                        var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
                         if (outJson["site/application"] == application && outJson["account"] == account)
                         {
                             outPass = outJson["password"];

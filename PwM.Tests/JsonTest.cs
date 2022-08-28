@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Xunit;
-using JsonManage = PwM.Utils.JsonManage;
-
-namespace Unit.Tests.Utils
+namespace PwM.Tests
 {
     public class JsonTest
     {

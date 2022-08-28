@@ -1,10 +1,5 @@
-﻿using System;
-using System.Linq;
-using Xunit;
-
-namespace Unit.Tests.Encryption
+﻿namespace PwM.Tests.Encryption
 {
-
     public class PasswordGeneratorTests
     {
         const string Numbers = "0123456789";

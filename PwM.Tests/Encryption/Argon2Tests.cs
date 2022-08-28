@@ -1,7 +1,4 @@
-﻿using System.Text;
-using Xunit;
-
-namespace Unit.Tests.Encryption
+﻿namespace PwM.Tests.Encryption
 {
     public class Argon2Tests
     {

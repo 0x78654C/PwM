@@ -25,6 +25,7 @@ namespace PwM.Utils
         public static string messageData { get; set; }
         public static bool vaultChecks = false;
         public static bool vaultOpen = false;
+        public static bool sharedVault = false;
         public static bool masterPasswordCheck = true;
         private static string s_rootPath = Path.GetPathRoot(Environment.SystemDirectory);
         private static readonly string s_accountName = Environment.UserName;

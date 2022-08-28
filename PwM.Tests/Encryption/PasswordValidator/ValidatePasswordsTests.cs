@@ -1,6 +1,10 @@
-﻿using Xunit;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace Unit.Tests.Encryption.PasswordValidator
+namespace PwM.Tests.Encryption.PasswordValidator
 {
     public class ValidatePasswordsTests
     {
