@@ -14,9 +14,6 @@
     <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System.Web.Extensions" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\Menu.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
