@@ -34,6 +34,7 @@ namespace PwM.Utils
                 }
                 else
                 {
+                    GlobalVariables.sharedVault = true;
                     pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
                 }
 

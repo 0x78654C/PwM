@@ -316,7 +316,11 @@ namespace PwM
                         ListViewSettings.SetListViewColor(settingsListVI, true);
                         ListViewSettings.SetListViewColorApp(appListVI, false);
                         tabControl.SelectedIndex = 1;
-                        appListVaultLVL.Text = vaultName;
+                        if (GlobalVariables.sharedVault)
+                            appListVaultLVL.Text = $"{vaultName} (shared)";
+                        else
+                            appListVaultLVL.Text = vaultName;
+                        GlobalVariables.sharedVault = false;
                         GlobalVariables.vaultOpen = true;
                         StartTimerVaultClose();
                         Sort("Application", appList, ListSortDirection.Ascending);
