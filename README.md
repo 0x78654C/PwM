@@ -100,9 +100,7 @@ The Passwowrd Manager generates a vault file for every user logged in system. Yo
 
 ## Requirements:
 
-.NET Framework 4.7.2
-
-Mono/Mono-wine for Linux
+.NET 6 Runtime
 
 ## Samples
 
