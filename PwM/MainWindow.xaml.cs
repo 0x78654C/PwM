@@ -32,6 +32,7 @@ namespace PwM
         private int _vaultCloseSesstion=0;
         public static DispatcherTimer s_masterPassCheckTimer;
         private string _vaultPath;
+        private string _vaultName;
         Mutex MyMutex;
 
         public MainWindow()
@@ -316,6 +317,7 @@ namespace PwM
                         ListViewSettings.SetListViewColor(settingsListVI, true);
                         ListViewSettings.SetListViewColorApp(appListVI, false);
                         tabControl.SelectedIndex = 1;
+                        _vaultName = vaultName;
                         if (GlobalVariables.sharedVault)
                             appListVaultLVL.Text = $"{vaultName} (shared)";
                         else
@@ -529,7 +531,7 @@ namespace PwM
                 Notification.ShowNotificationInfo("orange", "You must select a application line for updateing account password!");
                 return;
             }
-            AppManagement.UpdateSelectedItemPassword(appList, appListVaultLVL.Text, _vaultPath);
+            AppManagement.UpdateSelectedItemPassword(appList, _vaultName, _vaultPath);
         }
 
         /// <summary>
@@ -546,12 +548,12 @@ namespace PwM
             {
                 if (!GlobalVariables.masterPasswordCheck)
                 {
-                    var masterPassword = MasterPasswordLoad.LoadMasterPassword(appListVaultLVL.Text);
-                    AppManagement.AddApplication(appList, appListVaultLVL.Text, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, masterPassword, _vaultPath);
+                    var masterPassword = MasterPasswordLoad.LoadMasterPassword(_vaultName);
+                    AppManagement.AddApplication(appList, _vaultName, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, masterPassword, _vaultPath);
                     ClearVariables.VariablesClear();
                     return;
                 }
-                AppManagement.AddApplication(appList, appListVaultLVL.Text, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, GlobalVariables.masterPassword, _vaultPath);
+                AppManagement.AddApplication(appList, _vaultName, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, GlobalVariables.masterPassword, _vaultPath);
                 ClearVariables.VariablesClear();
             }
         }
@@ -564,7 +566,7 @@ namespace PwM
         private void DelAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             RestartTimerVaultClose();
-            AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text, _vaultPath);
+            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath);
         }
 
         /// <summary>
@@ -575,7 +577,7 @@ namespace PwM
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
             RestartTimerVaultClose();
-            AppManagement.DeleteSelectedItem(appList, appListVaultLVL.Text, _vaultPath);
+            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath);
         }
 
         /// <summary>
