@@ -112,6 +112,6 @@ The Passwowrd Manager generates a vault file for every user logged in system. Yo
 
 ## Video presentation
 
-![IMAGE ALT TEXT HERE](https://www.youtube.com/watch?v=ekZ-ZLQNDtg)
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/ekZ-ZLQNDtg/0.jpg)](https://www.youtube.com/watch?v=ekZ-ZLQNDtg)
 
 
