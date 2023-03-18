@@ -68,4 +68,10 @@
   <ItemGroup>
     <Compile Remove="Utils\RegistryManage.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Model\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="App.xaml" />
+  </ItemGroup>
 </Project>
