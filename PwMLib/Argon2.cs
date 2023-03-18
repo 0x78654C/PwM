@@ -3,6 +3,7 @@ using System.Text;
 
 namespace PwMLib
 {
+    /*Master password hash ecnryption.*/
     public static class Argon2
     {
         public static Argon2id s_argon2;
