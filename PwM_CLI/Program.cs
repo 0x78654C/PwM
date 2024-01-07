@@ -89,7 +89,8 @@ If you like this application and want to support the project you can always buy 
                 string accountName = Environment.UserName;
                 return $"{rootPath}Users\\{accountName}\\AppData\\Local\\PwM\\";
             }
-            return "Vaults";
+            var vaultPath = AppDomain.CurrentDomain.BaseDirectory + "Vaults";
+            return vaultPath;
         }
 
         /// <summary>
