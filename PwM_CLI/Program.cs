@@ -1,12 +1,12 @@
 ﻿using PwMLib;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using static PwM.Utils.UI;
 using PasswordValidator = PwMLib.PasswordValidator;
+using Otp = PwMLib.Otp;
 
 namespace PwM
 {
@@ -165,6 +165,7 @@ If you like this application and want to support the project you can always buy 
             s_tries = 0;
             if (passValidation)
             {
+                bool isOtp = IsOTP(vaultName, masterPassword1);
                 string sealVault = AES.Encrypt(string.Empty, masterPassword1);
                 if (!sealVault.Contains("Error encrypting"))
                 {
@@ -174,6 +175,25 @@ If you like this application and want to support the project you can always buy 
                 }
                 ErrorWriteLine(sealVault + ". Check command!");
             }
+        }
+
+        /// <summary>
+        /// Enable 2FA and generate QR from vault name and masster password.
+        /// </summary>
+        /// <param name="vaultName"></param>
+        /// <param name="masterPassword"></param>
+        /// <returns></returns>
+        private static bool IsOTP(string vaultName, string masterPassword)
+        {
+            Console.Write("Do you want to enable 2FA with OTP [Y/n]: ");
+            string inPut = Console.ReadLine();
+            if (inPut.ToLower() == "y")
+            {
+                Otp.GenerateQRDisplay(masterPassword, vaultName);
+                return true;
+            }
+            else
+                return false;
         }
 
         /// <summary>
