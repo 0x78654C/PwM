@@ -6,9 +6,15 @@ using Net.Codecrete.QrCodeGenerator;
 
 namespace PwMLib
 {
+
+    /// <summary>
+    /// Class for generating QR codes for vaults
+    /// </summary>
     public class Otp
     {
         private static string Name = "PwM";
+
+        //
         public static void GenerateQR( string secret, string vaultName,string pwm)
         {
             var bytes =  Base32Encoding.ToBytes(secret);
