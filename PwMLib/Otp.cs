@@ -20,12 +20,37 @@ namespace PwMLib
         /// <returns></returns>
         private static string GenerateURI( string secret, string vaultName)
         {
-            var bytes =  Base32Encoding.ToBytes("ASDASD4454");
+            var secretClean = SecretClean(secret);
+            var bytes =  Base32Encoding.ToBytes(secretClean);
             var totp = new Totp(bytes);
             var uriString = new OtpUri(OtpType.Totp, secret, vaultName, Name).ToString();
             return uriString;
         }
 
+        /// <summary>
+        /// Clean secret data for Base32 encoding.
+        /// </summary>
+        /// <param name="secret"></param>
+        /// <returns></returns>
+        public static string SecretClean(string secret)
+        {
+            if (secret.Contains("0"))
+                secret = secret.Replace("0", "");
+            if (secret.Contains("1"))
+                secret = secret.Replace("1", "");
+            if (secret.Contains("8"))
+                secret = secret.Replace("8", "");
+            if (secret.Contains("9"))
+                secret = secret.Replace("9", "");
+
+            string specialCharList = @"\|!#$%&/()=?»«@£§€{}.-;'<>_,";
+            foreach(var chr in specialCharList)
+            {
+                if (secret.Contains(chr.ToString()))
+                    secret = secret.Replace(chr.ToString(), "");
+            }
+            return secret;
+        }
 
         /// <summary>
         ///  Generate SVG QR code
