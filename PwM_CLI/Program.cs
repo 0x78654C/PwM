@@ -190,6 +190,7 @@ If you like this application and want to support the project you can always buy 
             if (inPut.ToLower() == "y")
             {
                 Otp.GenerateQRDisplay(masterPassword, vaultName);
+                ColorConsoleTextLine(ConsoleColor.Yellow, "\n[!] Scan the QR code with Google Authenticator or similar application for OTP generation!");
                 return true;
             }
             else
