@@ -54,30 +54,24 @@ namespace PwMLib
         /// </summary>
         /// <param name="input">Password string.</param>
         /// <returns></returns>
-        private static bool SpecialCharCheck(string input)
-        {
-            return input.IndexOfAny(@"\|!#$%&/()=?»«@£§€{}.-;'<>_,".ToCharArray()) > -1;
-        }
+        private static bool SpecialCharCheck(string input) => input.IndexOfAny(@"\|!#$%&/()=?»«@£§€{}.-;'<>_,".ToCharArray()) > -1;
+     
 
         /// <summary>
         /// Check for empty space in password.
         /// </summary>
         /// <param name="input">Password string.</param>
         /// <returns></returns>
-        private static bool CheckSpaceChar(string input)
-        {
-            return input.Contains(" ");
-        }
+        private static bool CheckSpaceChar(string input) => input.Contains(" ");
 
         /// <summary>
         /// Converts the secure string to string.
         /// </summary>
         /// <returns>The secure string to string.</returns>
         /// <param name="data">Data.</param>
-        public static string ConvertSecureStringToString(this SecureString data)
-        {
-            return new System.Net.NetworkCredential(string.Empty, data).Password;
-        }
+        public static string ConvertSecureStringToString(this SecureString data) =>
+                            new System.Net.NetworkCredential(string.Empty, data).Password;
+
         /// <summary>
         /// Convert string to secure string.
         /// </summary>
@@ -87,9 +81,7 @@ namespace PwMLib
         {
             SecureString secureString = new SecureString();
             foreach (var c in data)
-            {
                 secureString.AppendChar(c);
-            }
             return secureString;
         }
     }
