@@ -224,24 +224,15 @@ If you like this application and want to support the project you can always buy 
         /// </summary>
         private static void ListVaults()
         {
-            var outFiles = string.Empty;
             var getFiles = Directory.GetFiles(s_vaultsDir);
-            var filesCount = getFiles.Count();
-            foreach (var file in getFiles)
-            {
-                if (!file.EndsWith(".x")) continue;
-                var fileInfo = new FileInfo(file);
-                var vaultName = fileInfo.Name.Substring(0, fileInfo.Name.Length - 2);
-                outFiles += "----------------\n";
-                outFiles += vaultName + Environment.NewLine;
-            }
-
-            if (filesCount == 0)
+            if (!getFiles.Any())
             {
                 ColorConsoleTextLine(ConsoleColor.Yellow, "There are no vaults created!");
                 return;
             }
 
+            var names = getFiles.Select(w => new FileInfo(w).Name[..^2]);
+            var outFiles = string.Join(Environment.NewLine, names.Select(w => $"----------------\n{w}"));
             Console.WriteLine("List of current vaults:");
             Console.WriteLine(outFiles + "----------------");
         }
@@ -331,7 +322,7 @@ If you like this application and want to support the project you can always buy 
         }
 
         /// <summary>
-        /// Displays applicaitons from an existing vault.
+        /// Displays applications from an existing vault.
         /// </summary>
         private static void ReadPass()
         {
@@ -595,13 +586,13 @@ If you like this application and want to support the project you can always buy 
                 listApps.Add(JsonSerializer.Serialize(keyValues));
             }
 
-            var encryptdata = AES.Encrypt(string.Join("\n", listApps), masterPassword);
+            var encryptData = AES.Encrypt(string.Join("\n", listApps), masterPassword);
             listApps.Clear();
             if (File.Exists(s_vaultsDir + $"//{vault}.x"))
             {
                 if (accountCheck)
                 {
-                    File.WriteAllText(s_vaultsDir + $"//{vault}.x", encryptdata);
+                    File.WriteAllText(s_vaultsDir + $"//{vault}.x", encryptData);
                     WordColorInLine("\n[*]Password for ", accountName, " was updated!\n", ConsoleColor.Green);
                     return;
                 }
