@@ -322,7 +322,7 @@ If you like this application and want to support the project you can always buy 
         }
 
         /// <summary>
-        /// Displays applicaitons from an existing vault.
+        /// Displays applications from an existing vault.
         /// </summary>
         private static void ReadPass()
         {
