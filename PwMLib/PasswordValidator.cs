@@ -23,21 +23,20 @@ namespace PwMLib
         /// <returns></returns>
         public static SecureString GetHiddenConsoleInput()
         {
-            SecureString pwd = new SecureString();
+            var pwd = new SecureString();
             while (true)
             {
-                ConsoleKeyInfo i = Console.ReadKey(true);
+                var i = Console.ReadKey(true);
                 if (i.Key == ConsoleKey.Enter)
                 {
                     break;
                 }
-                else if (i.Key == ConsoleKey.Backspace)
+
+                if (i.Key == ConsoleKey.Backspace)
                 {
-                    if (pwd.Length > 0)
-                    {
-                        pwd.RemoveAt(pwd.Length - 1);
-                        Console.Write("\b \b");
-                    }
+                    if (pwd.Length <= 0) continue;
+                    pwd.RemoveAt(pwd.Length - 1);
+                    Console.Write("\b \b");
                 }
                 else if (i.KeyChar != '\u0000')
                 {
@@ -85,7 +84,7 @@ namespace PwMLib
         /// <returns></returns>
         public static SecureString StringToSecureString(string data)
         {
-            SecureString secureString = new SecureString();
+            var secureString = new SecureString();
             foreach (var c in data)
             {
                 secureString.AppendChar(c);

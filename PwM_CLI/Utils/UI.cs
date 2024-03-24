@@ -1,5 +1,4 @@
-﻿using System;
-namespace PwM.Utils
+﻿namespace PwM.Utils
 {
     public static class UI
     {
@@ -9,7 +8,7 @@ namespace PwM.Utils
         /// <param name="text"></param>
         public static void ErrorWriteLine(string text)
         {
-            ConsoleColor currentForeground = Console.ForegroundColor;
+            var currentForeground = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"Error: {text}");
             Console.ForegroundColor = currentForeground;
@@ -23,7 +22,7 @@ namespace PwM.Utils
         /// <param name="text"></param>
         public static void ColorConsoleTextLine(ConsoleColor color, string text)
         {
-            ConsoleColor currentForeground = Console.ForegroundColor;
+            var currentForeground = Console.ForegroundColor;
             Console.ForegroundColor = color;
             Console.WriteLine(text);
             Console.ForegroundColor = currentForeground;
@@ -36,7 +35,7 @@ namespace PwM.Utils
         /// <param name="text"></param>
         public static void ColorConsoleText(ConsoleColor color, string text)
         {
-            ConsoleColor currentForeground = Console.ForegroundColor;
+            var currentForeground = Console.ForegroundColor;
             Console.ForegroundColor = color;
             Console.Write(text);
             Console.ForegroundColor = currentForeground;

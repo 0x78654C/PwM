@@ -21,7 +21,7 @@ namespace PwMLib
         {
             try
             {
-                RijndaelManaged aes = new RijndaelManaged
+                var aes = new RijndaelManaged
                 {
                     KeySize = 256,
                     BlockSize = 128,
@@ -30,10 +30,10 @@ namespace PwMLib
                     Key = Argon2.Argon2HashPassword(password)
                 };
                 aes.GenerateIV();
-                ICryptoTransform AESEncrypt = aes.CreateEncryptor(aes.Key, aes.IV);
-                byte[] buffer = encoding.GetBytes(plainText);
-                string encryptedText = Convert.ToBase64String(AESEncrypt.TransformFinalBlock(buffer, 0, buffer.Length));
-                String mac = "";
+                var AESEncrypt = aes.CreateEncryptor(aes.Key, aes.IV);
+                var buffer = encoding.GetBytes(plainText);
+                var encryptedText = Convert.ToBase64String(AESEncrypt.TransformFinalBlock(buffer, 0, buffer.Length));
+                var mac = "";
                 mac = BitConverter.ToString(HmacSHA256(Convert.ToBase64String(aes.IV) + encryptedText, password)).Replace("-", "").ToLower();
                 var keyValues = new Dictionary<string, object>
                 {
@@ -61,7 +61,7 @@ namespace PwMLib
         {
             try
             {
-                RijndaelManaged aes = new RijndaelManaged
+                var aes = new RijndaelManaged
                 {
                     KeySize = 256,
                     BlockSize = 128,
@@ -69,12 +69,12 @@ namespace PwMLib
                     Mode = CipherMode.CBC,
                     Key = Argon2.Argon2HashPassword(password)
                 };
-                byte[] base64Decoded = Convert.FromBase64String(plainText);
-                string base64DecodedStr = encoding.GetString(base64Decoded);
+                var base64Decoded = Convert.FromBase64String(plainText);
+                var base64DecodedStr = encoding.GetString(base64Decoded);
                 var payload = JsonSerializer.Deserialize<Dictionary<string, string>>(base64DecodedStr);
                 aes.IV = Convert.FromBase64String(payload["iv"]);
-                ICryptoTransform AESDecrypt = aes.CreateDecryptor(aes.Key, aes.IV);
-                byte[] buffer = Convert.FromBase64String(payload["value"]);
+                var AESDecrypt = aes.CreateDecryptor(aes.Key, aes.IV);
+                var buffer = Convert.FromBase64String(payload["value"]);
                 Argon2.s_argon2.Reset();
                 Argon2.s_argon2.Dispose();
                 return encoding.GetString(AESDecrypt.TransformFinalBlock(buffer, 0, buffer.Length));
@@ -93,7 +93,7 @@ namespace PwMLib
         /// <returns></returns>
         private static byte[] HmacSHA256(String data, String key)
         {
-            using (HMACSHA256 hmac = new HMACSHA256(encoding.GetBytes(key)))
+            using (var hmac = new HMACSHA256(encoding.GetBytes(key)))
             {
                 return hmac.ComputeHash(encoding.GetBytes(data));
             }
