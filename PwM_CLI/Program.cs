@@ -586,13 +586,13 @@ If you like this application and want to support the project you can always buy 
                 listApps.Add(JsonSerializer.Serialize(keyValues));
             }
 
-            var encryptdata = AES.Encrypt(string.Join("\n", listApps), masterPassword);
+            var encryptData = AES.Encrypt(string.Join("\n", listApps), masterPassword);
             listApps.Clear();
             if (File.Exists(s_vaultsDir + $"//{vault}.x"))
             {
                 if (accountCheck)
                 {
-                    File.WriteAllText(s_vaultsDir + $"//{vault}.x", encryptdata);
+                    File.WriteAllText(s_vaultsDir + $"//{vault}.x", encryptData);
                     WordColorInLine("\n[*]Password for ", accountName, " was updated!\n", ConsoleColor.Green);
                     return;
                 }
