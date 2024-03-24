@@ -231,7 +231,7 @@ If you like this application and want to support the project you can always buy 
                 return;
             }
 
-            var names = getFiles.Select(w => new FileInfo(w)).Select(q => q.Name[..^2]);
+            var names = getFiles.Select(w => new FileInfo(w).Name[..^2]);
             var outFiles = string.Join(Environment.NewLine, names.Select(w => $"----------------\n{w}"));
             Console.WriteLine("List of current vaults:");
             Console.WriteLine(outFiles + "----------------");
