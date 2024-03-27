@@ -66,7 +66,7 @@ namespace PwM
         /// <param name="e"></param>
         private void ShowVaultPassword(object sender, MouseButtonEventArgs e)
         {
-            if (e.ButtonState == MouseButtonState.Pressed)
+           if (e.ButtonState == MouseButtonState.Pressed)
             {
                 Utils.TextPassBoxChanges.ShowPassword(addVPassword, vaultMassterPass);
                 Utils.TextPassBoxChanges.ShowPassword(confirmVPassword, vaultConfirmMassterPass);
