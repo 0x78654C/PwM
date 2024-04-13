@@ -9,6 +9,9 @@
         mc:Ignorable="d"
         Title="PwM - Password Manager" Background="Transparent" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="243.158" Width="235" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
     <Border  CornerRadius="9">
+        <Border.Effect>
+            <DropShadowEffect ShadowDepth="7" Direction="-50" BlurRadius="4"  Color="Gray" Opacity="1" />
+        </Border.Effect>
         <Grid Background="#f3f5f2">
             <Grid.OpacityMask>
                 <VisualBrush Visual="{Binding ElementName=MaiBorder}" />
