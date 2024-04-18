@@ -1,4 +1,4 @@
-﻿namespace PwM.Tests
+﻿namespace PwM.Tests.Util
 {
     public class ClipboardClearTest
     {
@@ -9,7 +9,7 @@
         public void ClearSpecificTextOnlyClipboard(string password, bool shouldBeClear)
         {
             ClipBoardManager.SetText(SetText);
-            Utils.ClipBoardUtil.ClearClipboard(password);
+            PwM.Utils.ClipBoardUtil.ClearClipboard(password);
             Assert.Equal(shouldBeClear ? "" : SetText, ClipBoardManager.GetText());
         }
     }

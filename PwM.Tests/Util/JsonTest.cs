@@ -1,4 +1,4 @@
-namespace PwM.Tests
+namespace PwM.Tests.Utils
 {
     public class JsonTest
     {
