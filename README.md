@@ -100,7 +100,7 @@ The Passwowrd Manager generates a vault file for every user logged in system. Yo
 
 ## Requirements:
 
-.NET 6 Runtime
+.NET 8 Runtime
 
 ## Samples
 
