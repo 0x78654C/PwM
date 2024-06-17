@@ -8,14 +8,8 @@
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
         Title="PwM - Password Manager" Background="Transparent" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="243.158" Width="235" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
-    <Border  CornerRadius="9">
-        <Border.Effect>
-            <DropShadowEffect ShadowDepth="7" Direction="-50" BlurRadius="4"  Color="Gray" Opacity="1" />
-        </Border.Effect>
+   <Border BorderBrush="#690fc2" BorderThickness="1">
         <Grid Background="#f3f5f2">
-            <Grid.OpacityMask>
-                <VisualBrush Visual="{Binding ElementName=MaiBorder}" />
-            </Grid.OpacityMask>
             <Border x:Name="MaiBorder" Background="#f3f5f2"  CornerRadius="8" />
             <Grid VerticalAlignment="Top" Height="39" Background="#551cc7" >
                 <TextBlock Text="Add Vault" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="15" Margin="0,8,0,9" Width="181" RenderTransformOrigin="0.5,0.5"/>
