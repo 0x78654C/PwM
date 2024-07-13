@@ -300,6 +300,7 @@ namespace PwM
             var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
             {
+                VaultCloseTimersStop();
                 VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
                 string item = vaultList.SelectedItem.ToString();
                 string vaultPath = VaultManagement.GetVaultPathFromList(vaultList);
