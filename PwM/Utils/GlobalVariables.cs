@@ -33,6 +33,7 @@ namespace PwM.Utils
         public static readonly string registryPath = "SOFTWARE\\PwM";
         public static readonly string jsonSharedVaults = Path.Combine(passwordManagerDirectory, "PwM.Json");
         public static readonly string vaultExpireReg = "VaultExpireSession";
+        public static readonly string lockedUser = $"{passwordManagerDirectory}lockedUser";
         public static int vaultExpireInterval { get; set; }
         public static ListView listView = new ListView();
     }
