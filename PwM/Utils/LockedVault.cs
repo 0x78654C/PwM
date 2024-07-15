@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
+﻿using System.IO;
 
 namespace PwM.Utils
 {
@@ -15,27 +9,18 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="lockedUser"></param>
         /// <returns></returns>
-        public static bool IsVaultLocked(string lockedUser)
+        public static bool IsVaultLocked( string vaultFullPath)
         {
-            if (File.Exists(lockedUser))
+            if (File.Exists(vaultFullPath))
             {
-                var user = File.ReadAllText(lockedUser);
-                Notification.ShowNotificationInfo("orange", $" You cannot make any changes at this moment.\nThe shared vault is opened by '{user}'. Wait until this vault is closed!");
-                return true;
+                FileInfo fileInfo = new FileInfo(vaultFullPath);
+                if (fileInfo.IsLocked())
+                {
+                    Notification.ShowNotificationInfo("orange", "You cannot make any changes at this moment.\nThe shared vault is opened by other user.\nWait until this vault is closed!");
+                    return true;
+                }
             }
             return false;
-        }
-
-        /// <summary>
-        /// Create locked user file with current connected user.
-        /// </summary>
-        /// <param name="lockedUser"></param>
-        /// <param name="connectedUser"></param>
-        public static void LockVault(string lockedUser, string connectedUser)
-        {
-            if (File.Exists(lockedUser))
-                return;
-            File.WriteAllText(lockedUser, connectedUser);
         }
     }
 }
