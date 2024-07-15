@@ -29,7 +29,7 @@ namespace PwM
         private DispatcherTimer _dispatcherTimer;
         private DispatcherTimer _dispatcherTimerCloseVault;
         private DispatcherTimer _dispatcherTimerElapsed;
-        private int _vaultCloseSesstion=0;
+        private int _vaultCloseSesstion = 0;
         public static DispatcherTimer s_masterPassCheckTimer;
         private string _vaultPath;
         private string _vaultName;
@@ -300,12 +300,14 @@ namespace PwM
             var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
             {
-                VaultCloseTimersStop();
-                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
-                string item = vaultList.SelectedItem.ToString();
                 string vaultPath = VaultManagement.GetVaultPathFromList(vaultList);
                 _vaultPath = vaultPath;
+                VaultCloseTimersStop();
+                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
+                string item = vaultList.SelectedItem.ToString();
                 string vaultName = item.Split(',')[0].Replace("{ Name = ", "");
+                var vaultFullPath = $"{vaultPath}\\{vaultName}.x";
+                if (LockedVault.IsVaultLocked(vaultFullPath)) return;
                 var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                 GlobalVariables.masterPassword = masterPassword;
                 if (masterPassword != null && masterPassword.Length > 0)
@@ -345,7 +347,7 @@ namespace PwM
         /// <param name="e"></param>
         public void vaultCloseLBL_Click(object sender, RoutedEventArgs e)
         {
-            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
             VaultCloseTimersStop();
         }
 
@@ -447,7 +449,7 @@ namespace PwM
             {
                 WindowCloser.CloseWindow(window);
             }
-            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
             VaultCloseTimersStop();
         }
 
@@ -484,7 +486,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
+                    VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
                     VaultCloseTimersStop();
                     break;
             }
@@ -500,7 +502,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
+                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
                 VaultCloseTimersStop();
             }
         }
@@ -567,7 +569,7 @@ namespace PwM
         private void DelAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             RestartTimerVaultClose();
-            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath);
+            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath, vaultList);
         }
 
         /// <summary>
@@ -578,7 +580,7 @@ namespace PwM
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
             RestartTimerVaultClose();
-            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath);
+            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath, vaultList);
         }
 
         /// <summary>

@@ -1,7 +1,6 @@
 ﻿using PwMLib;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Security;
 using System.Text.Json;
@@ -98,6 +97,7 @@ namespace PwM.Utils
             else
             {
                 pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                if (LockedVault.IsVaultLocked(pathToVault)) return;
             }
             if (!File.Exists(pathToVault))
             {
@@ -180,6 +180,7 @@ namespace PwM.Utils
             else
             {
                 pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                if (LockedVault.IsVaultLocked(pathToVault)) return;
             }
             if (masterPassword == null)
             {
@@ -279,6 +280,7 @@ namespace PwM.Utils
             else
             {
                 pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                if (LockedVault.IsVaultLocked(pathToVault)) return;
             }
             if (!File.Exists(pathToVault))
             {
@@ -479,8 +481,10 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="listView"></param>
         /// <param name="vaultName"></param>
-        public static void DeleteSelectedItem(ListView listView, string vaultName, string vaultPath)
+        public static void DeleteSelectedItem(ListView listView, string vaultName, string vaultPath, ListView vaultList)
         {
+            var pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            if (LockedVault.IsVaultLocked(pathToVault)) return;
             string application = GetApplicationFromListView(listView);
             if (application.Length > 0)
             {
@@ -553,6 +557,8 @@ namespace PwM.Utils
         /// <param name="vaultName"></param>
         public static void UpdateSelectedItemPassword(ListView listView, string vaultName, string vaultPath)
         {
+            var pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            if (LockedVault.IsVaultLocked(pathToVault)) return;
             string application = GetApplicationFromListView(listView);
             string account = GetAccountFromListView(listView);
             if (account.Length > 0 && application.Length > 0)
