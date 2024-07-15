@@ -303,7 +303,7 @@ namespace PwM
                 string vaultPath = VaultManagement.GetVaultPathFromList(vaultList);
                 _vaultPath = vaultPath;
                 VaultCloseTimersStop();
-                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
+                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
                 string item = vaultList.SelectedItem.ToString();
                 string vaultName = item.Split(',')[0].Replace("{ Name = ", "");
                 var vaultFullPath = $"{vaultPath}\\{vaultName}.x";
@@ -347,7 +347,7 @@ namespace PwM
         /// <param name="e"></param>
         public void vaultCloseLBL_Click(object sender, RoutedEventArgs e)
         {
-            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
             VaultCloseTimersStop();
         }
 
@@ -449,7 +449,7 @@ namespace PwM
             {
                 WindowCloser.CloseWindow(window);
             }
-            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
+            VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
             VaultCloseTimersStop();
         }
 
@@ -486,7 +486,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
+                    VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
                     VaultCloseTimersStop();
                     break;
             }
@@ -502,7 +502,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer, _vaultPath);
+                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
                 VaultCloseTimersStop();
             }
         }
