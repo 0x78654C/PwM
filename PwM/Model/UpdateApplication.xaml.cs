@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using PwMLib;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -10,6 +11,8 @@ namespace PwM
     /// </summary>
     public partial class UpdateApplication : Window
     {
+        private BackgroundWorker _worker;
+        private string _breaches = "";
         public UpdateApplication()
         {
             InitializeComponent();
@@ -126,6 +129,39 @@ namespace PwM
         private void newPassAccBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             updateAccPassBTN.IsEnabled = (newPassAccBox.Password.Length > 0) ? true : false;
+            _worker = new BackgroundWorker();
+            _worker.DoWork += BreackCheck_BW;
+            _worker.RunWorkerCompleted += BreackCheck_RunWorkerCompleted;
+            _worker.RunWorkerAsync();
+        }
+
+        /// <summary>
+        /// Set visibility if password breaches are found.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BreackCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (_breaches == "0")
+                breachLbl.Visibility = Visibility.Hidden;
+            else
+                breachLbl.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Get password breaches.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BreackCheck_BW(object sender, DoWorkEventArgs e)
+        {
+            var hibp = new HIBP();
+            if (!string.IsNullOrEmpty(newPassAccBox.Password))
+            {
+                _breaches = hibp.CheckIfPwnd(newPassAccBox.Password).Result;
+            }
+            else
+                _breaches = "0";
         }
 
         /// <summary>
