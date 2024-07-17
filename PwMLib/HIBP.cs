@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using System.Threading.Tasks;
 
 namespace PwMLib
 {
@@ -18,14 +19,14 @@ namespace PwMLib
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public string CheckIfPwnd(string password)
+        public async Task<string> CheckIfPwnd(string password)
         {
             var sha1 = Sha1Converter.Hash(password);
             var prefixHash = sha1[..5];
             var suffixHash = sha1.Substring(sha1.Length-5);
             var httpService = new HttpService();
             var apiReq = $"{API}{prefixHash}";
-            var httpData = httpService.GetAsync(apiReq).Result;
+            var httpData = await httpService.GetAsync(apiReq);
             var countBreachs = "0";
             using (StringReader sr = new StringReader(httpData))
             {
