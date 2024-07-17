@@ -9,7 +9,7 @@ namespace PwM.Tests.HIPB
         public void Check_API_HIBP(string password, string tBreaches)
         {
             var hibp = new HIBP();
-            var totalBreaches = hibp.CheckIfPwnd(password);
+            var totalBreaches = hibp.CheckIfPwnd(password).Result;
             Assert.Equal(totalBreaches,tBreaches);
         }
     }
