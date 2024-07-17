@@ -26,7 +26,7 @@ namespace PwMLib
         public async Task<string> GetAsync(string uri)
         {
             using HttpResponseMessage response = await _client.GetAsync(uri);
-            return await response.Content.ReadAsStringAsync();
+            return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
     }
 }
