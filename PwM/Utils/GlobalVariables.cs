@@ -36,5 +36,6 @@ namespace PwM.Utils
         public static readonly string lockedUser = $"{passwordManagerDirectory}lockedUser";
         public static int vaultExpireInterval { get; set; }
         public static ListView listView = new ListView();
+        public const string apiHIBP = "https://api.pwnedpasswords.com/range/";
     }
 }
