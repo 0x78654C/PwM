@@ -37,5 +37,6 @@ namespace PwM.Utils
         public static int vaultExpireInterval { get; set; }
         public static ListView listView = new ListView();
         public const string apiHIBP = "https://api.pwnedpasswords.com/range/";
+        public const string apiHIBPMain = "api.pwnedpasswords.com";
     }
 }
