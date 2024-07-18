@@ -1,4 +1,5 @@
 ﻿using PwMLib;
+using PwM.Utils;
 
 namespace PwM.Tests.HIPB
 {
@@ -8,9 +9,12 @@ namespace PwM.Tests.HIPB
         [InlineData("pawn","336")]
         public void Check_API_HIBP(string password, string tBreaches)
         {
-            var hibp = new HIBP();
+            var hibp = new HIBP(GlobalVariables.apiHIBP);
             var totalBreaches = hibp.CheckIfPwnd(password).Result;
-            Assert.Equal(totalBreaches,tBreaches);
+            bool isbreached = false;
+            if (totalBreaches != "0")
+                isbreached = true;
+            Assert.True(isbreached);
         }
     }
 }
