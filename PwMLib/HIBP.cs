@@ -9,9 +9,9 @@ namespace PwMLib
     public class HIBP
     {
         private readonly string API;
-        public HIBP()
+        public HIBP(string apiAddress)
         {
-            API = "https://api.pwnedpasswords.com/range/";
+            API = apiAddress;
         }
 
         /// <summary>
