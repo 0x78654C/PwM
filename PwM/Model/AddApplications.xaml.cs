@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using PwM.Utils;
 using PwMLib;
 using System.ComponentModel;
 using System.Threading;
@@ -170,7 +171,7 @@ namespace PwM
         /// <param name="e"></param>
         private void BreackCheck_BW(object sender, DoWorkEventArgs e)
         {
-            var hibp = new HIBP();
+            var hibp = new HIBP(GlobalVariables.apiHIBP);
             if (!string.IsNullOrEmpty(accPasswordBox.Password))
             {
                 _breaches = hibp.CheckIfPwnd(accPasswordBox.Password).Result;
