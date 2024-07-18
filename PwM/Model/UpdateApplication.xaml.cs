@@ -14,6 +14,7 @@ namespace PwM
     {
         private BackgroundWorker _worker;
         private string _breaches = "";
+        Network network = new Network(GlobalVariables.apiHIBPMain);
         public UpdateApplication()
         {
             InitializeComponent();
@@ -130,10 +131,13 @@ namespace PwM
         private void newPassAccBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             updateAccPassBTN.IsEnabled = (newPassAccBox.Password.Length > 0) ? true : false;
-            _worker = new BackgroundWorker();
-            _worker.DoWork += BreackCheck_BW;
-            _worker.RunWorkerCompleted += BreackCheck_RunWorkerCompleted;
-            _worker.RunWorkerAsync();
+            if (network.PingHost())
+            {
+                _worker = new BackgroundWorker();
+                _worker.DoWork += BreackCheck_BW;
+                _worker.RunWorkerCompleted += BreackCheck_RunWorkerCompleted;
+                _worker.RunWorkerAsync();
+            }
         }
 
         /// <summary>
