@@ -1,4 +1,5 @@
 ﻿using PwMLib;
+
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using static PwM.Utils.UI;
@@ -12,7 +13,7 @@ namespace PwM
 
         private static int s_tries = 0;
         private static string s_vaultsDir;
-
+        private static Network network = new Network(GlobalVariables.apiHIBPMain);
         private static readonly string s_helpMessage = $@"PwM Copyright @ 2020-2022 0x078654c
 PwM - A simple password manager to store localy the authentification data encrypted for a application using Rijndael AES-256 and Argon2 for password hash.
 Contact: xcoding.dev@gmail.com
@@ -301,6 +302,7 @@ Thank you very much for your support, I appreciate it!
             s_tries = 0;
             WordColorInLine("Enter password for ", account, ":", ConsoleColor.Green);
             var password = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
+            if (IsPasswordBreached(password)) return;
             Console.WriteLine();
             var keyValues = new Dictionary<string, object>
             {
@@ -360,7 +362,13 @@ Thank you very much for your support, I appreciate it!
                 Console.WriteLine("-------------------------");
                 Console.WriteLine($"Application Name: ".PadRight(20, ' ') + outJson["site/application"]);
                 Console.WriteLine($"Account Name: ".PadRight(20, ' ') + outJson["account"]);
-                Console.WriteLine($"Password: ".PadRight(20, ' ') + outJson["password"]);
+                if (IsPasswordBreached(outJson["password"], false))
+                {
+                    Console.Write($"Password: ".PadRight(20, ' ') + outJson["password"].PadRight(15, ' '));
+                    ColorConsoleText(ConsoleColor.Yellow, "(breached)\n");
+                }
+                else
+                    Console.WriteLine($"Password: ".PadRight(20, ' ') + outJson["password"]);
             }
 
             Console.WriteLine("-------------------------");
@@ -561,6 +569,7 @@ Thank you very much for your support, I appreciate it!
             s_tries = 0;
             WordColorInLine("Enter new password for ", accountName, ":", ConsoleColor.Green);
             var password = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
+            if (IsPasswordBreached(password)) return;
             Console.WriteLine();
             using var reader = new StringReader(decryptVault);
             string line;
@@ -614,6 +623,35 @@ Thank you very much for your support, I appreciate it!
             Console.Write(beforeText);
             ColorConsoleText(color, word);
             Console.Write(afterText + Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Check if password is been part of data breach.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        private static bool IsPasswordBreached(string password, bool displayMessage = false)
+        {
+            bool isPublicBreach = false;
+            if (!network.PingHost())
+                return isPublicBreach;
+            var hibp = new HIBP(GlobalVariables.apiHIBP);
+            var breach = hibp.CheckIfPwnd(password);
+            var isBreach = breach.Result != "0";
+            if (isBreach)
+            {
+                if (displayMessage)
+                {
+                    ColorConsoleText(ConsoleColor.Yellow, "\nThe password is part of an exposed data breach. Do you want to continue on adding the application to vault? Yes(Y) No(N):");
+                    var key = Console.ReadKey();
+                    Console.WriteLine();
+                    if (key.KeyChar.ToString().ToLower() == "n")
+                        isPublicBreach = true;
+                }
+                else
+                    isPublicBreach = true;
+            }
+            return isPublicBreach;
         }
     }
 }
