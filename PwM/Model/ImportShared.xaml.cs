@@ -50,7 +50,7 @@ namespace PwM
 
         private void SharedBtn_Click(object sender, RoutedEventArgs e)
         {
-            ImportExport.Import(PwMLib.GlobalVariables.listView, _passwordManagerDirectory, true);
+            ImportExport.Import(GlobalVariables.listView, _passwordManagerDirectory, true);
             this.Close();
         }
 
@@ -61,7 +61,7 @@ namespace PwM
         /// <param name="e"></param>
         private void LocalBtn_Click(object sender, RoutedEventArgs e)
         {
-            ImportExport.Import(PwMLib.GlobalVariables.listView, _passwordManagerDirectory, false);
+            ImportExport.Import(GlobalVariables.listView, _passwordManagerDirectory, false);
             this.Close();
         }
 

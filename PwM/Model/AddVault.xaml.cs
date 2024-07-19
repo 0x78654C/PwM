@@ -125,7 +125,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.PwMLib.GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
 
