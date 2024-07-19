@@ -1,13 +1,9 @@
 ﻿using Microsoft.Win32;
-using PwM.Utils;
 using PwMLib;
 using System.ComponentModel;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Threading;
 
 namespace PwM
 {
