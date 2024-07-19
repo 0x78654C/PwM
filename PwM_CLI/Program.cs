@@ -231,9 +231,9 @@ Thank you very much for your support, I appreciate it!
             }
 
             var names = getFiles.Select(w => new FileInfo(w).Name[..^2]);
-            var outFiles = string.Join(Environment.NewLine, names.Select(w => $"----------------\n{w}"));
+            var outFiles = string.Join(Environment.NewLine, names.Where(x=>!x.Contains(".")).Select(w => $"----------------\n{w}"));
             Console.WriteLine("List of current vaults:");
-            Console.WriteLine(outFiles + "----------------");
+            Console.WriteLine(outFiles + "\n----------------");
         }
 
 
