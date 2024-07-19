@@ -12,6 +12,7 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using GlobalVariables = PwMLib.GlobalVariables;
 
 namespace PwM
 {
@@ -657,7 +658,7 @@ namespace PwM
         private void PopulateListView(ListView listView)
         {
             listView.Items.Clear();
-            foreach (var item in GlobalVariables.listView.Items)
+            foreach (var item in PwM.Utils.GlobalVariables.listView.Items)
             {
                 listView.Items.Add(item);
             }

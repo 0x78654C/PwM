@@ -14,8 +14,8 @@ namespace PwM
             InitializeComponent();
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
-            vaultNameTB.Text = Utils.GlobalVariables.vaultName;
-            Utils.GlobalVariables.closeAppConfirmation = false;
+            vaultNameTB.Text = PwMLib.GlobalVariables.vaultName;
+            PwMLib.GlobalVariables.closeAppConfirmation = false;
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.closeAppConfirmation = true;
+                    PwMLib.GlobalVariables.closeAppConfirmation = true;
                     this.Close();
                     break;
             }
@@ -44,7 +44,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.closeAppConfirmation = true;
+                PwMLib.GlobalVariables.closeAppConfirmation = true;
                 this.Close();
             }
         }
@@ -81,8 +81,8 @@ namespace PwM
 
         private void saveBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.masterPassword = OldMasterPassword.SecurePassword;
-            Utils.GlobalVariables.newMasterPassword = NewMasterPassword.SecurePassword;
+            PwMLib.GlobalVariables.masterPassword = OldMasterPassword.SecurePassword;
+            PwMLib.GlobalVariables.newMasterPassword = NewMasterPassword.SecurePassword;
             this.Close();
         }
 
@@ -114,7 +114,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
 

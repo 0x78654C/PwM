@@ -11,7 +11,7 @@ namespace PwM
         public ImportNotification()
         {
             InitializeComponent();
-            string vault = Utils.GlobalVariables.vaultName;
+            string vault = PwMLib.GlobalVariables.vaultName;
             vault = vault.Substring(0, vault.Length - 2);
             notificationLBL.Text = $"Vault {vault} already exists. Do you want to replace it?";
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
@@ -28,7 +28,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.importConfirmation = false;
+                    PwMLib.GlobalVariables.importConfirmation = false;
                     this.Close();
                     break;
             }
@@ -43,7 +43,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.importConfirmation = false;
+                PwMLib.GlobalVariables.importConfirmation = false;
                 this.Close();
             }
         }
@@ -55,7 +55,7 @@ namespace PwM
         /// <param name="e"></param>
         private void confirmBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.importConfirmation = true;
+            PwMLib.GlobalVariables.importConfirmation = true;
             this.Close();
         }
 
@@ -66,7 +66,7 @@ namespace PwM
         /// <param name="e"></param>
         private void CancelBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.importConfirmation = false;
+            PwMLib.GlobalVariables.importConfirmation = false;
             this.Close();
         }
     }

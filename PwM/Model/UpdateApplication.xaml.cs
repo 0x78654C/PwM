@@ -14,12 +14,12 @@ namespace PwM
     {
         private BackgroundWorker _worker;
         private string _breaches = "";
-        Network network = new Network(GlobalVariables.apiHIBPMain);
+        Network network = new Network(PwMLib.GlobalVariables.apiHIBPMain);
         public UpdateApplication()
         {
             InitializeComponent();
-            AccountNameTXT.Text = Utils.GlobalVariables.accountName;
-            ApplicationNameTXT.Text = Utils.GlobalVariables.applicationName;
+            AccountNameTXT.Text = PwMLib.GlobalVariables.accountName;
+            ApplicationNameTXT.Text = PwMLib.GlobalVariables.applicationName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
         }
@@ -33,7 +33,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.closeAppConfirmation = true;
+                    PwMLib.GlobalVariables.closeAppConfirmation = true;
                     this.Close();
                     break;
             }
@@ -48,7 +48,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.closeAppConfirmation = true;
+                PwMLib.GlobalVariables.closeAppConfirmation = true;
                 this.Close();
             }
         }
@@ -71,7 +71,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
 
@@ -121,9 +121,9 @@ namespace PwM
         {
             UpdatePassNotification updatePassNotification = new UpdatePassNotification();
             updatePassNotification.ShowDialog();
-            if (Utils.GlobalVariables.updatePwdConfirmation)
+            if (PwMLib.GlobalVariables.updatePwdConfirmation)
             {
-                Utils.GlobalVariables.newAccountPassword = newPassAccBox.Password;
+                PwMLib.GlobalVariables.newAccountPassword = newPassAccBox.Password;
                 this.Close();
             }
         }
@@ -160,7 +160,7 @@ namespace PwM
         /// <param name="e"></param>
         private void BreackCheck_BW(object sender, DoWorkEventArgs e)
         {
-            var hibp = new HIBP(GlobalVariables.apiHIBP);
+            var hibp = new HIBP(PwMLib.GlobalVariables.apiHIBP);
             if (!string.IsNullOrEmpty(newPassAccBox.Password))
             {
                 _breaches = hibp.CheckIfPwnd(newPassAccBox.Password).Result;

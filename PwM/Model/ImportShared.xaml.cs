@@ -10,7 +10,7 @@ namespace PwM
     /// </summary>
     public partial class ImportShared : Window
     {
-        private readonly string _passwordManagerDirectory = GlobalVariables.passwordManagerDirectory;
+        private readonly string _passwordManagerDirectory = PwMLib.GlobalVariables.passwordManagerDirectory;
         public ImportShared()
         {
             InitializeComponent();
@@ -28,7 +28,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    GlobalVariables.importConfirmation = false;
+                    PwMLib.GlobalVariables.importConfirmation = false;
                     this.Close();
                     break;
             }
@@ -43,14 +43,14 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                GlobalVariables.importConfirmation = false;
+                PwMLib.GlobalVariables.importConfirmation = false;
                 this.Close();
             }
         }
 
         private void SharedBtn_Click(object sender, RoutedEventArgs e)
         {
-            ImportExport.Import(GlobalVariables.listView, _passwordManagerDirectory, true);
+            ImportExport.Import(PwMLib.GlobalVariables.listView, _passwordManagerDirectory, true);
             this.Close();
         }
 
@@ -61,7 +61,7 @@ namespace PwM
         /// <param name="e"></param>
         private void LocalBtn_Click(object sender, RoutedEventArgs e)
         {
-            ImportExport.Import(GlobalVariables.listView, _passwordManagerDirectory, false);
+            ImportExport.Import(PwMLib.GlobalVariables.listView, _passwordManagerDirectory, false);
             this.Close();
         }
 
@@ -72,7 +72,7 @@ namespace PwM
         /// <param name="e"></param>
         private void CloseLbl_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
     }

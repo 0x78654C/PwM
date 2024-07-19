@@ -24,19 +24,19 @@ namespace PwM.Utils
                     if (expireTime >= 1)
                     {
                         periodBox.Text = value;
-                        GlobalVariables.vaultExpireInterval = expireTime;
+                        PwMLib.GlobalVariables.vaultExpireInterval = expireTime;
                         return;
                     }
                     return;
                 }
                 RegistryManagement.RegKey_CreateKey(registryPath, key, keyValue);
-                GlobalVariables.vaultExpireInterval = expireTime;
+                PwMLib.GlobalVariables.vaultExpireInterval = expireTime;
                 periodBox.Text = keyValue;
                 return;
             }catch
             {
                 RegistryManagement.RegKey_CreateKey(registryPath, key, keyValue);
-                GlobalVariables.vaultExpireInterval = expireTime;
+                PwMLib.GlobalVariables.vaultExpireInterval = expireTime;
                 periodBox.Text = keyValue;
                 Notification.ShowNotificationInfo("red", "The vault session expire time could not be read due to an error. Expire time was set to default value of 10 minutes!");
             }

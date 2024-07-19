@@ -12,7 +12,7 @@ namespace PwM
         public UpdatePassNotification()
         {
             InitializeComponent();
-            string account = Utils.GlobalVariables.accountName;
+            string account = PwMLib.GlobalVariables.accountName;
             notificationLBL.Text = $"Do you want tot update password for {account} account?";
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
@@ -27,7 +27,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.updatePwdConfirmation = false;
+                    PwMLib.GlobalVariables.updatePwdConfirmation = false;
                     this.Close();
                     break;
             }
@@ -42,7 +42,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.updatePwdConfirmation = false;
+                PwMLib.GlobalVariables.updatePwdConfirmation = false;
                 this.Close();
             }
         }
@@ -54,7 +54,7 @@ namespace PwM
         /// <param name="e"></param>
         private void confirmBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.updatePwdConfirmation = true;
+            PwMLib.GlobalVariables.updatePwdConfirmation = true;
             this.Close();
         }
 
@@ -65,7 +65,7 @@ namespace PwM
         /// <param name="e"></param>
         private void CancelBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.updatePwdConfirmation = false;
+            PwMLib.GlobalVariables.updatePwdConfirmation = false;
             this.Close();
         }
     }

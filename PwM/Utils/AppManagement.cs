@@ -7,6 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
+
 namespace PwM.Utils
 {
     /* Application tab management class */
@@ -15,7 +16,7 @@ namespace PwM.Utils
         public static SecureString vaultSecure = null;
         private static string passMask = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
         private static string passMaskBreach = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022       \u24B7";
-        private static Network network = new Network(GlobalVariables.apiHIBPMain);
+        private static Network network = new Network(PwMLib.GlobalVariables.apiHIBPMain);
         /// <summary>
         /// Decrypt vault and populate applist with applications info.
         /// </summary>
@@ -31,11 +32,11 @@ namespace PwM.Utils
                 string pathToVault = string.Empty;
                 if (vaultPath.StartsWith("Local"))
                 {
-                    pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                    pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
                 }
                 else
                 {
-                    GlobalVariables.sharedVault = true;
+                    PwMLib.GlobalVariables.sharedVault = true;
                     pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
                 }
 
@@ -54,7 +55,7 @@ namespace PwM.Utils
                 if (decryptVault.Contains("Error decrypting"))
                 {
                     Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
-                    GlobalVariables.masterPasswordCheck = false;
+                    PwMLib.GlobalVariables.masterPasswordCheck = false;
                     MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                     return false;
                 }
@@ -94,7 +95,7 @@ namespace PwM.Utils
             string pathToVault;
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
             }
             else
             {
@@ -126,7 +127,7 @@ namespace PwM.Utils
             if (decryptVault.Contains("Error decrypting"))
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
-                GlobalVariables.masterPasswordCheck = false;
+                PwMLib.GlobalVariables.masterPasswordCheck = false;
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
             }
@@ -177,7 +178,7 @@ namespace PwM.Utils
             string pathToVault;
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
             }
             else
             {
@@ -199,7 +200,7 @@ namespace PwM.Utils
             if (decryptVault.Contains("Error decrypting"))
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
-                GlobalVariables.masterPasswordCheck = false;
+                PwMLib.GlobalVariables.masterPasswordCheck = false;
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
             }
@@ -277,7 +278,7 @@ namespace PwM.Utils
             string pathToVault;
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
             }
             else
             {
@@ -299,7 +300,7 @@ namespace PwM.Utils
             if (decryptVault.Contains("Error decrypting"))
             {
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
-                GlobalVariables.masterPasswordCheck = false;
+                PwMLib.GlobalVariables.masterPasswordCheck = false;
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 return;
             }
@@ -380,7 +381,7 @@ namespace PwM.Utils
             var breach = "0";
             if (network.PingHost())
             {
-                var hibp = new HIBP(GlobalVariables.apiHIBP);
+                var hibp = new HIBP(PwMLib.GlobalVariables.apiHIBP);
                 breach = Task.Run(() => hibp.CheckIfPwnd(password).Result).Result;
             }
             if (breach == "0")
@@ -481,7 +482,7 @@ namespace PwM.Utils
                         if (outJson["site/application"] == application && outJson["account"] == account)
                         {
                             outPass = outJson["password"];
-                            GlobalVariables.accountPassword = outJson["password"];
+                            PwMLib.GlobalVariables.accountPassword = outJson["password"];
                             Notification.ShowNotificationInfo("green", $"Password for {account} is copied to clipboard!");
                         }
                     }
@@ -505,20 +506,20 @@ namespace PwM.Utils
                 string account = GetAccountFromListView(listView);
                 if (account.Length > 0 && application.Length > 0)
                 {
-                    GlobalVariables.accountName = account;
-                    GlobalVariables.applicationName = application;
+                    PwMLib.GlobalVariables.accountName = account;
+                    PwMLib.GlobalVariables.applicationName = application;
                     DelApplications delApplications = new DelApplications();
                     delApplications.ShowDialog();
-                    if (GlobalVariables.deleteConfirmation)
+                    if (PwMLib.GlobalVariables.deleteConfirmation)
                     {
-                        if (!GlobalVariables.masterPasswordCheck)
+                        if (!PwMLib.GlobalVariables.masterPasswordCheck)
                         {
                             var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                             DeleteApplicaiton(listView, vaultName, application, account, masterPassword, vaultPath);
                             ClearVariables.VariablesClear();
                             return;
                         }
-                        DeleteApplicaiton(listView, vaultName, application, account, GlobalVariables.masterPassword, vaultPath);
+                        DeleteApplicaiton(listView, vaultName, application, account, PwMLib.GlobalVariables.masterPassword, vaultPath);
                         ClearVariables.VariablesClear();
                     }
                 }
@@ -577,21 +578,21 @@ namespace PwM.Utils
             string account = GetAccountFromListView(listView);
             if (account.Length > 0 && application.Length > 0)
             {
-                GlobalVariables.accountName = account;
-                GlobalVariables.applicationName = application;
+                PwMLib.GlobalVariables.accountName = account;
+                PwMLib.GlobalVariables.applicationName = application;
                 UpdateApplication updateApplication = new UpdateApplication();
                 updateApplication.ShowDialog();
-                string newPassword = GlobalVariables.newAccountPassword;
+                string newPassword = PwMLib.GlobalVariables.newAccountPassword;
                 if (!string.IsNullOrEmpty(newPassword))
                 {
-                    if (!GlobalVariables.masterPasswordCheck)
+                    if (!PwMLib.GlobalVariables.masterPasswordCheck)
                     {
                         var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                         UpdateAccount(listView, vaultName, application, account, newPassword, masterPassword, vaultPath);
                         ClearVariables.VariablesClear();
                         return;
                     }
-                    UpdateAccount(listView, vaultName, application, account, newPassword, GlobalVariables.masterPassword, vaultPath);
+                    UpdateAccount(listView, vaultName, application, account, newPassword, PwMLib.GlobalVariables.masterPassword, vaultPath);
                     ClearVariables.VariablesClear();
                 }
             }

@@ -12,7 +12,7 @@ namespace PwM.Utils
         public static SecureString LoadMasterPassword(string vaultName)
         {
             SecureString password;
-            GlobalVariables.vaultName = vaultName;
+            PwMLib.GlobalVariables.vaultName = vaultName;
             MasterPassword masterPassword = new MasterPassword();
             masterPassword.ShowDialog();
             password = masterPassword.masterPassword;

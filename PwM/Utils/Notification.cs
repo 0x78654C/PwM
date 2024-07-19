@@ -10,8 +10,8 @@
         /// <param name="messageData"></param>
         public static void ShowNotificationInfo(string gridColor, string messageData)
         {
-            GlobalVariables.gridColor = gridColor;
-            GlobalVariables.messageData = messageData;
+            PwMLib.GlobalVariables.gridColor = gridColor;
+            PwMLib.GlobalVariables.messageData = messageData;
             PopMessage popMessage = new PopMessage();
             popMessage.ShowDialog();
         }

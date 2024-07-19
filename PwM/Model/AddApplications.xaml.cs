@@ -18,7 +18,7 @@ namespace PwM
     {
         private BackgroundWorker _worker;
         private string _breaches = "";
-        Network network = new Network(GlobalVariables.apiHIBPMain);
+        Network network = new Network(PwMLib.GlobalVariables.apiHIBPMain);
         public AddApplications()
         {
             InitializeComponent();
@@ -36,7 +36,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.closeAppConfirmation = true;
+                    PwMLib.GlobalVariables.closeAppConfirmation = true;
                     this.Close();
                     break;
             }
@@ -52,7 +52,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.closeAppConfirmation = true;
+                PwMLib.GlobalVariables.closeAppConfirmation = true;
                 this.Close();
             }
         }
@@ -64,10 +64,10 @@ namespace PwM
         /// <param name="e"></param>
         private void addAppBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.applicationName = appNameTXT.Text;
-            Utils.GlobalVariables.accountName = accountNameTXT.Text;
-            Utils.GlobalVariables.accountPassword = accPasswordBox.Password;
-            Utils.GlobalVariables.closeAppConfirmation = false;
+            PwMLib.GlobalVariables.applicationName = appNameTXT.Text;
+            PwMLib.GlobalVariables.accountName = accountNameTXT.Text;
+            PwMLib.GlobalVariables.accountPassword = accPasswordBox.Password;
+            PwMLib.GlobalVariables.closeAppConfirmation = false;
             Utils.TextPassBoxChanges.ClearTextPassBox(appNameTXT, accountNameTXT, accPasswordBox);
             this.Close();
         }
@@ -90,7 +90,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
 
@@ -174,7 +174,7 @@ namespace PwM
         /// <param name="e"></param>
         private void BreackCheck_BW(object sender, DoWorkEventArgs e)
         {
-            var hibp = new HIBP(GlobalVariables.apiHIBP);
+            var hibp = new HIBP(PwMLib.GlobalVariables.apiHIBP);
             if (!string.IsNullOrEmpty(accPasswordBox.Password))
             {
                 _breaches = hibp.CheckIfPwnd(accPasswordBox.Password).Result;

@@ -12,7 +12,7 @@ namespace PwM
         public PopMessage()
         {
             InitializeComponent();
-            SetUI(Utils.GlobalVariables.gridColor, Utils.GlobalVariables.messageData);
+            SetUI(PwMLib.GlobalVariables.gridColor, PwMLib.GlobalVariables.messageData);
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
         }
