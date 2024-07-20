@@ -31,6 +31,8 @@ Contact: xcoding.dev@gmail.com
 [x] Support:
 If you like this application and want to support the project you can always drink a coffee and stay cool and chill ;).
 Thank you very much for your support, I appreciate it!
+
+Password breach check is powered by https://haveibeenpwned.com/
 ";
 
         /// <summary>
