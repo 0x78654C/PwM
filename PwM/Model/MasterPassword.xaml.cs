@@ -1,11 +1,13 @@
 ﻿using Microsoft.Win32;
 using PwMLib;
+using System.Runtime.Versioning;
 using System.Security;
 using System.Windows;
 using System.Windows.Input;
 
 namespace PwM
 {
+    [SupportedOSPlatform("Windows")]
     /// <summary>
     /// Interaction logic for MasterPassword.xaml
     /// </summary>

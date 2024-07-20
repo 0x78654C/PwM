@@ -1,11 +1,13 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace PwM
 {
+    [SupportedOSPlatform("Windows")]
     /// <summary>
     /// Interaction logic for AddVault.xaml
     /// </summary>

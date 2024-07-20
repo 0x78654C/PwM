@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Versioning;
 using System.Security;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using System.Windows.Controls;
 
 namespace PwM.Utils
 {
+    [SupportedOSPlatform("Windows")]
     /* Application tab management class */
     public class AppManagement
     {

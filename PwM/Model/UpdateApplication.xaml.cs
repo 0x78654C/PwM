@@ -2,6 +2,7 @@
 using PwM.Utils;
 using PwMLib;
 using System.ComponentModel;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 
@@ -10,6 +11,7 @@ namespace PwM
     /// <summary>
     /// Interaction logic for UpdateApplication.xaml
     /// </summary>
+    [SupportedOSPlatform("Windows")]
     public partial class UpdateApplication : Window
     {
         private BackgroundWorker _worker;

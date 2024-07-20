@@ -1,8 +1,11 @@
-﻿namespace PwM.Utils
+﻿using System.Runtime.Versioning;
+
+namespace PwM.Utils
 {
     /* Notificaiton class */
     public class Notification
     {
+        [SupportedOSPlatform("Windows")]
         /// <summary>
         /// Show notificaiton pop up message box with diferent case color.
         /// </summary>

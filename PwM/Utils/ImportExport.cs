@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Windows.Forms;
 
 namespace PwM.Utils
 {
+    [SupportedOSPlatform("Windows")]
     public class ImportExport
     {
         /*Import/export vault class.*/

@@ -1,9 +1,11 @@
 ﻿using Microsoft.Win32;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 
 namespace PwM
 {
+    [SupportedOSPlatform("Windows")]
     /// <summary>
     /// Interaction logic for MPasswordChanger.xaml
     /// </summary>

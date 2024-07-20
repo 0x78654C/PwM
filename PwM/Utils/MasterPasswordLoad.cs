@@ -1,7 +1,9 @@
-﻿using System.Security;
+﻿using System.Runtime.Versioning;
+using System.Security;
 
 namespace PwM.Utils
 {
+    [SupportedOSPlatform("Windows")]
     public class MasterPasswordLoad
     {
         /// <summary>

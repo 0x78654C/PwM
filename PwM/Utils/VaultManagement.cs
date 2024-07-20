@@ -2,11 +2,13 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 namespace PwM.Utils
 {
+    [SupportedOSPlatform("Windows")]
     public class VaultManagement
     {
         /// <summary>

@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -19,6 +20,7 @@ namespace PwM
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    [SupportedOSPlatform("Windows")]
     public partial class MainWindow : Window
     {
         private static readonly Regex s_regex = new Regex("[^!-*.-]+");

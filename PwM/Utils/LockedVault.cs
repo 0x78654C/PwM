@@ -1,9 +1,11 @@
 ﻿using System.IO;
+using System.Runtime.Versioning;
 
 namespace PwM.Utils
 {
     internal class LockedVault
     {
+        [SupportedOSPlatform("Windows")]
         /// <summary>
         /// Check if vault is locked by existing lockedUser file.
         /// </summary>

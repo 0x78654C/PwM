@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Runtime.Versioning;
 using System.Windows.Controls;
 
 namespace PwM.Utils
 {
+    [SupportedOSPlatform("Windows")]
     public class VaultSessionExpire
     {
         /// <summary>
