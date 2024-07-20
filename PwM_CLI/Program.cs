@@ -233,7 +233,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             var names = getFiles.Select(w => new FileInfo(w).Name[..^2]);
-            var outFiles = string.Join(Environment.NewLine, names.Where(x=>!x.Contains(".")).Select(w => $"----------------\n{w}"));
+            var outFiles = string.Join(Environment.NewLine, names.Where(x => !x.Contains(".")).Select(w => $"----------------\n{w}"));
             Console.WriteLine("List of current vaults:");
             Console.WriteLine(outFiles + "\n----------------");
         }
@@ -341,15 +341,19 @@ Password breach check is powered by https://haveibeenpwned.com/
                 return;
             }
 
-            Console.WriteLine("Enter application name (leave blank for all applications):");
+            Console.WriteLine("Enter application name (to display all applications type the word: all):");
             var application = Console.ReadLine();
-            if (application.Length > 0)
-            {
+
+            if (application.Length > 0 && application.ToLower() != "all")
                 WordColorInLine("This is your decrypted data for ", application, ":", ConsoleColor.Magenta);
-            }
-            else
+            else if (application.ToLower() == "all")
+                application = "";
+            else if (application.Length > 0)
+                WordColorInLine("This is your decrypted data for ", application, ":", ConsoleColor.Magenta);
+            else if (application.Length == 0)
             {
-                Console.WriteLine("This is your decrypted data for the entire vault:");
+                ColorConsoleTextLine(ConsoleColor.Yellow, "You need to type the application name or the word 'all' to display all applications!");
+                return;
             }
 
             using var reader = new StringReader(decryptVault);
