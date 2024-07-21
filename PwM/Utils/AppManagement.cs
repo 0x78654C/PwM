@@ -7,7 +7,7 @@ using System.Security;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-
+using System.Linq;
 
 namespace PwM.Utils
 {
@@ -70,7 +70,7 @@ namespace PwM.Utils
                         if (line.Length > 0)
                         {
                             var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
-                            SetMask(outJson["site/application"], outJson["account"], outJson["password"],ref listView);
+                            SetMask(outJson["site/application"], outJson["account"], outJson["password"], ref listView);
                         }
                     }
                 }
@@ -152,7 +152,7 @@ namespace PwM.Utils
                 {
                     File.WriteAllText(pathToVault, encryptdata);
                     Notification.ShowNotificationInfo("green", $"Data for {application} is encrypted and added to vault!");
-                    SetMask(application, accountName, accountPassword,ref listView);
+                    SetMask(application, accountName, accountPassword, ref listView);
                     return;
                 }
                 catch (UnauthorizedAccessException)
@@ -234,7 +234,7 @@ namespace PwM.Utils
                         }
                         else
                         {
-                            SetMask(outJson["site/application"], outJson["account"], outJson["password"],ref listView);
+                            SetMask(outJson["site/application"], outJson["account"], outJson["password"], ref listView);
                         }
                     }
                 }
@@ -335,7 +335,7 @@ namespace PwM.Utils
                             };
                             accountCheck = true;
                             listApps.Add(JsonSerializer.Serialize(keyValues));
-                            SetMask(outJson["site/application"], outJson["account"], password,ref listView);
+                            SetMask(outJson["site/application"], outJson["account"], password, ref listView);
                         }
                         else
                         {
@@ -378,7 +378,7 @@ namespace PwM.Utils
         /// <param name="account"></param>
         /// <param name="password"></param>
         /// <param name="listView"></param>
-        private static void SetMask(string application, string account, string password,ref ListView listView)
+        private static void SetMask(string application, string account, string password, ref ListView listView)
         {
             var breach = "0";
             if (network.PingHost())
@@ -398,6 +398,7 @@ namespace PwM.Utils
         /// <param name="listView"></param>
         public static void ShowPassword(ListView listView)
         {
+            var isPasswordBreachMask = false;
             ListView tempListView = new ListView();
             if (listView.SelectedItem == null)
             {
@@ -405,8 +406,13 @@ namespace PwM.Utils
                 return;
             }
             string selectedItem = listView.SelectedItem.ToString();
-            selectedItem = selectedItem.Replace($", Password = {passMask} " + "}", string.Empty);
-            selectedItem = selectedItem.Replace($", Password = {passMaskBreach} " + "}", string.Empty);
+            if (selectedItem.Contains("\u24B7"))
+            {
+                selectedItem = selectedItem.Replace($", Password = {passMaskBreach} " + "}", string.Empty);
+                isPasswordBreachMask = true;
+            }
+            else
+                selectedItem = selectedItem.Replace($", Password = {passMask} " + "}", string.Empty);
             selectedItem = selectedItem.Replace("{ Application = ", string.Empty);
             selectedItem = selectedItem.Replace(", Account = ", "|");
             var parsedData = selectedItem.Split('|');
@@ -422,7 +428,24 @@ namespace PwM.Utils
                         if (outJson["site/application"] == parsedData[0] && outJson["account"] == parsedData[1])
                             tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
                         else
-                            SetMask(outJson["site/application"], outJson["account"], outJson["password"],ref tempListView);
+                        {
+                            var isBreachMask = false;
+                            foreach (var item in PwMLib.GlobalVariables.listItems)
+                            {
+                                var jsonSplit = item.Split(',');
+                                var app = parsedData[0];
+                                var acc = parsedData[1];
+                                if (jsonSplit[0].Contains(outJson["site/application"]) && jsonSplit[1].Contains(outJson["account"]) && jsonSplit[2].Contains("\u24B7"))
+                                {
+                                    isBreachMask = true;
+                                    break;
+                                }
+                            }
+                            if (isBreachMask)
+                                tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMaskBreach });
+                            else
+                                tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                        }
                     }
                 }
             }
@@ -434,7 +457,12 @@ namespace PwM.Utils
                     if (outJson["site/application"] == parsedData[0] && outJson["account"] == parsedData[1])
                         tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
                     else
-                        SetMask(outJson["site/application"], outJson["account"], outJson["password"],ref tempListView);
+                    {
+                        if (isPasswordBreachMask)
+                            tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMaskBreach });
+                        else
+                            tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                    }
                 }
             }
             listView.Items.Clear();
@@ -599,6 +627,16 @@ namespace PwM.Utils
                 }
             }
             ListViewSettings.ListViewSortSetting(listView, "site/application", false);
+        }
+
+        /// <summary>
+        /// Set apps to temporary list.
+        /// </summary>
+        /// <param name="listView"></param>
+        public static void AddAppsToTempList(ListView listView)
+        {
+            for (int i = 0; i <= listView.Items.Count - 1; i++)
+                PwMLib.GlobalVariables.listItems.Add(listView.Items[i].ToString());
         }
     }
 }
