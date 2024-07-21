@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Security;
 
@@ -36,5 +37,6 @@ namespace PwMLib
         public static int vaultExpireInterval { get; set; }
         public const string apiHIBP = "https://api.pwnedpasswords.com/range/";
         public const string apiHIBPMain = "api.pwnedpasswords.com";
+        public static List<string> listItems = new List<string>();
     }
 }
