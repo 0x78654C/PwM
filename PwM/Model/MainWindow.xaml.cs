@@ -333,8 +333,7 @@ namespace PwM
                         GlobalVariables.vaultOpen = true;
                         StartTimerVaultClose();
                         Sort("Application", appList, ListSortDirection.Ascending);
-                        for (int i = 0; i <= appList.Items.Count - 1; i++)
-                            GlobalVariables.listItems.Add(appList.Items[i].ToString());
+                        AppManagement.AddAppsToTempList(appList);
                     }
                 }
             }

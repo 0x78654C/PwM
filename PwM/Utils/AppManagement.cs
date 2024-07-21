@@ -405,17 +405,17 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("orange", "You must select an application line to show the account password!");
                 return;
             }
+
             string selectedItem = listView.SelectedItem.ToString();
             if (selectedItem.Contains("\u24B7"))
-            {
                 selectedItem = selectedItem.Replace($", Password = {passMaskBreach} " + "}", string.Empty);
-                isPasswordBreachMask = true;
-            }
             else
                 selectedItem = selectedItem.Replace($", Password = {passMask} " + "}", string.Empty);
             selectedItem = selectedItem.Replace("{ Application = ", string.Empty);
             selectedItem = selectedItem.Replace(", Account = ", "|");
             var parsedData = selectedItem.Split('|');
+            if (PwMLib.GlobalVariables.listItems.Count == 1)
+                isPasswordBreachMask = string.Join("", PwMLib.GlobalVariables.listItems).Contains("\u24B7");
             var vault = PasswordValidator.ConvertSecureStringToString(vaultSecure);
             if (CountLines(vault) >= 2)
             {
@@ -433,8 +433,6 @@ namespace PwM.Utils
                             foreach (var item in PwMLib.GlobalVariables.listItems)
                             {
                                 var jsonSplit = item.Split(',');
-                                var app = parsedData[0];
-                                var acc = parsedData[1];
                                 if (jsonSplit[0].Contains(outJson["site/application"]) && jsonSplit[1].Contains(outJson["account"]) && jsonSplit[2].Contains("\u24B7"))
                                 {
                                     isBreachMask = true;
@@ -635,6 +633,7 @@ namespace PwM.Utils
         /// <param name="listView"></param>
         public static void AddAppsToTempList(ListView listView)
         {
+            PwMLib.GlobalVariables.listItems.Clear();
             for (int i = 0; i <= listView.Items.Count - 1; i++)
                 PwMLib.GlobalVariables.listItems.Add(listView.Items[i].ToString());
         }
