@@ -10,6 +10,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -332,6 +333,8 @@ namespace PwM
                         GlobalVariables.vaultOpen = true;
                         StartTimerVaultClose();
                         Sort("Application", appList, ListSortDirection.Ascending);
+                        for (int i = 0; i <= appList.Items.Count - 1; i++)
+                            GlobalVariables.listItems.Add(appList.Items[i].ToString());
                     }
                 }
             }
@@ -538,6 +541,7 @@ namespace PwM
                 return;
             }
             AppManagement.UpdateSelectedItemPassword(appList, _vaultName, _vaultPath);
+            AppManagement.AddAppsToTempList(appList);
         }
 
         /// <summary>
@@ -556,10 +560,12 @@ namespace PwM
                 {
                     var masterPassword = MasterPasswordLoad.LoadMasterPassword(_vaultName);
                     AppManagement.AddApplication(appList, _vaultName, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, masterPassword, _vaultPath);
+                    AppManagement.AddAppsToTempList(appList);
                     ClearVariables.VariablesClear();
                     return;
                 }
                 AppManagement.AddApplication(appList, _vaultName, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, GlobalVariables.masterPassword, _vaultPath);
+                AppManagement.AddAppsToTempList(appList);
                 ClearVariables.VariablesClear();
             }
         }
