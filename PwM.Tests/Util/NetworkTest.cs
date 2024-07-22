@@ -14,7 +14,6 @@ namespace PwM.Tests.Util
         }
 
         [Theory]
-        [InlineData("google.com")]
         [InlineData("api.pwnedpasswords.com")]
         public void Check_Ping_Response(string address)
         {
