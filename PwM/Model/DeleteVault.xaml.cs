@@ -1,8 +1,10 @@
 ﻿using Microsoft.Win32;
+using System.Runtime.Versioning;
 using System.Windows;
 
 namespace PwM
 {
+    [SupportedOSPlatform("Windows")]
     /// <summary>
     /// Interaction logic for DeleteVault.xaml
     /// </summary>
@@ -11,7 +13,7 @@ namespace PwM
         public DeleteVault()
         {
             InitializeComponent();
-            string vault = Utils.GlobalVariables.vaultName;
+            string vault = PwMLib.GlobalVariables.vaultName;
             notificationLBL.Text = $"Do you want tot delete/remove {vault} vault?";
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
@@ -27,7 +29,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.deleteConfirmation = false;
+                    PwMLib.GlobalVariables.deleteConfirmation = false;
                     this.Close();
                     break;
             }
@@ -42,7 +44,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.deleteConfirmation = false;
+                PwMLib.GlobalVariables.deleteConfirmation = false;
                 this.Close();
             }
         }
@@ -54,7 +56,7 @@ namespace PwM
         /// <param name="e"></param>
         private void confirmBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.deleteConfirmation = true;
+            PwMLib.GlobalVariables.deleteConfirmation = true;
             this.Close();
         }
 
@@ -65,7 +67,7 @@ namespace PwM
         /// <param name="e"></param>
         private void CancelBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.deleteConfirmation = false;
+            PwMLib.GlobalVariables.deleteConfirmation = false;
             this.Close();
         }
     }

@@ -1,11 +1,13 @@
 ﻿using Microsoft.Win32;
 using PwMLib;
+using System.Runtime.Versioning;
 using System.Security;
 using System.Windows;
 using System.Windows.Input;
 
 namespace PwM
 {
+    [SupportedOSPlatform("Windows")]
     /// <summary>
     /// Interaction logic for MasterPassword.xaml
     /// </summary>
@@ -16,7 +18,7 @@ namespace PwM
         public MasterPassword()
         {
             InitializeComponent();
-            vaultNameLBL.Text = Utils.GlobalVariables.vaultName;
+            vaultNameLBL.Text = PwMLib.GlobalVariables.vaultName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
         }
@@ -83,7 +85,7 @@ namespace PwM
                 masterPasswordPWD.Clear();
                 return;
             }
-            Utils.GlobalVariables.masterPasswordCheck = true;
+            PwMLib.GlobalVariables.masterPasswordCheck = true;
             Utils.MasterPasswordTimerStart.MasterPasswordCheck_TimerStart(MainWindow.s_masterPassCheckTimer);
             masterPassword = masterPasswordPWD.SecurePassword;
             this.Close();

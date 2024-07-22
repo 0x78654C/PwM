@@ -1,4 +1,5 @@
 ﻿using PwMLib;
+
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using static PwM.Utils.UI;
@@ -12,7 +13,7 @@ namespace PwM
 
         private static int s_tries = 0;
         private static string s_vaultsDir;
-
+        private static Network network = new Network(GlobalVariables.apiHIBPMain);
         private static readonly string s_helpMessage = $@"PwM Copyright @ 2020-2022 0x078654c
 PwM - A simple password manager to store localy the authentification data encrypted for a application using Rijndael AES-256 and Argon2 for password hash.
 Contact: xcoding.dev@gmail.com
@@ -30,6 +31,8 @@ Contact: xcoding.dev@gmail.com
 [x] Support:
 If you like this application and want to support the project you can always drink a coffee and stay cool and chill ;).
 Thank you very much for your support, I appreciate it!
+
+Password breach check is powered by https://haveibeenpwned.com/
 ";
 
         /// <summary>
@@ -230,9 +233,9 @@ Thank you very much for your support, I appreciate it!
             }
 
             var names = getFiles.Select(w => new FileInfo(w).Name[..^2]);
-            var outFiles = string.Join(Environment.NewLine, names.Select(w => $"----------------\n{w}"));
+            var outFiles = string.Join(Environment.NewLine, names.Where(x => !x.Contains(".")).Select(w => $"----------------\n{w}"));
             Console.WriteLine("List of current vaults:");
-            Console.WriteLine(outFiles + "----------------");
+            Console.WriteLine(outFiles + "\n----------------");
         }
 
 
@@ -301,6 +304,7 @@ Thank you very much for your support, I appreciate it!
             s_tries = 0;
             WordColorInLine("Enter password for ", account, ":", ConsoleColor.Green);
             var password = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
+            if (IsPasswordBreached(password)) return;
             Console.WriteLine();
             var keyValues = new Dictionary<string, object>
             {
@@ -337,15 +341,19 @@ Thank you very much for your support, I appreciate it!
                 return;
             }
 
-            Console.WriteLine("Enter application name (leave blank for all applications):");
+            Console.WriteLine("Enter application name (to display all applications type the word: all):");
             var application = Console.ReadLine();
-            if (application.Length > 0)
-            {
+
+            if (application.Length > 0 && application.ToLower() != "all")
                 WordColorInLine("This is your decrypted data for ", application, ":", ConsoleColor.Magenta);
-            }
-            else
+            else if (application.ToLower() == "all")
+                application = "";
+            else if (application.Length > 0)
+                WordColorInLine("This is your decrypted data for ", application, ":", ConsoleColor.Magenta);
+            else if (application.Length == 0)
             {
-                Console.WriteLine("This is your decrypted data for the entire vault:");
+                ColorConsoleTextLine(ConsoleColor.Yellow, "You need to type the application name or the word 'all' to display all applications!");
+                return;
             }
 
             using var reader = new StringReader(decryptVault);
@@ -360,7 +368,13 @@ Thank you very much for your support, I appreciate it!
                 Console.WriteLine("-------------------------");
                 Console.WriteLine($"Application Name: ".PadRight(20, ' ') + outJson["site/application"]);
                 Console.WriteLine($"Account Name: ".PadRight(20, ' ') + outJson["account"]);
-                Console.WriteLine($"Password: ".PadRight(20, ' ') + outJson["password"]);
+                if (IsPasswordBreached(outJson["password"], false))
+                {
+                    Console.Write($"Password: ".PadRight(20, ' ') + outJson["password"].PadRight(15, ' '));
+                    ColorConsoleText(ConsoleColor.Yellow, "(breached)\n");
+                }
+                else
+                    Console.WriteLine($"Password: ".PadRight(20, ' ') + outJson["password"]);
             }
 
             Console.WriteLine("-------------------------");
@@ -561,6 +575,7 @@ Thank you very much for your support, I appreciate it!
             s_tries = 0;
             WordColorInLine("Enter new password for ", accountName, ":", ConsoleColor.Green);
             var password = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
+            if (IsPasswordBreached(password)) return;
             Console.WriteLine();
             using var reader = new StringReader(decryptVault);
             string line;
@@ -614,6 +629,35 @@ Thank you very much for your support, I appreciate it!
             Console.Write(beforeText);
             ColorConsoleText(color, word);
             Console.Write(afterText + Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Check if password is been part of data breach.
+        /// </summary>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        private static bool IsPasswordBreached(string password, bool displayMessage = false)
+        {
+            bool isPublicBreach = false;
+            if (!network.PingHost())
+                return isPublicBreach;
+            var hibp = new HIBP(GlobalVariables.apiHIBP);
+            var breach = hibp.CheckIfPwnd(password);
+            var isBreach = breach.Result != "0";
+            if (isBreach)
+            {
+                if (displayMessage)
+                {
+                    ColorConsoleText(ConsoleColor.Yellow, "\nThe password is part of an exposed data breach. Do you want to continue on adding the application to vault? Yes(Y) No(N):");
+                    var key = Console.ReadKey();
+                    Console.WriteLine();
+                    if (key.KeyChar.ToString().ToLower() == "n")
+                        isPublicBreach = true;
+                }
+                else
+                    isPublicBreach = true;
+            }
+            return isPublicBreach;
         }
     }
 }

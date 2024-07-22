@@ -6,7 +6,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("PwM")]
-[assembly: AssemblyDescription("Simple offline password manager to store locally sensitive authentication data for a specific application. It uses Rijndael AES-256bit encryption for data and Argon2id for master password hash. The project is open source and can be found here https://github.com/0x78654C/PwM")]
+[assembly: AssemblyDescription("Simple offline password manager to store locally sensitive authentication data for a specific application. It uses Rijndael AES-256bit encryption for data and Argon2id for master password hash. The project is open source and can be found here https://github.com/0x78654C/PwM. Password breach check is powered by https://haveibeenpwned.com/")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PwM")]
@@ -49,5 +49,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.6.0")]
-[assembly: AssemblyFileVersion("1.1.6.0")]
+[assembly: AssemblyVersion("1.1.7.0")]
+[assembly: AssemblyFileVersion("1.1.7.0")]

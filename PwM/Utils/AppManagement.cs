@@ -1,20 +1,24 @@
 ﻿using PwMLib;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
+using System.Runtime.Versioning;
 using System.Security;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows.Controls;
+using System.Linq;
 
 namespace PwM.Utils
 {
+    [SupportedOSPlatform("Windows")]
     /* Application tab management class */
     public class AppManagement
     {
         public static SecureString vaultSecure = null;
         private static string passMask = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022";
-
+        private static string passMaskBreach = "\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022       \u24B7";
+        private static Network network = new Network(PwMLib.GlobalVariables.apiHIBPMain);
         /// <summary>
         /// Decrypt vault and populate applist with applications info.
         /// </summary>
@@ -30,11 +34,11 @@ namespace PwM.Utils
                 string pathToVault = string.Empty;
                 if (vaultPath.StartsWith("Local"))
                 {
-                    pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                    pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
                 }
                 else
                 {
-                    GlobalVariables.sharedVault = true;
+                    PwMLib.GlobalVariables.sharedVault = true;
                     pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
                 }
 
@@ -53,7 +57,7 @@ namespace PwM.Utils
                 if (decryptVault.Contains("Error decrypting"))
                 {
                     Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
-                    GlobalVariables.masterPasswordCheck = false;
+                    PwMLib.GlobalVariables.masterPasswordCheck = false;
                     MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                     return false;
                 }
@@ -66,7 +70,7 @@ namespace PwM.Utils
                         if (line.Length > 0)
                         {
                             var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
-                            listView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                            SetMask(outJson["site/application"], outJson["account"], outJson["password"], ref listView);
                         }
                     }
                 }
@@ -93,11 +97,12 @@ namespace PwM.Utils
             string pathToVault;
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
             }
             else
             {
                 pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                if (LockedVault.IsVaultLocked(pathToVault)) return;
             }
             if (!File.Exists(pathToVault))
             {
@@ -124,7 +129,7 @@ namespace PwM.Utils
             if (decryptVault.Contains("Error decrypting"))
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
-                GlobalVariables.masterPasswordCheck = false;
+                PwMLib.GlobalVariables.masterPasswordCheck = false;
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
             }
@@ -146,8 +151,8 @@ namespace PwM.Utils
                 try
                 {
                     File.WriteAllText(pathToVault, encryptdata);
-                    Notification.ShowNotificationInfo("green", $"Data for { application} is encrypted and added to vault!");
-                    listView.Items.Add(new { Application = application, Account = accountName, Password = passMask });
+                    Notification.ShowNotificationInfo("green", $"Data for {application} is encrypted and added to vault!");
+                    SetMask(application, accountName, accountPassword, ref listView);
                     return;
                 }
                 catch (UnauthorizedAccessException)
@@ -175,11 +180,12 @@ namespace PwM.Utils
             string pathToVault;
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
             }
             else
             {
                 pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                if (LockedVault.IsVaultLocked(pathToVault)) return;
             }
             if (masterPassword == null)
             {
@@ -196,7 +202,7 @@ namespace PwM.Utils
             if (decryptVault.Contains("Error decrypting"))
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
-                GlobalVariables.masterPasswordCheck = false;
+                PwMLib.GlobalVariables.masterPasswordCheck = false;
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 return;
             }
@@ -228,7 +234,7 @@ namespace PwM.Utils
                         }
                         else
                         {
-                            listView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                            SetMask(outJson["site/application"], outJson["account"], outJson["password"], ref listView);
                         }
                     }
                 }
@@ -274,11 +280,12 @@ namespace PwM.Utils
             string pathToVault;
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
             }
             else
             {
                 pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                if (LockedVault.IsVaultLocked(pathToVault)) return;
             }
             if (!File.Exists(pathToVault))
             {
@@ -295,7 +302,7 @@ namespace PwM.Utils
             if (decryptVault.Contains("Error decrypting"))
             {
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
-                GlobalVariables.masterPasswordCheck = false;
+                PwMLib.GlobalVariables.masterPasswordCheck = false;
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 return;
             }
@@ -328,12 +335,12 @@ namespace PwM.Utils
                             };
                             accountCheck = true;
                             listApps.Add(JsonSerializer.Serialize(keyValues));
-                            listView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                            SetMask(outJson["site/application"], outJson["account"], password, ref listView);
                         }
                         else
                         {
                             listApps.Add(line);
-                            listView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                            SetMask(outJson["site/application"], outJson["account"], outJson["password"], ref listView);
                         }
                     }
                 }
@@ -364,7 +371,26 @@ namespace PwM.Utils
             ListViewSettings.ListViewSortSetting(listView, "site/application", false);
         }
 
-
+        /// <summary>
+        /// Set mask depending if breached or not.
+        /// </summary>
+        /// <param name="application"></param>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <param name="listView"></param>
+        private static void SetMask(string application, string account, string password, ref ListView listView)
+        {
+            var breach = "0";
+            if (network.PingHost())
+            {
+                var hibp = new HIBP(PwMLib.GlobalVariables.apiHIBP);
+                breach = Task.Run(() => hibp.CheckIfPwnd(password).Result).Result;
+            }
+            if (breach == "0")
+                listView.Items.Add(new { Application = application, Account = account, Password = passMask });
+            else
+                listView.Items.Add(new { Application = application, Account = account, Password = passMaskBreach });
+        }
 
         /// <summary>
         /// Show password function for right click context menu event on applist.
@@ -372,17 +398,24 @@ namespace PwM.Utils
         /// <param name="listView"></param>
         public static void ShowPassword(ListView listView)
         {
+            var isPasswordBreachMask = false;
             ListView tempListView = new ListView();
             if (listView.SelectedItem == null)
             {
                 Notification.ShowNotificationInfo("orange", "You must select an application line to show the account password!");
                 return;
             }
+
             string selectedItem = listView.SelectedItem.ToString();
-            selectedItem = selectedItem.Replace($", Password = {passMask} " + "}", string.Empty);
+            if (selectedItem.Contains("\u24B7"))
+                selectedItem = selectedItem.Replace($", Password = {passMaskBreach} " + "}", string.Empty);
+            else
+                selectedItem = selectedItem.Replace($", Password = {passMask} " + "}", string.Empty);
             selectedItem = selectedItem.Replace("{ Application = ", string.Empty);
             selectedItem = selectedItem.Replace(", Account = ", "|");
             var parsedData = selectedItem.Split('|');
+            if (PwMLib.GlobalVariables.listItems.Count == 1)
+                isPasswordBreachMask = string.Join("", PwMLib.GlobalVariables.listItems).Contains("\u24B7");
             var vault = PasswordValidator.ConvertSecureStringToString(vaultSecure);
             if (CountLines(vault) >= 2)
             {
@@ -393,12 +426,23 @@ namespace PwM.Utils
                     {
                         var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
                         if (outJson["site/application"] == parsedData[0] && outJson["account"] == parsedData[1])
-                        {
                             tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
-                        }
                         else
                         {
-                            tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                            var isBreachMask = false;
+                            foreach (var item in PwMLib.GlobalVariables.listItems)
+                            {
+                                var jsonSplit = item.Split(',');
+                                if (jsonSplit[0].Contains(outJson["site/application"]) && jsonSplit[1].Contains(outJson["account"]) && jsonSplit[2].Contains("\u24B7"))
+                                {
+                                    isBreachMask = true;
+                                    break;
+                                }
+                            }
+                            if (isBreachMask)
+                                tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMaskBreach });
+                            else
+                                tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
                         }
                     }
                 }
@@ -409,12 +453,13 @@ namespace PwM.Utils
                 {
                     var outJson = JsonSerializer.Deserialize<Dictionary<string, string>>(vault);
                     if (outJson["site/application"] == parsedData[0] && outJson["account"] == parsedData[1])
-                    {
                         tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = outJson["password"] });
-                    }
                     else
                     {
-                        tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
+                        if (isPasswordBreachMask)
+                            tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMaskBreach });
+                        else
+                            tempListView.Items.Add(new { Application = outJson["site/application"], Account = outJson["account"], Password = passMask });
                     }
                 }
             }
@@ -465,7 +510,7 @@ namespace PwM.Utils
                         if (outJson["site/application"] == application && outJson["account"] == account)
                         {
                             outPass = outJson["password"];
-                            GlobalVariables.accountPassword = outJson["password"];
+                            PwMLib.GlobalVariables.accountPassword = outJson["password"];
                             Notification.ShowNotificationInfo("green", $"Password for {account} is copied to clipboard!");
                         }
                     }
@@ -479,28 +524,30 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="listView"></param>
         /// <param name="vaultName"></param>
-        public static void DeleteSelectedItem(ListView listView, string vaultName, string vaultPath)
+        public static void DeleteSelectedItem(ListView listView, string vaultName, string vaultPath, ListView vaultList)
         {
+            var pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            if (LockedVault.IsVaultLocked(pathToVault)) return;
             string application = GetApplicationFromListView(listView);
             if (application.Length > 0)
             {
                 string account = GetAccountFromListView(listView);
                 if (account.Length > 0 && application.Length > 0)
                 {
-                    GlobalVariables.accountName = account;
-                    GlobalVariables.applicationName = application;
+                    PwMLib.GlobalVariables.accountName = account;
+                    PwMLib.GlobalVariables.applicationName = application;
                     DelApplications delApplications = new DelApplications();
                     delApplications.ShowDialog();
-                    if (GlobalVariables.deleteConfirmation)
+                    if (PwMLib.GlobalVariables.deleteConfirmation)
                     {
-                        if (!GlobalVariables.masterPasswordCheck)
+                        if (!PwMLib.GlobalVariables.masterPasswordCheck)
                         {
                             var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                             DeleteApplicaiton(listView, vaultName, application, account, masterPassword, vaultPath);
                             ClearVariables.VariablesClear();
                             return;
                         }
-                        DeleteApplicaiton(listView, vaultName, application, account, GlobalVariables.masterPassword, vaultPath);
+                        DeleteApplicaiton(listView, vaultName, application, account, PwMLib.GlobalVariables.masterPassword, vaultPath);
                         ClearVariables.VariablesClear();
                     }
                 }
@@ -553,29 +600,42 @@ namespace PwM.Utils
         /// <param name="vaultName"></param>
         public static void UpdateSelectedItemPassword(ListView listView, string vaultName, string vaultPath)
         {
+            var pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            if (LockedVault.IsVaultLocked(pathToVault)) return;
             string application = GetApplicationFromListView(listView);
             string account = GetAccountFromListView(listView);
             if (account.Length > 0 && application.Length > 0)
             {
-                GlobalVariables.accountName = account;
-                GlobalVariables.applicationName = application;
+                PwMLib.GlobalVariables.accountName = account;
+                PwMLib.GlobalVariables.applicationName = application;
                 UpdateApplication updateApplication = new UpdateApplication();
                 updateApplication.ShowDialog();
-                string newPassword = GlobalVariables.newAccountPassword;
+                string newPassword = PwMLib.GlobalVariables.newAccountPassword;
                 if (!string.IsNullOrEmpty(newPassword))
                 {
-                    if (!GlobalVariables.masterPasswordCheck)
+                    if (!PwMLib.GlobalVariables.masterPasswordCheck)
                     {
                         var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                         UpdateAccount(listView, vaultName, application, account, newPassword, masterPassword, vaultPath);
                         ClearVariables.VariablesClear();
                         return;
                     }
-                    UpdateAccount(listView, vaultName, application, account, newPassword, GlobalVariables.masterPassword, vaultPath);
+                    UpdateAccount(listView, vaultName, application, account, newPassword, PwMLib.GlobalVariables.masterPassword, vaultPath);
                     ClearVariables.VariablesClear();
                 }
             }
             ListViewSettings.ListViewSortSetting(listView, "site/application", false);
+        }
+
+        /// <summary>
+        /// Set apps to temporary list.
+        /// </summary>
+        /// <param name="listView"></param>
+        public static void AddAppsToTempList(ListView listView)
+        {
+            PwMLib.GlobalVariables.listItems.Clear();
+            for (int i = 0; i <= listView.Items.Count - 1; i++)
+                PwMLib.GlobalVariables.listItems.Add(listView.Items[i].ToString());
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Windows.Forms;
 
 namespace PwM.Utils
 {
+    [SupportedOSPlatform("Windows")]
     public class ImportExport
     {
         /*Import/export vault class.*/
@@ -19,7 +21,7 @@ namespace PwM.Utils
         /// <param name="vaultDirPath"></param>
         public static void Import(System.Windows.Controls.ListView vaultList, string vaultDirPath, bool sharedVault)
         {
-            GlobalVariables.closeAppConfirmation = false;
+            PwMLib.GlobalVariables.closeAppConfirmation = false;
             s_openFileDialog.Filter = "Vault Files (*.x)|*.x";
             s_openFileDialog.Multiselect = true;
             s_openFileDialog.Title = "Select PwM vault files to Import";
@@ -42,7 +44,7 @@ namespace PwM.Utils
                         string vaultPwMLocation = vaultDirPath + vault;
                         if (sharedVault)
                         {
-                            AddSharedVault(GlobalVariables.jsonSharedVaults, vault, vaultPath);
+                            AddSharedVault(PwMLib.GlobalVariables.jsonSharedVaults, vault, vaultPath);
                         }
                         else
                         {
@@ -54,7 +56,7 @@ namespace PwM.Utils
                                     copyOverwrite = true;
                                     vaultOverwrite = vault;
                                     File.Copy(vaultfile, vaultPwMLocation, true);
-                                    GlobalVariables.importConfirmation = false;
+                                    PwMLib.GlobalVariables.importConfirmation = false;
                                 }
                             }
                             else
@@ -74,7 +76,7 @@ namespace PwM.Utils
                 VaultManagement.ListVaults(vaultDirPath, vaultList, sharedVault);
                 return;
             }
-            GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
         }
 
 
@@ -145,10 +147,10 @@ namespace PwM.Utils
         /// <returns></returns>
         private static bool VaultImportOverwriteFile(string vaultName)
         {
-            GlobalVariables.vaultName = vaultName;
+            PwMLib.GlobalVariables.vaultName = vaultName;
             ImportNotification importNotification = new ImportNotification();
             importNotification.ShowDialog();
-            return GlobalVariables.importConfirmation;
+            return PwMLib.GlobalVariables.importConfirmation;
         }
 
         private static bool CheckJsonVault(string filePath, string vaultName, string sharedPath)
@@ -170,7 +172,7 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("orange", $"Shared vault {vaultName} is already added to list!");
                 return;
             }
-            JsonManage.UpdateJsonFile(GlobalVariables.jsonSharedVaults, new VaultDetails { VaultName = vaultName, SharedPath = sharedPath });
+            JsonManage.UpdateJsonFile(PwMLib.GlobalVariables.jsonSharedVaults, new VaultDetails { VaultName = vaultName, SharedPath = sharedPath });
             Notification.ShowNotificationInfo("green", $"{vaultName} vault was imported!");
         }
     }

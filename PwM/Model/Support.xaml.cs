@@ -1,10 +1,12 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Threading;
 
 namespace PwM
 {
+    [SupportedOSPlatform("Windows")]
     /// <summary>
     /// Interaction logic for Support.xaml
     /// </summary>
@@ -28,7 +30,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.updatePwdConfirmation = false;
+                    PwMLib.GlobalVariables.updatePwdConfirmation = false;
                     this.Close();
                     break;
             }
@@ -43,7 +45,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.updatePwdConfirmation = false;
+                PwMLib.GlobalVariables.updatePwdConfirmation = false;
                 this.Close();
             }
         }

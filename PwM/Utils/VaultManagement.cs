@@ -2,11 +2,13 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.Versioning;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 namespace PwM.Utils
 {
+    [SupportedOSPlatform("Windows")]
     public class VaultManagement
     {
         /// <summary>
@@ -23,28 +25,28 @@ namespace PwM.Utils
                 if (File.Exists(pathToVault))
                 {
                     Notification.ShowNotificationInfo("orange", $"Vault {vaultName} already exist!");
-                    GlobalVariables.vaultChecks = true;
+                    PwMLib.GlobalVariables.vaultChecks = true;
                     return;
                 }
 
                 if (vaultName.Length < 3)
                 {
                     Notification.ShowNotificationInfo("orange", "Vault name must be at least 3 characters long.");
-                    GlobalVariables.vaultChecks = true;
+                    PwMLib.GlobalVariables.vaultChecks = true;
                     return;
                 }
 
                 if (!PasswordValidator.ValidatePassword(confirmPassword))
                 {
                     Notification.ShowNotificationInfo("orange", "Password must be at least 12 characters, and must include at least one upper case letter, one lower case letter, one numeric digit, one special character and no space!");
-                    GlobalVariables.vaultChecks = true;
+                    PwMLib.GlobalVariables.vaultChecks = true;
                     return;
                 }
 
                 string sealVault = AES.Encrypt(string.Empty, confirmPassword);
                 File.WriteAllText(pathToVault, sealVault);
                 Notification.ShowNotificationInfo("green", $"Vault {vaultName} was created!");
-                GlobalVariables.createConfirmation = true;
+                PwMLib.GlobalVariables.createConfirmation = true;
             }
             catch (Exception e)
             {
@@ -64,10 +66,10 @@ namespace PwM.Utils
             string vault = GetVaultNameFromListView(listView);
             if (vault.Length > 0)
             {
-                GlobalVariables.vaultName = vault;
+                PwMLib.GlobalVariables.vaultName = vault;
                 DeleteVault deleteVault = new DeleteVault();
                 deleteVault.ShowDialog();
-                if (GlobalVariables.deleteConfirmation)
+                if (PwMLib.GlobalVariables.deleteConfirmation)
                 {
                     DeleteVault(vault, vaultDirectory, listView);
                     ClearVariables.VariablesClear();
@@ -105,7 +107,7 @@ namespace PwM.Utils
             {
                 if (vaultDirectory.StartsWith("Local"))
                 {
-                    string pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                    string pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
                     if (!File.Exists(pathToVault))
                     {
                         Notification.ShowNotificationInfo("orange", $"Vault {vaultName} does not exist!");
@@ -113,10 +115,10 @@ namespace PwM.Utils
                     }
                     File.Delete(pathToVault);
                     Notification.ShowNotificationInfo("green", $"Vault { vaultName} was deleted!");
-                    ListVaults(GlobalVariables.passwordManagerDirectory, vaultsList, false);
+                    ListVaults(PwMLib.GlobalVariables.passwordManagerDirectory, vaultsList, false);
                     return;
                 }
-                JsonManage.DeleteJsonData<VaultDetails>(GlobalVariables.jsonSharedVaults, f => f.Where(t => t.VaultName == vaultName + ".x" && t.SharedPath == vaultDirectory));
+                JsonManage.DeleteJsonData<VaultDetails>(PwMLib.GlobalVariables.jsonSharedVaults, f => f.Where(t => t.VaultName == vaultName + ".x" && t.SharedPath == vaultDirectory));
                 Notification.ShowNotificationInfo("green", $"Shared vault { vaultName} was removed from list!");
                 ListVaults(vaultDirectory, vaultsList, true);
             }
@@ -132,11 +134,11 @@ namespace PwM.Utils
         /// <param name="vaultsDirectory">Path to vault directory.</param>
         public static void ListVaults(string vaultsDirectory, ListView listView, bool enableShare)
         {
-            GlobalVariables.vaultsCount = 0;
+            PwMLib.GlobalVariables.vaultsCount = 0;
             listView.Items.Clear();
 
             if (enableShare)
-                vaultsDirectory = GlobalVariables.passwordManagerDirectory;
+                vaultsDirectory = PwMLib.GlobalVariables.passwordManagerDirectory;
 
             if (!Directory.Exists(vaultsDirectory))
             {
@@ -147,18 +149,18 @@ namespace PwM.Utils
             var getFiles = new DirectoryInfo(vaultsDirectory).GetFiles();
             foreach (var file in getFiles)
             {
-                GlobalVariables.vaultsCount++;
+                PwMLib.GlobalVariables.vaultsCount++;
                 if (file.Name.EndsWith(".x"))
                 {
                     listView.Items.Add(new { Name = file.Name.Substring(0, file.Name.Length - 2), CreateDate = file.CreationTime, SharePoint = "Local Stored" });
                 }
             }
-            if (File.Exists(GlobalVariables.jsonSharedVaults))
+            if (File.Exists(PwMLib.GlobalVariables.jsonSharedVaults))
             {
                 VaultDetails[] items;
                 try
                 {
-                    items = JsonManage.ReadJsonFromFile<VaultDetails[]>(GlobalVariables.jsonSharedVaults);
+                    items = JsonManage.ReadJsonFromFile<VaultDetails[]>(PwMLib.GlobalVariables.jsonSharedVaults);
                     FileInfo fileInfo;
                     foreach (var item in items)
                     {
@@ -170,7 +172,7 @@ namespace PwM.Utils
                 catch
                 {
                     Notification.ShowNotificationInfo("red", "Shared vault list is corrupted. Try import again the shared vaults!");
-                    File.Delete(GlobalVariables.jsonSharedVaults);
+                    File.Delete(PwMLib.GlobalVariables.jsonSharedVaults);
                     return;
                 }
             }
@@ -194,8 +196,8 @@ namespace PwM.Utils
             tabControl.SelectedIndex = 0;
             appListView.Foreground = Brushes.Red;
             appListView.IsEnabled = false;
-            GlobalVariables.masterPassword = null;
-            GlobalVariables.vaultOpen = false;
+            PwMLib.GlobalVariables.masterPassword = null;
+            PwMLib.GlobalVariables.vaultOpen = false;
             AppManagement.vaultSecure = null;
             MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(masterPasswordTimer);
             GC.Collect();
@@ -225,8 +227,8 @@ namespace PwM.Utils
         /// <param name="newMasterPassword"></param>
         public static void ChangeMassterPassword(ListView vaultList)
         {
-            string oldMasterPassword = PasswordValidator.ConvertSecureStringToString(GlobalVariables.masterPassword);
-            string newMasterPassword = PasswordValidator.ConvertSecureStringToString(GlobalVariables.newMasterPassword);
+            string oldMasterPassword = PasswordValidator.ConvertSecureStringToString(PwMLib.GlobalVariables.masterPassword);
+            string newMasterPassword = PasswordValidator.ConvertSecureStringToString(PwMLib.GlobalVariables.newMasterPassword);
             if (vaultList.SelectedItem == null)
             {
                 Notification.ShowNotificationInfo("orange", "You must select a vault for changeing the Master Password!");
@@ -237,7 +239,7 @@ namespace PwM.Utils
             string vaultPath = GetVaultPathFromList(vaultList);
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
             }
             else
             {

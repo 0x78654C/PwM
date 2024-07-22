@@ -1,8 +1,11 @@
-﻿namespace PwM.Utils
+﻿using System.Runtime.Versioning;
+
+namespace PwM.Utils
 {
     /* Notificaiton class */
     public class Notification
     {
+        [SupportedOSPlatform("Windows")]
         /// <summary>
         /// Show notificaiton pop up message box with diferent case color.
         /// </summary>
@@ -10,8 +13,8 @@
         /// <param name="messageData"></param>
         public static void ShowNotificationInfo(string gridColor, string messageData)
         {
-            GlobalVariables.gridColor = gridColor;
-            GlobalVariables.messageData = messageData;
+            PwMLib.GlobalVariables.gridColor = gridColor;
+            PwMLib.GlobalVariables.messageData = messageData;
             PopMessage popMessage = new PopMessage();
             popMessage.ShowDialog();
         }

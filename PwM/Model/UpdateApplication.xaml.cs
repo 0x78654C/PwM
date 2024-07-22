@@ -1,5 +1,8 @@
 ﻿using Microsoft.Win32;
+using PwM.Utils;
 using PwMLib;
+using System.ComponentModel;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 
@@ -8,13 +11,17 @@ namespace PwM
     /// <summary>
     /// Interaction logic for UpdateApplication.xaml
     /// </summary>
+    [SupportedOSPlatform("Windows")]
     public partial class UpdateApplication : Window
     {
+        private BackgroundWorker _worker;
+        private string _breaches = "";
+        Network network = new Network(PwMLib.GlobalVariables.apiHIBPMain);
         public UpdateApplication()
         {
             InitializeComponent();
-            AccountNameTXT.Text = Utils.GlobalVariables.accountName;
-            ApplicationNameTXT.Text = Utils.GlobalVariables.applicationName;
+            AccountNameTXT.Text = PwMLib.GlobalVariables.accountName;
+            ApplicationNameTXT.Text = PwMLib.GlobalVariables.applicationName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
         }
@@ -28,7 +35,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.closeAppConfirmation = true;
+                    PwMLib.GlobalVariables.closeAppConfirmation = true;
                     this.Close();
                     break;
             }
@@ -43,7 +50,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.closeAppConfirmation = true;
+                PwMLib.GlobalVariables.closeAppConfirmation = true;
                 this.Close();
             }
         }
@@ -66,7 +73,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
 
@@ -116,9 +123,9 @@ namespace PwM
         {
             UpdatePassNotification updatePassNotification = new UpdatePassNotification();
             updatePassNotification.ShowDialog();
-            if (Utils.GlobalVariables.updatePwdConfirmation)
+            if (PwMLib.GlobalVariables.updatePwdConfirmation)
             {
-                Utils.GlobalVariables.newAccountPassword = newPassAccBox.Password;
+                PwMLib.GlobalVariables.newAccountPassword = newPassAccBox.Password;
                 this.Close();
             }
         }
@@ -126,6 +133,42 @@ namespace PwM
         private void newPassAccBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             updateAccPassBTN.IsEnabled = (newPassAccBox.Password.Length > 0) ? true : false;
+            if (network.PingHost())
+            {
+                _worker = new BackgroundWorker();
+                _worker.DoWork += BreackCheck_BW;
+                _worker.RunWorkerCompleted += BreackCheck_RunWorkerCompleted;
+                _worker.RunWorkerAsync();
+            }
+        }
+
+        /// <summary>
+        /// Set visibility if password breaches are found.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BreackCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (_breaches == "0")
+                breachLbl.Visibility = Visibility.Hidden;
+            else
+                breachLbl.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Get password breaches.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BreackCheck_BW(object sender, DoWorkEventArgs e)
+        {
+            var hibp = new HIBP(PwMLib.GlobalVariables.apiHIBP);
+            if (!string.IsNullOrEmpty(newPassAccBox.Password))
+            {
+                _breaches = hibp.CheckIfPwnd(newPassAccBox.Password).Result;
+            }
+            else
+                _breaches = "0";
         }
 
         /// <summary>

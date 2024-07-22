@@ -33,7 +33,7 @@ namespace PwM.Utils
         /// <param name="e"></param>
         private static void MasterPasswordCheck_Tick(object sender, EventArgs e)
         {
-            GlobalVariables.masterPasswordCheck = false;
+            PwMLib.GlobalVariables.masterPasswordCheck = false;
         }
     }
 }

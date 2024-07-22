@@ -1,11 +1,13 @@
 ﻿using Microsoft.Win32;
 using System;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace PwM
 {
+    [SupportedOSPlatform("Windows")]
     /// <summary>
     /// Interaction logic for AddVault.xaml
     /// </summary>
@@ -29,7 +31,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.closeAppConfirmation = true;
+                    PwMLib.GlobalVariables.closeAppConfirmation = true;
                     this.Close();
                     break;
             }
@@ -45,7 +47,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.closeAppConfirmation = true;
+               PwMLib.GlobalVariables.closeAppConfirmation = true;
                 this.Close();
             }
         }
@@ -85,11 +87,11 @@ namespace PwM
         /// <param name="e"></param>
         private void saveBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.VaultManagement.CreateVault(vaultNameTXT.Text, addVPassword.Password, confirmVPassword.Password, Utils.GlobalVariables.passwordManagerDirectory);
-            if (Utils.GlobalVariables.vaultChecks)
+            Utils.VaultManagement.CreateVault(vaultNameTXT.Text, addVPassword.Password, confirmVPassword.Password, PwMLib.GlobalVariables.passwordManagerDirectory);
+            if (PwMLib.GlobalVariables.vaultChecks)
             {
                 Utils.TextPassBoxChanges.ClearPBoxesInput(addVPassword, confirmVPassword);
-                Utils.GlobalVariables.vaultChecks = false;
+                PwMLib.GlobalVariables.vaultChecks = false;
             }
             else
             {
@@ -125,7 +127,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
 

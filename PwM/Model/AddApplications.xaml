@@ -7,15 +7,15 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
-        Title="PwM - Password Manager" Name="AddApplicationWPF" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="214.998" Width="235" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
+        Title="PwM - Password Manager" Name="AddApplicationWPF" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="276" Width="280" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
     <Border BorderBrush="#690fc2" BorderThickness="1">
-        <Grid Background="#f3f5f2" >
+        <Grid Background="#f3f5f2" Margin="0,0,0,3" >
             <Grid VerticalAlignment="Top" Height="39" Background="#551cc7" >
                 <TextBlock Text="Add Applications" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="18" Margin="30,6,22,4" Width="181" RenderTransformOrigin="0.5,0.5"/>
-                <materialDesign:PackIcon Name="vaultIcon" Foreground="#f3f5f2" PreviewMouseDown="closeLBL_PreviewMouseDown" Kind="Close" Margin="205,7,0,9" Width="28" Height="23" VerticalAlignment="Center"/>
-                <Label Content="  " ToolTip="Close" HorizontalAlignment="Left" Margin="207,8,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="closeLBL_PreviewMouseDown" Width="22" />
+                <materialDesign:PackIcon Name="vaultIcon" Foreground="#f3f5f2" PreviewMouseDown="closeLBL_PreviewMouseDown" Kind="Close" Margin="248,0,0,0" Width="28" Height="23" VerticalAlignment="Center"/>
+                <Label Content="  " ToolTip="Close" HorizontalAlignment="Left" Margin="250,0,0,0" VerticalAlignment="Center" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="closeLBL_PreviewMouseDown" Width="22" />
             </Grid>
-            <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="Application Name" TextAlignment="Center" x:Name="appNameTXT" HorizontalAlignment="Left" Height="30" Margin="28,57,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" TextChanged="appNameTXT_TextChanged">
+            <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="16" VerticalContentAlignment="Center" adorners:Watermark.Text="Application Name" TextAlignment="Center" x:Name="appNameTXT" HorizontalAlignment="Center" Height="30" Margin="0,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" TextChanged="appNameTXT_TextChanged" TextBlock.FontSize="18">
                 <adorners:Watermark.TextStyle>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Opacity" Value="0.5" />
@@ -24,7 +24,7 @@
                     </Style>
                 </adorners:Watermark.TextStyle>
             </TextBox>
-            <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="Account Name" TextAlignment="Center" x:Name="accountNameTXT" HorizontalAlignment="Left" Height="30" Margin="28,92,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" TextChanged="accountNameTXT_TextChanged">
+            <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="16" VerticalContentAlignment="Center" adorners:Watermark.Text="Account Name" TextAlignment="Center" x:Name="accountNameTXT" HorizontalAlignment="Center" Height="30" Margin="0,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" TextChanged="accountNameTXT_TextChanged" TextBlock.FontSize="18">
                 <adorners:Watermark.TextStyle>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Opacity" Value="0.5" />
@@ -33,7 +33,7 @@
                     </Style>
                 </adorners:Watermark.TextStyle>
             </TextBox>
-            <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="12" Visibility="Hidden"  adorners:Watermark.Text ="Account Password" VerticalContentAlignment="Center" TextAlignment="Center" x:Name="PasswordShow" HorizontalAlignment="Left" Height="30" Margin="28,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" TextChanged="accountNameTXT_TextChanged">
+            <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="18" Visibility="Hidden"  adorners:Watermark.Text ="Account Password" VerticalContentAlignment="Center" TextAlignment="Center" x:Name="PasswordShow" HorizontalAlignment="Center" Height="30" Margin="0,139,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="176" TextChanged="accountNameTXT_TextChanged">
                 <adorners:Watermark.TextStyle>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Opacity" Value="0.5" />
@@ -42,9 +42,9 @@
                     </Style>
                 </adorners:Watermark.TextStyle>
             </TextBox>
-            <materialDesign:PackIcon Name="GeneratePassAcc" ToolTip="Generate Password" Foreground="Gray" Kind="LockAdd" Margin="4,131,0,0" Width="18" Height="23" VerticalAlignment="Top" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="GeneratePassAcc_PreviewMouseDown"/>
-            <materialDesign:PackIcon Name="ShowPassword" ToolTip="Show Password (Right Click)" Foreground="Gray" Kind="Eye" Margin="210,133,0,0" Width="18" Height="18" VerticalAlignment="Top" RenderTransformOrigin="0.556,-0.722" PreviewMouseRightButtonDown="ShowHidePassword" PreviewMouseRightButtonUp="ShowHidePassword" PreviewMouseMove="ShowPassword_PreviewMouseMove"/>
-            <PasswordBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="14"  adorners:Watermark.Text ="Account Password" Name="accPasswordBox" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Left" Height="30" Margin="28,126,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="accPasswordBox_PasswordChanged"  >
+            <materialDesign:PackIcon Name="GeneratePassAcc" ToolTip="Generate Password" Foreground="Gray" Kind="LockAdd" Margin="27,146,0,0" Width="18" Height="23" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="GeneratePassAcc_PreviewMouseDown"/>
+            <materialDesign:PackIcon Name="ShowPassword" ToolTip="Show Password (Right Click)" Foreground="Gray" Kind="Eye" Margin="233,151,0,0" Width="18" Height="18" RenderTransformOrigin="0.556,-0.722" PreviewMouseRightButtonDown="ShowHidePassword" PreviewMouseRightButtonUp="ShowHidePassword" PreviewMouseMove="ShowPassword_PreviewMouseMove"/>
+            <PasswordBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="16"  adorners:Watermark.Text ="Account Password" Name="accPasswordBox" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" HorizontalAlignment="Center" Height="30" Margin="0,139,0,0"  VerticalAlignment="Top" Width="176" PasswordChanged="accPasswordBox_PasswordChanged" TextBlock.FontSize="18"  >
                 <adorners:Watermark.TextStyle>
                     <Style TargetType="{x:Type TextBlock}">
                         <Setter Property="Opacity" Value="0.5" />
@@ -53,7 +53,8 @@
                     </Style>
                 </adorners:Watermark.TextStyle>
             </PasswordBox>
-            <Button Name="addAppBTN" Style="{DynamicResource RoundCorner2}" Content="Add"  Margin="72,165,0,0"  Width="94" Height="37" Foreground="#FFE1DDEE" Click="addAppBTN_Click" IsEnabled="False" HorizontalAlignment="Left" VerticalAlignment="Top" IsDefault="True"/>
+            <Button Name="addAppBTN" Style="{DynamicResource RoundCorner2}" Content="Add"  Margin="0,224,0,0"  Width="94" Height="37" Foreground="#FFE1DDEE" Click="addAppBTN_Click" IsEnabled="False" HorizontalAlignment="Center" VerticalAlignment="Top" IsDefault="True"/>
+            <TextBlock Name="breachLbl" Visibility="Hidden" Text="The password is part of an exposed data breach." HorizontalAlignment="Center" Margin="0,177,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.217,0.197" Height="40" Foreground="#FFD24E1C" TextWrapping="Wrap" Width="224" FontSize="14"/>
         </Grid>
     </Border>
 </Window>

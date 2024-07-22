@@ -8,11 +8,11 @@ namespace PwM.Utils
         /// </summary>
         public static void VariablesClear()
         {
-            GlobalVariables.applicationName = "";
-            GlobalVariables.accountName = "";
-            GlobalVariables.newAccountPassword = "";
-            GlobalVariables.closeAppConfirmation = false;
-            GlobalVariables.deleteConfirmation = false;
+            PwMLib.GlobalVariables.applicationName = "";
+            PwMLib.GlobalVariables.accountName = "";
+            PwMLib.GlobalVariables.newAccountPassword = "";
+            PwMLib.GlobalVariables.closeAppConfirmation = false;
+            PwMLib.GlobalVariables.deleteConfirmation = false;
         }
     }
 }

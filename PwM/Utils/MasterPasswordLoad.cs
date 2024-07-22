@@ -1,7 +1,9 @@
-﻿using System.Security;
+﻿using System.Runtime.Versioning;
+using System.Security;
 
 namespace PwM.Utils
 {
+    [SupportedOSPlatform("Windows")]
     public class MasterPasswordLoad
     {
         /// <summary>
@@ -12,7 +14,7 @@ namespace PwM.Utils
         public static SecureString LoadMasterPassword(string vaultName)
         {
             SecureString password;
-            GlobalVariables.vaultName = vaultName;
+            PwMLib.GlobalVariables.vaultName = vaultName;
             MasterPassword masterPassword = new MasterPassword();
             masterPassword.ShowDialog();
             password = masterPassword.masterPassword;

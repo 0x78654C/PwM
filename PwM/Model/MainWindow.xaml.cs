@@ -4,20 +4,24 @@ using System;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Versioning;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
+using GlobalVariables = PwMLib.GlobalVariables;
 
 namespace PwM
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    [SupportedOSPlatform("Windows")]
     public partial class MainWindow : Window
     {
         private static readonly Regex s_regex = new Regex("[^!-*.-]+");
@@ -29,7 +33,7 @@ namespace PwM
         private DispatcherTimer _dispatcherTimer;
         private DispatcherTimer _dispatcherTimerCloseVault;
         private DispatcherTimer _dispatcherTimerElapsed;
-        private int _vaultCloseSesstion=0;
+        private int _vaultCloseSesstion = 0;
         public static DispatcherTimer s_masterPassCheckTimer;
         private string _vaultPath;
         private string _vaultName;
@@ -300,11 +304,14 @@ namespace PwM
             var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
             {
-                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
-                string item = vaultList.SelectedItem.ToString();
                 string vaultPath = VaultManagement.GetVaultPathFromList(vaultList);
                 _vaultPath = vaultPath;
+                VaultCloseTimersStop();
+                VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
+                string item = vaultList.SelectedItem.ToString();
                 string vaultName = item.Split(',')[0].Replace("{ Name = ", "");
+                var vaultFullPath = $"{vaultPath}\\{vaultName}.x";
+                if (LockedVault.IsVaultLocked(vaultFullPath)) return;
                 var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
                 GlobalVariables.masterPassword = masterPassword;
                 if (masterPassword != null && masterPassword.Length > 0)
@@ -326,6 +333,7 @@ namespace PwM
                         GlobalVariables.vaultOpen = true;
                         StartTimerVaultClose();
                         Sort("Application", appList, ListSortDirection.Ascending);
+                        AppManagement.AddAppsToTempList(appList);
                     }
                 }
             }
@@ -532,6 +540,7 @@ namespace PwM
                 return;
             }
             AppManagement.UpdateSelectedItemPassword(appList, _vaultName, _vaultPath);
+            AppManagement.AddAppsToTempList(appList);
         }
 
         /// <summary>
@@ -550,10 +559,12 @@ namespace PwM
                 {
                     var masterPassword = MasterPasswordLoad.LoadMasterPassword(_vaultName);
                     AppManagement.AddApplication(appList, _vaultName, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, masterPassword, _vaultPath);
+                    AppManagement.AddAppsToTempList(appList);
                     ClearVariables.VariablesClear();
                     return;
                 }
                 AppManagement.AddApplication(appList, _vaultName, GlobalVariables.applicationName, GlobalVariables.accountName, GlobalVariables.accountPassword, GlobalVariables.masterPassword, _vaultPath);
+                AppManagement.AddAppsToTempList(appList);
                 ClearVariables.VariablesClear();
             }
         }
@@ -566,7 +577,7 @@ namespace PwM
         private void DelAppIcon_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             RestartTimerVaultClose();
-            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath);
+            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath, vaultList);
         }
 
         /// <summary>
@@ -577,7 +588,7 @@ namespace PwM
         private void DeleteAccount_Click(object sender, RoutedEventArgs e)
         {
             RestartTimerVaultClose();
-            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath);
+            AppManagement.DeleteSelectedItem(appList, _vaultName, _vaultPath, vaultList);
         }
 
         /// <summary>
@@ -654,7 +665,7 @@ namespace PwM
         private void PopulateListView(ListView listView)
         {
             listView.Items.Clear();
-            foreach (var item in GlobalVariables.listView.Items)
+            foreach (var item in PwM.Utils.GlobalVariables.listView.Items)
             {
                 listView.Items.Add(item);
             }

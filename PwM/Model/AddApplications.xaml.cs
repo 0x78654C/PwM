@@ -1,16 +1,22 @@
 ﻿using Microsoft.Win32;
 using PwMLib;
+using System.ComponentModel;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace PwM
 {
+    [SupportedOSPlatform("Windows")]
     /// <summary>
     /// Interaction logic for AddApplications.xaml
     /// </summary>
     public partial class AddApplications : Window
     {
+        private BackgroundWorker _worker;
+        private string _breaches = "";
+        Network network = new Network(PwMLib.GlobalVariables.apiHIBPMain);
         public AddApplications()
         {
             InitializeComponent();
@@ -28,7 +34,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    Utils.GlobalVariables.closeAppConfirmation = true;
+                    PwMLib.GlobalVariables.closeAppConfirmation = true;
                     this.Close();
                     break;
             }
@@ -44,7 +50,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                Utils.GlobalVariables.closeAppConfirmation = true;
+                PwMLib.GlobalVariables.closeAppConfirmation = true;
                 this.Close();
             }
         }
@@ -56,10 +62,10 @@ namespace PwM
         /// <param name="e"></param>
         private void addAppBTN_Click(object sender, RoutedEventArgs e)
         {
-            Utils.GlobalVariables.applicationName = appNameTXT.Text;
-            Utils.GlobalVariables.accountName = accountNameTXT.Text;
-            Utils.GlobalVariables.accountPassword = accPasswordBox.Password;
-            Utils.GlobalVariables.closeAppConfirmation = false;
+            PwMLib.GlobalVariables.applicationName = appNameTXT.Text;
+            PwMLib.GlobalVariables.accountName = accountNameTXT.Text;
+            PwMLib.GlobalVariables.accountPassword = accPasswordBox.Password;
+            PwMLib.GlobalVariables.closeAppConfirmation = false;
             Utils.TextPassBoxChanges.ClearTextPassBox(appNameTXT, accountNameTXT, accPasswordBox);
             this.Close();
         }
@@ -82,7 +88,7 @@ namespace PwM
         /// <param name="e"></param>
         private void closeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            Utils.GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
 
@@ -137,6 +143,42 @@ namespace PwM
         private void accPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             Utils.TextPassBoxChanges.TextPassBoxChanged(appNameTXT, accountNameTXT, accPasswordBox, addAppBTN);
+            if (network.PingHost())
+            {
+                _worker = new BackgroundWorker();
+                _worker.DoWork += BreackCheck_BW;
+                _worker.RunWorkerCompleted += BreackCheck_RunWorkerCompleted;
+                _worker.RunWorkerAsync();
+            }
+        }
+
+        /// <summary>
+        /// Set visibility if password breaches are found.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BreackCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (_breaches == "0")
+                breachLbl.Visibility = Visibility.Hidden;
+            else
+                breachLbl.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// Get password breaches.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BreackCheck_BW(object sender, DoWorkEventArgs e)
+        {
+            var hibp = new HIBP(PwMLib.GlobalVariables.apiHIBP);
+            if (!string.IsNullOrEmpty(accPasswordBox.Password))
+            {
+                _breaches = hibp.CheckIfPwnd(accPasswordBox.Password).Result;
+            }
+            else
+                _breaches = "0";
         }
 
         /// <summary>

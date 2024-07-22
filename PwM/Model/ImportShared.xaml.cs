@@ -1,16 +1,18 @@
 ﻿using Microsoft.Win32;
 using PwM.Utils;
+using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
 
 namespace PwM
 {
+    [SupportedOSPlatform("Windows")]
     /// <summary>
     /// Interaction logic for ImportShared.xaml
     /// </summary>
     public partial class ImportShared : Window
     {
-        private readonly string _passwordManagerDirectory = GlobalVariables.passwordManagerDirectory;
+        private readonly string _passwordManagerDirectory = PwMLib.GlobalVariables.passwordManagerDirectory;
         public ImportShared()
         {
             InitializeComponent();
@@ -28,7 +30,7 @@ namespace PwM
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
-                    GlobalVariables.importConfirmation = false;
+                    PwMLib.GlobalVariables.importConfirmation = false;
                     this.Close();
                     break;
             }
@@ -43,7 +45,7 @@ namespace PwM
         {
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
-                GlobalVariables.importConfirmation = false;
+                PwMLib.GlobalVariables.importConfirmation = false;
                 this.Close();
             }
         }
@@ -72,7 +74,7 @@ namespace PwM
         /// <param name="e"></param>
         private void CloseLbl_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
-            GlobalVariables.closeAppConfirmation = true;
+            PwMLib.GlobalVariables.closeAppConfirmation = true;
             this.Close();
         }
     }
