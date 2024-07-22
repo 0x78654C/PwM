@@ -24,6 +24,7 @@ The ideea of creation for this Password Manager came from the simple fact to use
  - After log in vault, master password required window will be prompted every 30 minutes if a action is made. Example: update password, delete account , etc.
  - Command line interface for Windows and Linux.
  - Open vault session expires after a certain time if no action is made on it. Default: after 10 minutes.
+ - Check automatically if your password is part of data breach with https://haveibeenpwned.com/
 
 # How it works
 
@@ -107,8 +108,10 @@ The Passwowrd Manager generates a vault file for every user logged in system. Yo
 
 ![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1.jpg?raw=true)
 
-
 ![alt text](https://github.com/0x78654C/PwM/blob/main/Media/2.jpg?raw=true)
+
+![image](https://github.com/user-attachments/assets/6e1b42a6-fe2e-41cd-9fcc-caa50fb1f311)
+
 
 ## Video presentation
 
