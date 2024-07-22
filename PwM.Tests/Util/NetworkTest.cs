@@ -18,8 +18,8 @@ namespace PwM.Tests.Util
         public void Check_Ping_Response(string address)
         {
             var network = new Network(address);
-            var isGooglUp = network.PingHost();
-            Assert.True(isGooglUp);
+            var isApiUp = network.PingHost();
+            Assert.True(isApiUp);
         }
     }
 }
