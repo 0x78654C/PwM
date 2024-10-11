@@ -1,5 +1,7 @@
 ﻿using System.Net.NetworkInformation;
 using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace PwMLib
 {
@@ -48,11 +50,9 @@ namespace PwMLib
         {
             try
             {
-                HttpWebRequest request = WebRequest.Create(IpAdress) as HttpWebRequest;
-                request.Method = "HEAD";
-                HttpWebResponse response = request.GetResponse() as HttpWebResponse;
+                HttpClient client = new HttpClient();
+                HttpResponseMessage response = Task.Run(() => client.GetAsync(IpAdress)).Result;
                 bool isResponding = response.StatusCode == HttpStatusCode.OK;
-                response.Close();
                 return isResponding;
             }
             catch
