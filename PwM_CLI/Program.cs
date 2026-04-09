@@ -370,11 +370,22 @@ Password breach check is powered by https://haveibeenpwned.com/
                 Console.WriteLine($"Account Name: ".PadRight(20, ' ') + outJson["account"]);
                 if (IsPasswordBreached(outJson["password"], false))
                 {
-                    Console.Write($"Password: ".PadRight(20, ' ') + outJson["password"].PadRight(15, ' '));
+                    Console.WriteLine($"Password: ".PadRight(20, ' ') + new string('*', outJson["password"].Length));
+                    Console.Write("Reveal password? [y/N]: ");
+                    var reveal = Console.ReadLine()?.Trim();
+                    if (string.Equals(reveal, "y", StringComparison.OrdinalIgnoreCase))
+                        Console.Write($"Password: ".PadRight(20, ' ') + outJson["password"].PadRight(15, ' '));
                     ColorConsoleText(ConsoleColor.Yellow, "(breached)\n");
+
                 }
                 else
-                    Console.WriteLine($"Password: ".PadRight(20, ' ') + outJson["password"]);
+                {
+                    Console.WriteLine($"Password: ".PadRight(20, ' ') + new string('*', outJson["password"].Length));
+                    Console.Write("Reveal password? [y/N]: ");
+                    var reveal = Console.ReadLine()?.Trim();
+                    if (string.Equals(reveal, "y", StringComparison.OrdinalIgnoreCase))
+                        Console.WriteLine($"Password: ".PadRight(20, ' ') + outJson["password"]);
+                }
             }
 
             Console.WriteLine("-------------------------");
