@@ -30,7 +30,17 @@ namespace PwMLib
             collection += useUpper ? Alphabet.ToUpper() : "";
             collection += useSymbols ? Symbols : "";
 
-            return GeneratePassword(collection.OrderBy(r => Guid.NewGuid().GetHashCode()).ToArray(), 0, length, useUpper, useLower, useSymbols, useNumbers);
+            return GeneratePassword(CryptoShuffle(collection.ToCharArray()), 0, length, useUpper, useLower, useSymbols, useNumbers);
+        }
+
+        private static char[] CryptoShuffle(char[] chars)
+        {
+            for (int i = chars.Length - 1; i > 0; i--)
+            {
+                int j = (int)(RandomNumberGenerator.GetInt32(i + 1));
+                (chars[i], chars[j]) = (chars[j], chars[i]);
+            }
+            return chars;
         }
 
         private static string GeneratePassword(char[] chars, int attempt, int length = 16, bool useUpper = true, bool useLower = true,
@@ -38,7 +48,7 @@ namespace PwMLib
         {
 
             var bytes = new byte[length * 8];
-            new RNGCryptoServiceProvider().GetBytes(bytes);
+            RandomNumberGenerator.Fill(bytes);
             var result = new char[length];
             for (int i = 0; i < length; i++)
             {

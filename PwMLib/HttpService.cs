@@ -1,5 +1,4 @@
 ﻿using System.Net.Http;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace PwMLib
@@ -10,11 +9,6 @@ namespace PwMLib
 
         public HttpService()
         {
-            HttpClientHandler handler = new HttpClientHandler
-            {
-                AutomaticDecompression = DecompressionMethods.None
-            };
-
             _client = new HttpClient();
         }
 

@@ -167,14 +167,8 @@ Password breach check is powered by https://haveibeenpwned.com/
             s_tries = 0;
             if (!passValidation) return;
             var sealVault = AES.Encrypt(string.Empty, masterPassword1);
-            if (!sealVault.Contains("Error encrypting"))
-            {
-                File.WriteAllText(s_vaultsDir + $"//{vaultName}.x", sealVault);
-                WordColorInLine("\n[+] Vault ", vaultName, " was created!\n", ConsoleColor.Cyan);
-                return;
-            }
-
-            ErrorWriteLine(sealVault + ". Check command!");
+            File.WriteAllText(s_vaultsDir + $"//{vaultName}.x", sealVault);
+            WordColorInLine("\n[+] Vault ", vaultName, " was created!\n", ConsoleColor.Cyan);
         }
 
         /// <summary>
@@ -200,9 +194,12 @@ Password breach check is powered by https://haveibeenpwned.com/
             WordColorInLine("Enter master password for ", vaultName, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
-            var decryptVault = AES.Decrypt(encryptedData, masterPassword);
-
-            if (decryptVault.Contains("Error decrypting"))
+            string decryptVault;
+            try
+            {
+                decryptVault = AES.Decrypt(encryptedData, masterPassword);
+            }
+            catch (System.Security.Cryptography.CryptographicException)
             {
                 ErrorWriteLine("Something went wrong. Check master password or vault name!");
                 return;
@@ -271,8 +268,12 @@ Password breach check is powered by https://haveibeenpwned.com/
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
-            var decryptVault = AES.Decrypt(encryptedData, masterPassword);
-            if (decryptVault.Contains("Error decrypting"))
+            string decryptVault;
+            try
+            {
+                decryptVault = AES.Decrypt(encryptedData, masterPassword);
+            }
+            catch (System.Security.Cryptography.CryptographicException)
             {
                 ErrorWriteLine("Something went wrong. Check master password or vault name!");
                 return;
@@ -328,8 +329,12 @@ Password breach check is powered by https://haveibeenpwned.com/
         /// </summary>
         private static void ReadPass()
         {
-            var decryptVault = DecryptData();
-            if (decryptVault.Contains("Error decrypting"))
+            string decryptVault;
+            try
+            {
+                decryptVault = DecryptData();
+            }
+            catch (System.Security.Cryptography.CryptographicException)
             {
                 ErrorWriteLine("Something went wrong. Check master password or vault name!");
                 return;
@@ -442,8 +447,12 @@ Password breach check is powered by https://haveibeenpwned.com/
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
-            var decryptVault = AES.Decrypt(encryptedData, masterPassword);
-            if (decryptVault.Contains("Error decrypting"))
+            string decryptVault;
+            try
+            {
+                decryptVault = AES.Decrypt(encryptedData, masterPassword);
+            }
+            catch (System.Security.Cryptography.CryptographicException)
             {
                 ErrorWriteLine("Something went wrong. Check master password or vault name!");
                 return;
@@ -543,8 +552,12 @@ Password breach check is powered by https://haveibeenpwned.com/
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
-            var decryptVault = AES.Decrypt(encryptedData, masterPassword);
-            if (decryptVault.Contains("Error decrypting"))
+            string decryptVault;
+            try
+            {
+                decryptVault = AES.Decrypt(encryptedData, masterPassword);
+            }
+            catch (System.Security.Cryptography.CryptographicException)
             {
                 ErrorWriteLine("Something went wrong. Check master password or vault name!");
                 return;

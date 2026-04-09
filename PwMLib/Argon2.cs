@@ -12,12 +12,13 @@ namespace PwMLib
         /// Argon2 Password Hash
         /// </summary>
         /// <param name="password"></param>
+        /// <param name="salt">Random salt bytes. Must be unique per encryption operation.</param>
         /// <returns></returns>
-        public static byte[] Argon2HashPassword(string password)
+        public static byte[] Argon2HashPassword(string password, byte[] salt)
         {
             s_argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
             {
-                Salt = Encoding.UTF8.GetBytes(password.Substring(2, 10)),
+                Salt = salt,
                 DegreeOfParallelism = 2,
                 Iterations = 40,
                 MemorySize = 4096

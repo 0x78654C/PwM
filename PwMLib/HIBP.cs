@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace PwMLib
@@ -23,7 +24,7 @@ namespace PwMLib
         {
             var sha1 = Sha1Converter.Hash(password);
             var prefixHash = sha1[..5];
-            var suffixHash = sha1.Substring(sha1.Length-5);
+            var suffixHash = sha1[5..];
             var httpService = new HttpService();
             var apiReq = $"{API}{prefixHash}";
             var httpData = await httpService.GetAsync(apiReq);
@@ -34,7 +35,7 @@ namespace PwMLib
                 while ((line = sr.ReadLine()) != null)
                 {
                     var lineSplit = line.Split(':');
-                    if (lineSplit[0].EndsWith(suffixHash))
+                    if (string.Equals(lineSplit[0], suffixHash, StringComparison.OrdinalIgnoreCase))
                         countBreachs = lineSplit[1];
                 }
             }
