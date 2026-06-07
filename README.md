@@ -1,117 +1,156 @@
 <p align="center">
-  <img src="https://github.com/0x78654C/PwM/blob/main/Media/logo.png" width=150>
+  <img src="https://github.com/0x78654C/PwM/blob/main/Media/logo.png" width="120">
 </p>
 
-# PwM
-Simple offline password manager for Windows in C# WPF and Linux as command line interface to store locally sensitive authentication data for a specific application. 
-The ideea of creation for this Password Manager came from the simple fact to use something simple and fast.   
+<h1 align="center">PwM — Password Manager</h1>
 
-![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1v.png?raw=true)
+<p align="center">
+  A simple, fully <strong>offline</strong> password manager for Windows (WPF) and Linux/Windows (CLI).<br/>
+  No cloud. No telemetry. Your data stays on your machine.
+</p>
 
-# Features
+<p align="center">
+  <img src="https://img.shields.io/badge/.NET-10-512BD4?logo=dotnet&logoColor=white"/>
+  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux-0078D6?logo=windows&logoColor=white"/>
+  <img src="https://img.shields.io/badge/encryption-AES--256%20%2B%20Argon2id-4F46E5"/>
+  <img src="https://img.shields.io/github/license/0x78654C/PwM"/>
+</p>
 
- - Create/Delete vaults
- - Import/Export vaults
- - Shared vaults
- - Change Master Password for vaults
- - Add/delete account for applications in vault
- - Update application account passwords
- - Exit logged vault on entering lock screen event or suspend.
- - Generate strong passwords.
- - Show password temporary when entered on password boxes. Right click on eye symbol.
- - Copy password from applications to clipboard for a duration of 15 seconds.
-   (If in the 15 seconds interval is copied something else on clipboard, PwM will not clear the clipboard whe time expired or app is closed) 
- - After log in vault, master password required window will be prompted every 30 minutes if a action is made. Example: update password, delete account , etc.
- - Command line interface for Windows and Linux.
- - Open vault session expires after a certain time if no action is made on it. Default: after 10 minutes.
- - Check automatically if your password is part of data breach with https://haveibeenpwned.com/
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f0f72027-dc94-4345-994d-c0bde9088e50" width="820"/>
+</p>
 
-# How it works
+---
 
-  Vaults:
-  - Creating a vault: press on '+' sign down bellow and you will be prompted for vault name and master password. Every vault is created in Windows user profile.
-  - Delete/Remove a vault: select the vault that you want to delete or remove(for shared vaults only) from list and press on '-' sign down bellow or right click on vault and choose 'Delete/Remove vault'. INFO: shared vaults files wont be deleted only removed from displaying on vault list.
-  - Import vault: press on 'I' letter down bellow and a message box will appear to choose if you want to import locally the vault or shared(Ex.: using a vault file on a file server). After a file dialog will be opened for selecting the vault file. The file extension must end in '.x' .
-  - Export vault: right click on the vault name from list that you want to export and choose 'Export vault'. You will be prompted with a file save dialog.
-  - Change Master Password: right click on the vault name from list that you want to change the password and choose 'Change Master Password'.
-  
-  ATTENTION: Shared vaults are not supported for now in the CLI version.
- 
-  Applications:
-  - Add application: press on '+' sign down bellow and you will be prompted with a window for adding application name, account name and password.
-  - Delete account: select the account from specific application that you want to delete and press on '-' sign down bellow or right click on application/account and choose 'Delete Account'
-  - Update account password: right click on account and choose update 'Update account password'. You will be prompted with a pop window to enter new password for account.
-  - Show password: right click on account and choose update 'Show password'. Password will be visible on application list.
-  - Copy to Clipboard: right click on account and choose update 'Copy to clipboard (15 seconds available)'. Password will be copied on clipboard for 15 seconds.
+## Features
 
-  Settings:
-  - You can set the vault session expiration time. The default value is set on 10 minutes.
+### 🗄️ Vault management
+- Create and delete vaults — one encrypted file per Windows user profile
+- Import / export vaults (`.x` file format)
+- **Shared vaults** — link to a vault on a network share or file server
+- Change master password for any vault
 
-# Usage of command line interface:
- 
- Example commands use: pwm_cli.exe COMMAND
- 
- List of commands:
- 
- For creating a vault just type:
- ```
-  -createv
- ```
- You will be asked for the vault name and master password. Master password must meet the following complexity:
- ```
- Password must be at least 12 characters, and must include at least one upper case letter, one lower case letter, one numeric digit, one special character and no space!
- ````
+### 🔑 Accounts & applications
+- Add / delete application entries inside a vault
+- Add / delete account credentials per application
+- Update account passwords
+- **Show password** temporarily (hold right-click on the eye icon)
+- **Copy to clipboard** for 15 seconds, then auto-cleared
+  > If something else is copied within those 15 s, PwM will not clear the clipboard on expiry
 
- To see if the vault is created we list the current existing vaults by typing in console the following command:
- ```
-  -listv
- ```
+### 🛡️ Security
+- **Argon2id** key derivation with fully configurable parameters (see Settings)
+- **AES-256 (Rijndael)** vault encryption
+- Master password **re-prompt every 30 minutes** on any write action inside an open vault
+- **Auto-lock** open vault after configurable inactivity period (default 10 min)
+- Lock vault automatically on Windows lock screen or system suspend
+- Password breach check via [HaveIBeenPwned](https://haveibeenpwned.com/) — only a SHA-1 prefix is sent (k-anonymity model)
+- Built-in **strong password generator**
+- Password complexity enforced on creation (≥ 12 chars, upper + lower + digit + special, no spaces)
 
- Adding the application information just type:
- ```
-  -addapp
- ```
- You will be prompted for vault name, master password to login in it, application name to be added, account name and password to be stored.
+### ⚙️ Settings
+All settings are stored in the Windows registry under `HKCU\SOFTWARE\PwM` and persist across sessions.
 
- To list the accounts from a specific application or entire vault lists type: 
- ```
-  -lista
- ```
- 
- To delete a specific account from an application just use:
- ```
-  -dela
- ```
+| Setting | Default | Range | Description |
+|---|---|---|---|
+| Vault session timeout | **10 min** | — | Auto-lock an inactive open vault |
+| Argon2 iterations | **40** | 10 – 200 | Passes over memory (time cost) |
+| Argon2 memory size | **4096 KB** | 4096 – 1 048 576 KB | RAM consumed per hash |
+| Argon2 parallelism | **2** | 1 – 16 | Parallel threads during hashing |
 
- To update password for a specific account in a application type:
- ```
-  -updatea
- ```
+> ⚠️ Changing Argon2 parameters affects **all vaults**. Re-create your vaults after applying new values.
 
- To delete a vault type:
- ```
-  -delv
- ```
-  
+---
 
-# Encryption
+## How it works
 
-For password hash is used Argon2 (argon2id) https://en.wikipedia.org/wiki/Argon2. And for encryption is used Rijndael AES-256.
-The Passwowrd Manager generates a vault file for every user logged in system. You cannot see the vaults from other user on that machine.
+### Vaults
 
-## Requirements:
+| Action | How |
+|---|---|
+| **Open** | Double-click the vault name, then enter your master password |
+| **Create** | Click **New vault** at the bottom of the vault list → enter vault name, master password, and confirm master password |
+| **Delete / Remove** | Select vault → click **Remove** at the bottom, or right-click → *Delete or remove vault*<br/>Shared vault files are only unlinked from the list, not deleted from disk |
+| **Import** | Click **Import** at the bottom → choose *Local* or *Shared* → select a `.x` vault file |
+| **Export** | Right-click vault → *Export vault* → choose save location |
+| **Change master password** | Right-click vault → *Change master password* |
 
-.NET 8 Runtime
+### Credentials (Applications tab)
 
-## Samples
+First open a vault by double-clicking it. The sidebar switches to **Applications**.
 
+| Action | How |
+|---|---|
+| **Add credential** | Click **New credential** at the bottom → enter application name, account (username/email), and password.<br/>Use the ✨ wand icon to generate a strong password, or the 👁 eye icon (hold right-click) to reveal what you typed |
+| **Delete account** | Select account → click **Delete** at the bottom, or right-click → *Delete account* |
+| **Update password** | Right-click account → *Update account password* |
+| **Show password** | Right-click account → *Show password* |
+| **Copy to clipboard** | Right-click account → *Copy password for 15 seconds* |
+| **Lock vault** | Click **Lock vault** (top-right of the Applications tab) |
 
-![alt text](https://github.com/0x78654C/PwM/blob/main/Media/1.png?raw=true)
+> ⚠️ A breach warning is shown automatically when adding a credential whose password appears in a known data breach (powered by HaveIBeenPwned).
 
-![alt text](https://github.com/0x78654C/PwM/blob/main/Media/2.png?raw=true)
+> Shared vaults are **not supported** in the CLI version.
 
-<img width="1080" height="689" alt="Screenshot 2026-06-07 194017" src="https://github.com/user-attachments/assets/6b9ebc65-b4bc-4ad6-894b-75ad0607ad4a" />
+---
 
+## CLI usage
 
+```
+pwm_cli COMMAND
+```
 
+| Command | Description |
+|---|---|
+| `-h` | Show help |
+| `-createv` | Create a new vault |
+| `-delv` | Delete a vault |
+| `-listv` | List all vaults |
+| `-addapp` | Add an application/account to a vault |
+| `-dela` | Delete an account from a vault |
+| `-updatea` | Update an account password |
+| `-lista` | List accounts in a vault |
+
+**Master password requirements:**
+```
+At least 12 characters — must include uppercase, lowercase, digit, special character, no spaces
+```
+
+---
+
+## Encryption
+
+| Layer | Details |
+|---|---|
+| Key derivation | [Argon2id](https://en.wikipedia.org/wiki/Argon2) — iterations, memory size and parallelism configurable in Settings |
+| Vault encryption | Rijndael AES-256 |
+| Storage | `%LOCALAPPDATA%\PwM\` — each Windows user sees only their own vaults |
+
+---
+
+## Requirements
+
+- **.NET 10** Runtime
+- Windows 10 or later (GUI)
+- Windows or Linux (CLI)
+
+---
+
+## Screenshots
+
+![Vault list](https://github.com/0x78654C/PwM/blob/main/Media/1.png?raw=true)
+
+![Application view](https://github.com/0x78654C/PwM/blob/main/Media/2.png?raw=true)
+
+---
+
+## Video presentation
+
+[![PwM video](https://img.youtube.com/vi/ekZ-ZLQNDtg/0.jpg)](https://www.youtube.com/watch?v=ekZ-ZLQNDtg)
+
+---
+
+## License
+
+[LICENSE](LICENSE) © 0x78654C
 
