@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
+using System.Security.Cryptography;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -252,8 +253,12 @@ namespace PwM.Utils
                 return;
             }
             string readVault = File.ReadAllText(pathToVault);
-            string decryptVault = AES.Decrypt(readVault, oldMasterPassword);
-            if (decryptVault.Contains("Error decrypting"))
+            string decryptVault;
+            try
+            {
+                decryptVault = AES.Decrypt(readVault, oldMasterPassword);
+            }
+            catch (CryptographicException)
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 return;
