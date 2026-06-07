@@ -45,7 +45,7 @@ namespace PwM
             InitializeComponent();
             InitializeVaultsDirectory(s_passwordManagerDirectory);
             s_masterPassCheckTimer = new DispatcherTimer();
-            versionLabel.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            versionLabel.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(0, Assembly.GetExecutingAssembly().GetName().Version.ToString().Length-2);
             VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList, false);
             userTXB.Text = s_accountName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
