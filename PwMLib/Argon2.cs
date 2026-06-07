@@ -18,9 +18,9 @@ namespace PwMLib
             s_argon2 = new Argon2id(Encoding.UTF8.GetBytes(password))
             {
                 Salt = Encoding.UTF8.GetBytes(password.Substring(2, 10)),
-                DegreeOfParallelism = 2,
-                Iterations = 40,
-                MemorySize = 4096
+                DegreeOfParallelism = GlobalVariables.argon2Parallelism,
+                Iterations = GlobalVariables.argon2Iterations,
+                MemorySize = GlobalVariables.argon2MemorySize
             };
             return s_argon2.GetBytes(32);
         }

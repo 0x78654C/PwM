@@ -592,80 +592,247 @@
                     <Grid Background="{StaticResource AppBackgroundBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="20"/>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
+
+                        <!-- Page title -->
                         <StackPanel>
                             <TextBlock Text="Settings" Foreground="#0F172A" FontSize="24" FontWeight="SemiBold"/>
                             <TextBlock Text="Configure how PwM protects active vault sessions." Foreground="#64748B" FontSize="13" Margin="0,5,0,0"/>
                         </StackPanel>
 
-                        <Border Grid.Row="2"
-                                Width="520"
-                                HorizontalAlignment="Left"
-                                Background="White"
-                                BorderBrush="#E2E8F0"
-                                BorderThickness="1"
-                                CornerRadius="12"
-                                Padding="22">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition Height="18"/>
-                                    <RowDefinition Height="Auto"/>
-                                </Grid.RowDefinitions>
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="42"/>
-                                        <ColumnDefinition Width="*"/>
-                                    </Grid.ColumnDefinitions>
-                                    <Border Width="38" Height="38" Background="#EEF2FF" CornerRadius="9">
-                                        <materialDesign:PackIcon Kind="TimerLockOutline"
-                                                                 Width="20"
-                                                                 Height="20"
-                                                                 Foreground="#4F46E5"
-                                                                 HorizontalAlignment="Center"
-                                                                 VerticalAlignment="Center"/>
-                                    </Border>
-                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                        <TextBlock Text="Vault session timeout" Foreground="#0F172A" FontSize="15" FontWeight="SemiBold"/>
-                                        <TextBlock Text="Automatically lock an inactive vault after this period." Foreground="#64748B" FontSize="12" Margin="0,3,0,0"/>
-                                    </StackPanel>
-                                </Grid>
-                                <Grid Grid.Row="2">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*"/>
-                                        <ColumnDefinition Width="90"/>
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Text="Expire after (minutes)" Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,6"/>
-                                        <TextBox x:Name="expirePeriodTxT"
-                                                 Style="{StaticResource SettingsInputStyle}"
-                                                 Width="180"
-                                                 HorizontalAlignment="Left"
-                                                 TextAlignment="Left"
-                                                 adorners:Watermark.Text="10">
-                                            <adorners:Watermark.TextStyle>
-                                                <Style TargetType="{x:Type TextBlock}">
-                                                    <Setter Property="Opacity" Value="0.5"/>
-                                                    <Setter Property="VerticalAlignment" Value="Center"/>
-                                                    <Setter Property="Margin" Value="12,0,0,0"/>
-                                                </Style>
-                                            </adorners:Watermark.TextStyle>
-                                        </TextBox>
-                                    </StackPanel>
-                                    <Button Grid.Column="1"
-                                            Name="applyExpirePeriodBTN"
-                                            Style="{DynamicResource RoundCorner2}"
-                                            Content="Apply"
-                                            Click="applyExpirePeriodBTN_Click"
-                                            IsEnabled="True"
-                                            IsDefault="True"
-                                            VerticalAlignment="Bottom"/>
-                                </Grid>
-                            </Grid>
-                        </Border>
+                        <!-- Scrollable cards -->
+                        <ScrollViewer Grid.Row="2"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      Padding="0,0,6,0">
+                            <StackPanel>
+
+                                <!-- Vault session timeout card -->
+                                <Border Width="520"
+                                        HorizontalAlignment="Left"
+                                        Background="White"
+                                        BorderBrush="#E2E8F0"
+                                        BorderThickness="1"
+                                        CornerRadius="12"
+                                        Padding="22">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="18"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Header -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="42"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="38" Height="38" Background="#EEF2FF" CornerRadius="9">
+                                                <materialDesign:PackIcon Kind="TimerLockOutline"
+                                                                         Width="20" Height="20"
+                                                                         Foreground="#4F46E5"
+                                                                         HorizontalAlignment="Center"
+                                                                         VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                <TextBlock Text="Vault session timeout" Foreground="#0F172A" FontSize="15" FontWeight="SemiBold"/>
+                                                <TextBlock Text="Automatically lock an inactive vault after this period. Default: 10 minutes."
+                                                           Foreground="#64748B" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <!-- Input row -->
+                                        <Grid Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="90"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="Expire after (minutes)" Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                                <TextBox x:Name="expirePeriodTxT"
+                                                         Style="{StaticResource SettingsInputStyle}"
+                                                         Width="180"
+                                                         HorizontalAlignment="Left"
+                                                         TextAlignment="Left"
+                                                         adorners:Watermark.Text="10">
+                                                    <adorners:Watermark.TextStyle>
+                                                        <Style TargetType="{x:Type TextBlock}">
+                                                            <Setter Property="Opacity" Value="0.5"/>
+                                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                                            <Setter Property="Margin" Value="12,0,0,0"/>
+                                                        </Style>
+                                                    </adorners:Watermark.TextStyle>
+                                                </TextBox>
+                                            </StackPanel>
+                                            <Button Grid.Column="1"
+                                                    Name="applyExpirePeriodBTN"
+                                                    Style="{DynamicResource RoundCorner2}"
+                                                    Content="Apply"
+                                                    Click="applyExpirePeriodBTN_Click"
+                                                    IsEnabled="True"
+                                                    IsDefault="True"
+                                                    VerticalAlignment="Bottom"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Spacer -->
+                                <Border Height="16"/>
+
+                                <!-- Argon2 hashing parameters card -->
+                                <Border Width="520"
+                                        HorizontalAlignment="Left"
+                                        Background="White"
+                                        BorderBrush="#E2E8F0"
+                                        BorderThickness="1"
+                                        CornerRadius="12"
+                                        Padding="22"
+                                        Margin="0,0,0,16">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="18"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="14"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="14"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="14"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="14"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Header -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="42"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="38" Height="38" Background="#EEF2FF" CornerRadius="9">
+                                                <materialDesign:PackIcon Kind="ShieldLockOutline"
+                                                                         Width="20" Height="20"
+                                                                         Foreground="#4F46E5"
+                                                                         HorizontalAlignment="Center"
+                                                                         VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                <TextBlock Text="Argon2 hashing parameters" Foreground="#0F172A" FontSize="15" FontWeight="SemiBold"/>
+                                                <TextBlock Text="Controls how the master password is derived into an encryption key. Higher values increase security but also login time."
+                                                           Foreground="#64748B" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <!-- Iterations -->
+                                        <StackPanel Grid.Row="2">
+                                            <TextBlock Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4">
+                                                <Run Text="Iterations "/>
+                                                <Run Text="(time cost, 10–200)" Foreground="#94A3B8" FontSize="11" FontWeight="Normal"/>
+                                            </TextBlock>
+                                            <TextBlock Text="Number of passes over memory. Default: 40."
+                                                       Foreground="#94A3B8" FontSize="11" Margin="0,0,0,6"/>
+                                            <TextBox x:Name="argon2IterationsTxt"
+                                                     Style="{StaticResource SettingsInputStyle}"
+                                                     Width="180"
+                                                     HorizontalAlignment="Left"
+                                                     TextAlignment="Left"
+                                                     adorners:Watermark.Text="40">
+                                                <adorners:Watermark.TextStyle>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Opacity" Value="0.5"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="Margin" Value="12,0,0,0"/>
+                                                    </Style>
+                                                </adorners:Watermark.TextStyle>
+                                            </TextBox>
+                                        </StackPanel>
+
+                                        <!-- Memory size -->
+                                        <StackPanel Grid.Row="4">
+                                            <TextBlock Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4">
+                                                <Run Text="Memory size "/>
+                                                <Run Text="(KB, 4096–1 048 576)" Foreground="#94A3B8" FontSize="11" FontWeight="Normal"/>
+                                            </TextBlock>
+                                            <TextBlock Text="RAM used per hash in kilobytes. Default: 4096 KB (4 MB)."
+                                                       Foreground="#94A3B8" FontSize="11" Margin="0,0,0,6"/>
+                                            <TextBox x:Name="argon2MemorySizeTxt"
+                                                     Style="{StaticResource SettingsInputStyle}"
+                                                     Width="180"
+                                                     HorizontalAlignment="Left"
+                                                     TextAlignment="Left"
+                                                     adorners:Watermark.Text="4096">
+                                                <adorners:Watermark.TextStyle>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Opacity" Value="0.5"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="Margin" Value="12,0,0,0"/>
+                                                    </Style>
+                                                </adorners:Watermark.TextStyle>
+                                            </TextBox>
+                                        </StackPanel>
+
+                                        <!-- Parallelism -->
+                                        <StackPanel Grid.Row="6">
+                                            <TextBlock Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4">
+                                                <Run Text="Parallelism "/>
+                                                <Run Text="(threads, 1–16)" Foreground="#94A3B8" FontSize="11" FontWeight="Normal"/>
+                                            </TextBlock>
+                                            <TextBlock Text="Number of parallel threads used during hashing. Default: 2."
+                                                       Foreground="#94A3B8" FontSize="11" Margin="0,0,0,6"/>
+                                            <TextBox x:Name="argon2ParallelismTxt"
+                                                     Style="{StaticResource SettingsInputStyle}"
+                                                     Width="180"
+                                                     HorizontalAlignment="Left"
+                                                     TextAlignment="Left"
+                                                     adorners:Watermark.Text="2">
+                                                <adorners:Watermark.TextStyle>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Opacity" Value="0.5"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="Margin" Value="12,0,0,0"/>
+                                                    </Style>
+                                                </adorners:Watermark.TextStyle>
+                                            </TextBox>
+                                        </StackPanel>
+
+                                        <!-- Warning -->
+                                        <Border Grid.Row="8"
+                                                Background="#FFF7ED"
+                                                BorderBrush="#FED7AA"
+                                                BorderThickness="1"
+                                                CornerRadius="8"
+                                                Padding="10,8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="AlertOutline"
+                                                                         Foreground="#EA580C"
+                                                                         Width="16" Height="16"
+                                                                         Margin="0,0,8,0"
+                                                                         VerticalAlignment="Center"/>
+                                                <TextBlock Text="Changing these settings affects all vaults. Re-create vaults after applying."
+                                                           Foreground="#C2410C"
+                                                           FontSize="11"
+                                                           TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Apply -->
+                                        <Grid Grid.Row="10">
+                                            <Button Name="applyArgon2SettingsBTN"
+                                                    Style="{DynamicResource RoundCorner2}"
+                                                    Content="Apply"
+                                                    Width="90"
+                                                    Height="38"
+                                                    HorizontalAlignment="Right"
+                                                    Click="applyArgon2SettingsBTN_Click"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                            </StackPanel>
+                        </ScrollViewer>
                     </Grid>
                 </TabItem>
             </TabControl>

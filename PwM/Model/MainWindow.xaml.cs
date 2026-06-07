@@ -53,6 +53,7 @@ namespace PwM
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
             VaultSessionExpire.LoadExpireTime(GlobalVariables.registryPath, GlobalVariables.vaultExpireReg, "10", expirePeriodTxT);
+            Argon2SettingsManager.LoadSettings(GlobalVariables.registryPath, argon2IterationsTxt, argon2MemorySizeTxt, argon2ParallelismTxt);
         }
 
         private void MainInnerGrid_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -786,6 +787,36 @@ namespace PwM
                     return;
                 }
                 Notification.ShowNotificationInfo("orange", "You must type a vaule greather than 0 !");
+            }
+            catch (Exception x)
+            {
+                Notification.ShowNotificationInfo("red", x.Message);
+            }
+        }
+
+        /// <summary>
+        /// Save Argon2 hashing parameters to registry and apply immediately.
+        /// </summary>
+        private void applyArgon2SettingsBTN_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string error = Argon2SettingsManager.ValidateAndSave(
+                    GlobalVariables.registryPath,
+                    argon2IterationsTxt.Text,
+                    argon2MemorySizeTxt.Text,
+                    argon2ParallelismTxt.Text);
+
+                if (error != null)
+                {
+                    Notification.ShowNotificationInfo("orange", error);
+                    return;
+                }
+
+                Notification.ShowNotificationInfo("green",
+                    $"Argon2 settings saved — Iterations: {GlobalVariables.argon2Iterations}, " +
+                    $"Memory: {GlobalVariables.argon2MemorySize} KB, " +
+                    $"Parallelism: {GlobalVariables.argon2Parallelism}.");
             }
             catch (Exception x)
             {
