@@ -110,6 +110,7 @@ The Passwowrd Manager generates a vault file for every user logged in system. Yo
 
 ![alt text](https://github.com/0x78654C/PwM/blob/main/Media/2.png?raw=true)
 
+<img width="1080" height="689" alt="Screenshot 2026-06-07 194017" src="https://github.com/user-attachments/assets/6b9ebc65-b4bc-4ad6-894b-75ad0607ad4a" />
 
 
 
