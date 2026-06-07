@@ -45,7 +45,7 @@ namespace PwM
             InitializeComponent();
             InitializeVaultsDirectory(s_passwordManagerDirectory);
             s_masterPassCheckTimer = new DispatcherTimer();
-            versionLabel.Content = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            versionLabel.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
             VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList, false);
             userTXB.Text = s_accountName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
@@ -53,6 +53,12 @@ namespace PwM
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
             VaultSessionExpire.LoadExpireTime(GlobalVariables.registryPath, GlobalVariables.vaultExpireReg, "10", expirePeriodTxT);
+        }
+
+        private void MainInnerGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            mainInnerGrid.Clip = new RectangleGeometry(
+                new Rect(0, 0, e.NewSize.Width, e.NewSize.Height), 16, 16);
         }
 
         /// <summary>

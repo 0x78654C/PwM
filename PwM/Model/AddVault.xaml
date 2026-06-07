@@ -1,19 +1,184 @@
-<Window x:Class="PwM.AddVault" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:adorners="http://gu.se/Adorners"
-        Title="PwM - Password Manager" Icon="pack://application:,,,/Resources/logo-modern.ico" AllowsTransparency="True" Background="Transparent" Height="480" Width="470" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen">
+<Window x:Class="PwM.AddVault"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:adorners="http://gu.se/Adorners"
+        Title="PwM - Password Manager"
+        Icon="pack://application:,,,/Resources/logo-modern.ico"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Height="450"
+        Width="440"
+        ResizeMode="NoResize"
+        WindowStyle="None"
+        MouseDown="Window_MouseDown"
+        WindowStartupLocation="CenterScreen">
     <Window.Resources>
-        <Style x:Key="Field" TargetType="{x:Type TextBox}"><Setter Property="Height" Value="42"/><Setter Property="Padding" Value="12,0"/><Setter Property="Background" Value="White"/><Setter Property="Foreground" Value="#0F172A"/><Setter Property="BorderBrush" Value="#CBD5E1"/><Setter Property="BorderThickness" Value="1"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
-        <Style x:Key="PasswordField" TargetType="{x:Type PasswordBox}"><Setter Property="Height" Value="42"/><Setter Property="Padding" Value="12,0"/><Setter Property="Background" Value="White"/><Setter Property="Foreground" Value="#0F172A"/><Setter Property="BorderBrush" Value="#CBD5E1"/><Setter Property="BorderThickness" Value="1"/><Setter Property="VerticalContentAlignment" Value="Center"/></Style>
+        <Style x:Key="Field" TargetType="{x:Type TextBox}">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style x:Key="PasswordField" TargetType="{x:Type PasswordBox}">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
     </Window.Resources>
+
     <Border Margin="10" Background="White" CornerRadius="14" BorderBrush="#E2E8F0" BorderThickness="1">
-        <Border.Effect><DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.2" Color="#0F172A"/></Border.Effect>
-        <Grid><Grid.RowDefinitions><RowDefinition Height="76"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-            <Border Background="#0F172A" CornerRadius="13,13,0,0"><Grid><Border Width="38" Height="38" Background="#4F46E5" CornerRadius="10" Margin="20,0,0,0" HorizontalAlignment="Left"><materialDesign:PackIcon Kind="SafeSquareOutline" Foreground="White" Width="21" Height="21" HorizontalAlignment="Center" VerticalAlignment="Center"/></Border><StackPanel Margin="72,16,0,0"><TextBlock Text="Create vault" Foreground="White" FontSize="17" FontWeight="SemiBold"/><TextBlock Text="Create a new encrypted local vault" Foreground="#94A3B8" FontSize="11" Margin="0,3,0,0"/></StackPanel><materialDesign:PackIcon Kind="Close" Foreground="#CBD5E1" Width="20" Height="20" HorizontalAlignment="Right" Margin="0,0,20,0" Cursor="Hand" PreviewMouseDown="closeLBL_PreviewMouseDown"/></Grid></Border>
-            <Grid Grid.Row="1" Margin="28,22"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="14"/><RowDefinition Height="Auto"/><RowDefinition Height="14"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
-                <StackPanel><TextBlock Text="Vault name" Foreground="#475569" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/><TextBox Name="vaultNameTXT" Style="{StaticResource Field}" TextChanged="vaultNameTXT_TextChanged" adorners:Watermark.Text="Name your vault"><adorners:Watermark.TextStyle><Style TargetType="TextBlock"><Setter Property="Opacity" Value="0.45"/><Setter Property="Margin" Value="12,0,0,0"/><Setter Property="VerticalAlignment" Value="Center"/></Style></adorners:Watermark.TextStyle></TextBox></StackPanel>
-                <Grid Grid.Row="2"><PasswordBox Name="addVPassword" Style="{StaticResource PasswordField}" PasswordChanged="addVPassword_PasswordChanged" adorners:Watermark.Text="Master password"><adorners:Watermark.TextStyle><Style TargetType="TextBlock"><Setter Property="Opacity" Value="0.45"/><Setter Property="Margin" Value="12,0,0,0"/><Setter Property="VerticalAlignment" Value="Center"/></Style></adorners:Watermark.TextStyle></PasswordBox><TextBox Name="vaultMassterPass" Style="{StaticResource Field}" Visibility="Hidden" adorners:Watermark.Text="Master password"/></Grid>
-                <Grid Grid.Row="4"><PasswordBox Name="confirmVPassword" Style="{StaticResource PasswordField}" PasswordChanged="confirmVPassword_PasswordChanged" adorners:Watermark.Text="Confirm master password"><adorners:Watermark.TextStyle><Style TargetType="TextBlock"><Setter Property="Opacity" Value="0.45"/><Setter Property="Margin" Value="12,0,0,0"/><Setter Property="VerticalAlignment" Value="Center"/></Style></adorners:Watermark.TextStyle></PasswordBox><TextBox Name="vaultConfirmMassterPass" Style="{StaticResource Field}" Visibility="Hidden" adorners:Watermark.Text="Confirm master password"/><materialDesign:PackIcon Name="ShowNewVaultPassword" Kind="EyeOutline" Foreground="#64748B" Width="18" Height="18" HorizontalAlignment="Right" Margin="0,0,12,0" Cursor="Hand" PreviewMouseRightButtonUp="ShowVaultPassword" PreviewMouseRightButtonDown="ShowVaultPassword" PreviewMouseMove="ShowNewVaultPassword_PreviewMouseMove"/></Grid>
-                <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,10,0,0"><materialDesign:PackIcon Kind="InformationOutline" Foreground="#64748B" Width="15" Height="15" Margin="0,0,6,0"/><TextBlock Text="Use at least 12 characters with mixed character types." Foreground="#64748B" FontSize="10"/><Label Name="vaultLimitLbl" Content=" " Foreground="#DC2626" FontSize="10" Padding="6,0,0,0"/></StackPanel>
-                <Button Grid.Row="7" Name="createBTN" Style="{DynamicResource RoundCorner2}" Content="Create vault" Width="118" Height="38" HorizontalAlignment="Right" Click="saveBTN_Click" IsEnabled="False" IsDefault="True"/>
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.2" Color="#0F172A"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Background="#0F172A" CornerRadius="13,13,0,0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="54"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="46"/>
+                    </Grid.ColumnDefinitions>
+                    <Border Width="34" Height="34" Background="#4F46E5" CornerRadius="9" HorizontalAlignment="Right">
+                        <materialDesign:PackIcon Kind="SafeSquareOutline"
+                                                 Width="19" Height="19"
+                                                 Foreground="White"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"/>
+                    </Border>
+                    <StackPanel Grid.Column="1" Margin="10,14,0,0">
+                        <TextBlock Text="Create vault" Foreground="White" FontSize="16" FontWeight="SemiBold"/>
+                        <TextBlock Text="Create a new encrypted local vault" Foreground="#94A3B8" FontSize="11" Margin="0,2,0,0"/>
+                    </StackPanel>
+                    <materialDesign:PackIcon Grid.Column="2"
+                                             Kind="Close"
+                                             Width="20" Height="20"
+                                             Foreground="#CBD5E1"
+                                             Cursor="Hand"
+                                             ToolTip="Close"
+                                             HorizontalAlignment="Center"
+                                             VerticalAlignment="Center"
+                                             PreviewMouseDown="closeLBL_PreviewMouseDown"/>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" Margin="24,20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="16"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel>
+                    <TextBlock Text="Vault name" Foreground="#475569" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <TextBox Name="vaultNameTXT" Style="{StaticResource Field}" TextChanged="vaultNameTXT_TextChanged" adorners:Watermark.Text="Name your vault">
+                        <adorners:Watermark.TextStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="Opacity" Value="0.45"/>
+                                <Setter Property="Margin" Value="12,0,0,0"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </adorners:Watermark.TextStyle>
+                    </TextBox>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2">
+                    <TextBlock Text="Master password" Foreground="#475569" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <Grid>
+                        <PasswordBox Name="addVPassword"
+                                     Style="{StaticResource PasswordField}"
+                                     PasswordChanged="addVPassword_PasswordChanged"
+                                     adorners:Watermark.Text="At least 12 characters">
+                            <adorners:Watermark.TextStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Opacity" Value="0.45"/>
+                                    <Setter Property="Margin" Value="12,0,0,0"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </adorners:Watermark.TextStyle>
+                        </PasswordBox>
+                        <TextBox Name="vaultMassterPass"
+                                 Style="{StaticResource Field}"
+                                 Visibility="Hidden"
+                                 adorners:Watermark.Text="At least 12 characters"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Grid.Row="4">
+                    <TextBlock Text="Confirm master password" Foreground="#475569" FontSize="11" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="34"/>
+                        </Grid.ColumnDefinitions>
+                        <PasswordBox Name="confirmVPassword"
+                                     Style="{StaticResource PasswordField}"
+                                     PasswordChanged="confirmVPassword_PasswordChanged"
+                                     adorners:Watermark.Text="Re-enter master password">
+                            <adorners:Watermark.TextStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Opacity" Value="0.45"/>
+                                    <Setter Property="Margin" Value="12,0,0,0"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                </Style>
+                            </adorners:Watermark.TextStyle>
+                        </PasswordBox>
+                        <TextBox Name="vaultConfirmMassterPass"
+                                 Style="{StaticResource Field}"
+                                 Visibility="Hidden"
+                                 adorners:Watermark.Text="Re-enter master password"/>
+                        <materialDesign:PackIcon Grid.Column="1"
+                                                 Name="ShowNewVaultPassword"
+                                                 Kind="EyeOutline"
+                                                 Foreground="#64748B"
+                                                 Width="18" Height="18"
+                                                 HorizontalAlignment="Right"
+                                                 VerticalAlignment="Center"
+                                                 Cursor="Hand"
+                                                 ToolTip="Hold right click to show passwords"
+                                                 PreviewMouseRightButtonDown="ShowVaultPassword"
+                                                 PreviewMouseRightButtonUp="ShowVaultPassword"
+                                                 PreviewMouseMove="ShowNewVaultPassword_PreviewMouseMove"/>
+                    </Grid>
+                </StackPanel>
+
+                <StackPanel Grid.Row="6" Orientation="Horizontal">
+                    <materialDesign:PackIcon Kind="InformationOutline" Foreground="#64748B" Width="15" Height="15" Margin="0,0,6,0"/>
+                    <TextBlock Text="Use at least 12 characters with mixed character types." Foreground="#64748B" FontSize="10" VerticalAlignment="Center"/>
+                    <Label Name="vaultLimitLbl" Content=" " Foreground="#DC2626" FontSize="10" Padding="6,0,0,0"/>
+                </StackPanel>
+
+                <Grid Grid.Row="8">
+                    <Button Name="createBTN"
+                            Style="{DynamicResource RoundCorner2}"
+                            Content="Create vault"
+                            Width="118"
+                            Height="38"
+                            HorizontalAlignment="Right"
+                            Click="saveBTN_Click"
+                            IsEnabled="False"
+                            IsDefault="True"/>
+                </Grid>
             </Grid>
         </Grid>
     </Border>

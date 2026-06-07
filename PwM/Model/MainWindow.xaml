@@ -228,13 +228,13 @@
     </Window.Resources>
 
     <Border Margin="12"
-            Background="{StaticResource AppBackgroundBrush}"
+            Background="Transparent"
             CornerRadius="16"
             SnapsToDevicePixels="True">
         <Border.Effect>
             <DropShadowEffect BlurRadius="30" ShadowDepth="8" Opacity="0.22" Color="#0F172A"/>
         </Border.Effect>
-        <Grid>
+        <Grid x:Name="mainInnerGrid" SizeChanged="MainInnerGrid_SizeChanged">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="236"/>
                 <ColumnDefinition Width="*"/>
@@ -244,11 +244,13 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Grid x:Name="GridMenu" Grid.RowSpan="2" Background="{StaticResource SidebarBrush}">
+            <Border x:Name="GridMenu" Grid.RowSpan="2" Background="{StaticResource SidebarBrush}" CornerRadius="16,0,0,16">
+            <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="88"/>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
@@ -301,40 +303,45 @@
                     </ListViewItem>
                 </StackPanel>
 
-                <Border Grid.Row="3" Margin="14,12,14,16" Padding="12" Background="#172033" CornerRadius="10">
+                <Border Grid.Row="3"
+                        Margin="12,0,12,14"
+                        Padding="12,10"
+                        Background="#1E293B"
+                        CornerRadius="10"
+                        BorderBrush="#334155"
+                        BorderThickness="1">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="Auto"/>
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="34"/>
+                            <ColumnDefinition Width="36"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border Width="30" Height="30" Background="#334155" CornerRadius="15" VerticalAlignment="Top">
+
+                        <Border Width="32" Height="32"
+                                Background="#4F46E5"
+                                CornerRadius="16"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="AccountOutline"
-                                                     Width="17"
-                                                     Height="17"
-                                                     Foreground="#CBD5E1"
+                                                     Width="17" Height="17"
+                                                     Foreground="White"
                                                      HorizontalAlignment="Center"
                                                      VerticalAlignment="Center"/>
                         </Border>
-                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
                             <TextBlock Name="userTXB"
                                        Text="user"
                                        Foreground="White"
-                                       FontSize="12"
+                                       FontSize="13"
                                        FontWeight="SemiBold"
                                        TextTrimming="CharacterEllipsis"/>
-                            <Label Name="versionLabel"
-                                   Content="v1.0"
-                                   Foreground="#94A3B8"
-                                   FontSize="10"
-                                   Margin="0,5,0,0"
-                                   Padding="0"
-                                   HorizontalContentAlignment="Left"/>
                         </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,12,0,0">
+
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,8,0,0">
                             <TextBlock Name="vaultExpireTb"
                                        Visibility="Hidden"
                                        Text="Vault Expire"
@@ -353,9 +360,19 @@
                         </StackPanel>
                     </Grid>
                 </Border>
-            </Grid>
 
-            <Grid Grid.Column="1" Background="White">
+                <TextBlock Grid.Row="4"
+                           Name="versionLabel"
+                           Text="v1.0"
+                           Foreground="#334155"
+                           FontSize="10"
+                           Margin="18,6,0,10"
+                           HorizontalAlignment="Left"/>
+            </Grid>
+            </Border>
+
+            <Border Grid.Column="1" CornerRadius="0,16,0,0" Background="White">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
@@ -393,6 +410,7 @@
                 </StackPanel>
                 <Border Grid.ColumnSpan="2" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1"/>
             </Grid>
+            </Border>
 
             <TabControl Name="tabControl"
                         Grid.Column="1"
