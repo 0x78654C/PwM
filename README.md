@@ -144,12 +144,6 @@ At least 12 characters — must include uppercase, lowercase, digit, special cha
 
 ---
 
-## Video presentation
-
-[![PwM video](https://img.youtube.com/vi/ekZ-ZLQNDtg/0.jpg)](https://www.youtube.com/watch?v=ekZ-ZLQNDtg)
-
----
-
 ## License
 
 [LICENSE](LICENSE) © 0x78654C
