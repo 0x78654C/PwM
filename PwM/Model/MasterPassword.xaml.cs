@@ -15,10 +15,14 @@ namespace PwM
     {
         public SecureString masterPassword;
 
-        public MasterPassword()
+        public MasterPassword(bool isSharedVault = false)
         {
             InitializeComponent();
             vaultNameLBL.Text = PwMLib.GlobalVariables.vaultName;
+            vaultTypeLBL.Text = isSharedVault ? "Shared vault" : "Local vault";
+            vaultTypeIcon.Kind = isSharedVault
+                ? MaterialDesignThemes.Wpf.PackIconKind.AccountMultipleOutline
+                : MaterialDesignThemes.Wpf.PackIconKind.Harddisk;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
         }

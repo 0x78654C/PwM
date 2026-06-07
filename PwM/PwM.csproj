@@ -12,7 +12,7 @@
     <OutputPath>..\..\Release\PwM\</OutputPath>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>logo.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\logo-modern.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Resource Include="Resources\Menu.jpg">
@@ -31,6 +31,14 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\logo.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\logo-modern.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\logo-modern.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>

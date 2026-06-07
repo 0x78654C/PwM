@@ -11,11 +11,11 @@ namespace PwM.Utils
         /// </summary>
         /// <param name="vaultName"></param>
         /// <returns></returns>
-        public static SecureString LoadMasterPassword(string vaultName)
+        public static SecureString LoadMasterPassword(string vaultName, bool? isSharedVault = null)
         {
             SecureString password;
             PwMLib.GlobalVariables.vaultName = vaultName;
-            MasterPassword masterPassword = new MasterPassword();
+            MasterPassword masterPassword = new MasterPassword(isSharedVault ?? PwMLib.GlobalVariables.sharedVault);
             masterPassword.ShowDialog();
             password = masterPassword.masterPassword;
             masterPassword.masterPasswordPWD.Clear();

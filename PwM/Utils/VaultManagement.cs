@@ -152,7 +152,7 @@ namespace PwM.Utils
                 PwMLib.GlobalVariables.vaultsCount++;
                 if (file.Name.EndsWith(".x"))
                 {
-                    listView.Items.Add(new { Name = file.Name.Substring(0, file.Name.Length - 2), CreateDate = file.CreationTime, SharePoint = "Local Stored" });
+                    listView.Items.Add(new { Name = file.Name.Substring(0, file.Name.Length - 2), CreateDate = file.CreationTime, SharePoint = "Local Stored", Storage = "Local vault" });
                 }
             }
             if (File.Exists(PwMLib.GlobalVariables.jsonSharedVaults))
@@ -166,7 +166,7 @@ namespace PwM.Utils
                     {
                         string vaultPathFile = Path.Combine(item.SharedPath, item.VaultName);
                         fileInfo = new FileInfo(vaultPathFile);
-                        listView.Items.Add(new { Name = item.VaultName.Substring(0, item.VaultName.Length - 2), CreateDate = fileInfo.CreationTime, SharePoint = item.SharedPath });
+                        listView.Items.Add(new { Name = item.VaultName.Substring(0, item.VaultName.Length - 2), CreateDate = fileInfo.CreationTime, SharePoint = item.SharedPath, Storage = "Shared vault" });
                     }
                 }
                 catch
@@ -198,6 +198,7 @@ namespace PwM.Utils
             appListView.IsEnabled = false;
             PwMLib.GlobalVariables.masterPassword = null;
             PwMLib.GlobalVariables.vaultOpen = false;
+            PwMLib.GlobalVariables.sharedVault = false;
             AppManagement.vaultSecure = null;
             MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(masterPasswordTimer);
             GC.Collect();

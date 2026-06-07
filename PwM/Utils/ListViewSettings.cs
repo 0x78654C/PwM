@@ -17,10 +17,11 @@ namespace PwM.Utils
             if (reset)
             {
                 listViewItem.Background = Brushes.Transparent;
-                listViewItem.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
+                listViewItem.Foreground = (Brush)converter.ConvertFromString("#CBD5E1");
                 return;
             }
-            listViewItem.Background = (Brush)converter.ConvertFromString("#6f2be3");
+            listViewItem.Background = (Brush)converter.ConvertFromString("#4F46E5");
+            listViewItem.Foreground = Brushes.White;
         }
 
         /// <summary>
@@ -36,10 +37,11 @@ namespace PwM.Utils
                 if (reset)
                 {
                     listViewItem.Background = Brushes.Transparent;
-                    listViewItem.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
+                    listViewItem.Foreground = (Brush)converter.ConvertFromString("#CBD5E1");
                     return;
                 }
-                listViewItem.Background = (Brush)converter.ConvertFromString("#6f2be3");
+                listViewItem.Background = (Brush)converter.ConvertFromString("#4F46E5");
+                listViewItem.Foreground = Brushes.White;
             }
         }
 

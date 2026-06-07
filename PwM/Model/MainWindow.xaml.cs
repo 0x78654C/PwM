@@ -47,7 +47,7 @@ namespace PwM
             s_masterPassCheckTimer = new DispatcherTimer();
             versionLabel.Content = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
             VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList, false);
-            userTXB.Text = " " + s_accountName;
+            userTXB.Text = s_accountName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
             ListViewSettings.SetListViewColor(vaultsListVI, false);
@@ -295,6 +295,27 @@ namespace PwM
             OpenVault();
         }
 
+        private void vaultList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateVaultStorageBadge();
+        }
+
+        private void UpdateVaultStorageBadge()
+        {
+            if (vaultList.SelectedItem == null)
+            {
+                vaultStorageLabel.Text = "Select a vault";
+                vaultStorageIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ShieldOutline;
+                return;
+            }
+
+            bool isSharedVault = !VaultManagement.GetVaultPathFromList(vaultList).StartsWith("Local");
+            vaultStorageLabel.Text = isSharedVault ? "Shared vault" : "Stored locally";
+            vaultStorageIcon.Kind = isSharedVault
+                ? MaterialDesignThemes.Wpf.PackIconKind.AccountMultipleOutline
+                : MaterialDesignThemes.Wpf.PackIconKind.Harddisk;
+        }
+
 
         /// <summary>
         /// Open selected vault from vault list.
@@ -305,6 +326,9 @@ namespace PwM
             if (vaultList.SelectedItem != null)
             {
                 string vaultPath = VaultManagement.GetVaultPathFromList(vaultList);
+                bool isSharedVault = !vaultPath.StartsWith("Local");
+                GlobalVariables.sharedVault = isSharedVault;
+                UpdateVaultStorageBadge();
                 _vaultPath = vaultPath;
                 VaultCloseTimersStop();
                 VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
@@ -312,14 +336,14 @@ namespace PwM
                 string vaultName = item.Split(',')[0].Replace("{ Name = ", "");
                 var vaultFullPath = $"{vaultPath}\\{vaultName}.x";
                 if (LockedVault.IsVaultLocked(vaultFullPath)) return;
-                var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
+                var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName, isSharedVault);
                 GlobalVariables.masterPassword = masterPassword;
                 if (masterPassword != null && masterPassword.Length > 0)
                 {
                     if (AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword, vaultPath))
                     {
                         appListVI.IsEnabled = true;
-                        appListVI.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
+                        appListVI.Foreground = (Brush)converter.ConvertFromString("#CBD5E1");
                         ListViewSettings.SetListViewColor(vaultsListVI, true);
                         ListViewSettings.SetListViewColor(settingsListVI, true);
                         ListViewSettings.SetListViewColorApp(appListVI, false);
@@ -329,7 +353,6 @@ namespace PwM
                             appListVaultLVL.Text = $"{vaultName} (shared)";
                         else
                             appListVaultLVL.Text = vaultName;
-                        GlobalVariables.sharedVault = false;
                         GlobalVariables.vaultOpen = true;
                         StartTimerVaultClose();
                         Sort("Application", appList, ListSortDirection.Ascending);
