@@ -1,28 +1,13 @@
-﻿<Window x:Class="PwM.about"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        xmlns:local="clr-namespace:PwM"
-        mc:Ignorable="d"
-       Title="About Me" Icon="pack://application:,,,/Resources/Logo.ico"  AllowsTransparency="True" Height="471" Width="598.087" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen" >
-    <Grid Background="#f3f5f2" >
-        <Border BorderBrush="#690fc2" BorderThickness="1">
-            <Image Source="pack://application:,,,/Resources/logot.png" Margin="390,46,10,279"/>
-        </Border>
-        <Grid VerticalAlignment="Top" Height="39" Background="#551cc7" >
-            <TextBlock Text="About Me"  TextAlignment="Center" HorizontalAlignment="Center" Foreground="White" FontSize="18" Margin="246,6,261,4" Width="91"/>
-            <Label Name="miniMizeLBL" Content="_" FontSize="26" Foreground="#FFE1DDE2" HorizontalAlignment="Right" Margin="0,-15,12,0" VerticalAlignment="Top" Height="46" PreviewMouseDown="minimizeLBL_PreviewMouseDown" />
+<Window x:Class="PwM.about" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="About PwM" Icon="pack://application:,,,/Resources/logo-modern.ico" AllowsTransparency="True" Background="Transparent" Height="500" Width="600" ResizeMode="NoResize" WindowStyle="None" MouseDown="Window_MouseDown" WindowStartupLocation="CenterScreen">
+    <Border Margin="10" Background="White" CornerRadius="14" BorderBrush="#E2E8F0" BorderThickness="1"><Border.Effect><DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.2" Color="#0F172A"/></Border.Effect>
+        <Grid><Grid.RowDefinitions><RowDefinition Height="76"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Border Background="#0F172A" CornerRadius="13,13,0,0"><Grid><Image Source="pack://application:,,,/Resources/logo-modern.png" Width="46" Height="46" Margin="18,0,0,0" HorizontalAlignment="Left"/><StackPanel Margin="76,15,0,0"><TextBlock Text="About PwM" Foreground="White" FontSize="17" FontWeight="SemiBold"/><TextBlock Text="Private, local password management" Foreground="#94A3B8" FontSize="11" Margin="0,3,0,0"/></StackPanel><Label Name="miniMizeLBL" Content="−" Foreground="#CBD5E1" FontSize="20" HorizontalAlignment="Right" Margin="0,0,20,0" Cursor="Hand" PreviewMouseDown="minimizeLBL_PreviewMouseDown"/></Grid></Border>
+            <Grid Grid.Row="1" Margin="28,22"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="16"/><RowDefinition Height="*"/><RowDefinition Height="16"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions><StackPanel><Label Name="assamblyNameLBL" Content="Name" Foreground="#0F172A" FontSize="14" FontWeight="SemiBold" Padding="0"/><Label Name="versionNameLBL" Content="Version" Foreground="#64748B" FontSize="11" Padding="0" Margin="0,6,0,0"/><Label Name="copyRightLBL" Content="Copyright" Foreground="#94A3B8" FontSize="10" Padding="0" Margin="0,6,0,0"/></StackPanel><Border Grid.Column="1" Background="#EEF2FF" CornerRadius="10" Padding="14" HorizontalAlignment="Right"><materialDesign:PackIcon Kind="ShieldLockOutline" Foreground="#4F46E5" Width="42" Height="42"/></Border></Grid>
+                <TextBox Grid.Row="2" Name="descriptionTXT" Text="Description" IsReadOnly="True" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" Foreground="#475569" FontSize="12" TextWrapping="Wrap" Padding="14"/>
+                <Grid Grid.Row="4"><StackPanel Orientation="Horizontal"><materialDesign:PackIcon x:Name="EmailContactIcon" Kind="EmailOutline" Foreground="#4F46E5" Width="19" Height="19" Margin="0,0,7,0"/><TextBox Name="EmailContactTxtBox" Text="xcoding.dev@gmail.com" BorderThickness="0" Background="Transparent" IsReadOnly="True" Foreground="#475569" FontSize="11"/><Image Name="BuyMeACoffe_Image" Visibility="Hidden" PreviewMouseDown="BuyMeACoffee_Image_PreviewMouseDown"/><materialDesign:PackIcon x:Name="CryptoCoffeIcon" Visibility="Hidden" PreviewMouseDown="BuyMeACoffee_Image_PreviewMouseDown"/></StackPanel><Button Name="closeBTNMSG" Style="{DynamicResource RoundCorner2}" Content="Close" Width="96" Height="38" HorizontalAlignment="Right" Click="closeBTNMSG_Click"/></Grid>
+            </Grid>
         </Grid>
-        <Button Name="closeBTNMSG" Foreground="#FFE1DDEE" Style="{DynamicResource RoundCorner2}"  Content="Close" HorizontalAlignment="Left" Margin="488,409,0,0" VerticalAlignment="Top" Width="100" Height="41" Click="closeBTNMSG_Click"/>
-        <Label Name="assamblyNameLBL" Content="Name" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,50,296,0" VerticalAlignment="Top" Height="46" Width="292" />
-        <Label Name="versionNameLBL" Content="Version" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,96,326,0" VerticalAlignment="Top" Height="46" Width="262" />
-        <Label Name="copyRightLBL" Content="CopyRight" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,147,10,0" VerticalAlignment="Top" Height="46" Width="578" />
-        <TextBox Name="EmailContactTxtBox" Text="xcoding.dev@gmail.com" BorderThickness="0" Background="#f3f5f2" IsReadOnly="True" FontSize="16"  Foreground="Black"  HorizontalAlignment="Right" Margin="0,416,376,0" VerticalAlignment="Top" Height="30" Width="183"/>
-        <TextBox Background="#f3f5f2"  Foreground="Black"  Name="descriptionTXT" IsReadOnly="True" FontSize="16" Text="Description" HorizontalAlignment="Left" Height="185" Margin="10,205,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="578"/>
-        <Image Name="BuyMeACoffe_Image" Source="pack://application:,,,/Resources/support.png" Margin="317,409,166,44" PreviewMouseDown="BuyMeACoffee_Image_PreviewMouseDown" Visibility="Hidden"/>
-        <materialDesign:PackIcon x:Name="CryptoCoffeIcon" ToolTip="Support" Foreground="#690fc2" Kind="Bitcoin" Margin="294,406,0,0" Width="25" Height="26" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="BuyMeACoffee_Image_PreviewMouseDown" Visibility="Hidden"/>
-        <materialDesign:PackIcon x:Name="EmailContactIcon" ToolTip="Support" Foreground="#690fc2" Kind="Email" Margin="10,416,0,0" Width="25" Height="26" RenderTransformOrigin="0.556,-0.722"/>
-    </Grid>
+    </Border>
 </Window>

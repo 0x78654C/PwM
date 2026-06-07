@@ -38,5 +38,13 @@ namespace PwMLib
         public const string apiHIBP = "https://api.pwnedpasswords.com/range/";
         public const string apiHIBPMain = "api.pwnedpasswords.com";
         public static List<string> listItems = new List<string>();
+
+        // Argon2 hashing parameters (defaults match the original hardcoded values)
+        public static readonly string argon2IterationsReg = "Argon2Iterations";
+        public static readonly string argon2MemorySizeReg = "Argon2MemorySize";
+        public static readonly string argon2ParallelismReg = "Argon2Parallelism";
+        public static int argon2Iterations { get; set; } = 40;
+        public static int argon2MemorySize { get; set; } = 4096;
+        public static int argon2Parallelism { get; set; } = 2;
     }
 }

@@ -2,6 +2,7 @@
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Media;
+using MaterialDesignThemes.Wpf;
 
 namespace PwM
 {
@@ -67,20 +68,26 @@ namespace PwM
             switch (gridColor)
             {
                 case "green":
-                    popGrid.Background = Brushes.Green;
+                    statusIconBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F0FDF4"));
+                    statusIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#16A34A"));
+                    statusIcon.Kind = PackIconKind.CheckCircleOutline;
                     titleTxt.Text = "Notification";
                     notificationLBL.Text = messageData;
                     break;
 
                 case "red":
-                    popGrid.Background = Brushes.Red;
-                    titleTxt.Text = "ERROR";
+                    statusIconBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FEF2F2"));
+                    statusIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC2626"));
+                    statusIcon.Kind = PackIconKind.AlertCircleOutline;
+                    titleTxt.Text = "Error";
                     notificationLBL.Text = messageData;
                     break;
 
                 case "orange":
-                    popGrid.Background = Brushes.DarkOrange;
-                    titleTxt.Text = "WARNING";
+                    statusIconBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFBEB"));
+                    statusIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D97706"));
+                    statusIcon.Kind = PackIconKind.AlertOutline;
+                    titleTxt.Text = "Warning";
                     notificationLBL.Text = messageData;
                     break;
             }

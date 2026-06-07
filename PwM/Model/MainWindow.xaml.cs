@@ -45,14 +45,21 @@ namespace PwM
             InitializeComponent();
             InitializeVaultsDirectory(s_passwordManagerDirectory);
             s_masterPassCheckTimer = new DispatcherTimer();
-            versionLabel.Content = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            versionLabel.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(0, Assembly.GetExecutingAssembly().GetName().Version.ToString().Length-2);
             VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList, false);
-            userTXB.Text = " " + s_accountName;
+            userTXB.Text = s_accountName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
             VaultSessionExpire.LoadExpireTime(GlobalVariables.registryPath, GlobalVariables.vaultExpireReg, "10", expirePeriodTxT);
+            Argon2SettingsManager.LoadSettings(GlobalVariables.registryPath, argon2IterationsTxt, argon2MemorySizeTxt, argon2ParallelismTxt);
+        }
+
+        private void MainInnerGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            mainInnerGrid.Clip = new RectangleGeometry(
+                new Rect(0, 0, e.NewSize.Width, e.NewSize.Height), 16, 16);
         }
 
         /// <summary>
@@ -295,6 +302,27 @@ namespace PwM
             OpenVault();
         }
 
+        private void vaultList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            UpdateVaultStorageBadge();
+        }
+
+        private void UpdateVaultStorageBadge()
+        {
+            if (vaultList.SelectedItem == null)
+            {
+                vaultStorageLabel.Text = "Select a vault";
+                vaultStorageIcon.Kind = MaterialDesignThemes.Wpf.PackIconKind.ShieldOutline;
+                return;
+            }
+
+            bool isSharedVault = !VaultManagement.GetVaultPathFromList(vaultList).StartsWith("Local");
+            vaultStorageLabel.Text = isSharedVault ? "Shared vault" : "Stored locally";
+            vaultStorageIcon.Kind = isSharedVault
+                ? MaterialDesignThemes.Wpf.PackIconKind.AccountMultipleOutline
+                : MaterialDesignThemes.Wpf.PackIconKind.Harddisk;
+        }
+
 
         /// <summary>
         /// Open selected vault from vault list.
@@ -305,6 +333,9 @@ namespace PwM
             if (vaultList.SelectedItem != null)
             {
                 string vaultPath = VaultManagement.GetVaultPathFromList(vaultList);
+                bool isSharedVault = !vaultPath.StartsWith("Local");
+                GlobalVariables.sharedVault = isSharedVault;
+                UpdateVaultStorageBadge();
                 _vaultPath = vaultPath;
                 VaultCloseTimersStop();
                 VaultManagement.VaultClose(vaultsListVI, appListVI, settingsListVI, appList, tabControl, s_masterPassCheckTimer);
@@ -312,14 +343,14 @@ namespace PwM
                 string vaultName = item.Split(',')[0].Replace("{ Name = ", "");
                 var vaultFullPath = $"{vaultPath}\\{vaultName}.x";
                 if (LockedVault.IsVaultLocked(vaultFullPath)) return;
-                var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName);
+                var masterPassword = MasterPasswordLoad.LoadMasterPassword(vaultName, isSharedVault);
                 GlobalVariables.masterPassword = masterPassword;
                 if (masterPassword != null && masterPassword.Length > 0)
                 {
                     if (AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword, vaultPath))
                     {
                         appListVI.IsEnabled = true;
-                        appListVI.Foreground = (Brush)converter.ConvertFromString("#FFDCDCDC");
+                        appListVI.Foreground = (Brush)converter.ConvertFromString("#CBD5E1");
                         ListViewSettings.SetListViewColor(vaultsListVI, true);
                         ListViewSettings.SetListViewColor(settingsListVI, true);
                         ListViewSettings.SetListViewColorApp(appListVI, false);
@@ -329,7 +360,6 @@ namespace PwM
                             appListVaultLVL.Text = $"{vaultName} (shared)";
                         else
                             appListVaultLVL.Text = vaultName;
-                        GlobalVariables.sharedVault = false;
                         GlobalVariables.vaultOpen = true;
                         StartTimerVaultClose();
                         Sort("Application", appList, ListSortDirection.Ascending);
@@ -757,6 +787,36 @@ namespace PwM
                     return;
                 }
                 Notification.ShowNotificationInfo("orange", "You must type a vaule greather than 0 !");
+            }
+            catch (Exception x)
+            {
+                Notification.ShowNotificationInfo("red", x.Message);
+            }
+        }
+
+        /// <summary>
+        /// Save Argon2 hashing parameters to registry and apply immediately.
+        /// </summary>
+        private void applyArgon2SettingsBTN_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string error = Argon2SettingsManager.ValidateAndSave(
+                    GlobalVariables.registryPath,
+                    argon2IterationsTxt.Text,
+                    argon2MemorySizeTxt.Text,
+                    argon2ParallelismTxt.Text);
+
+                if (error != null)
+                {
+                    Notification.ShowNotificationInfo("orange", error);
+                    return;
+                }
+
+                Notification.ShowNotificationInfo("green",
+                    $"Argon2 settings saved — Iterations: {GlobalVariables.argon2Iterations}, " +
+                    $"Memory: {GlobalVariables.argon2MemorySize} KB, " +
+                    $"Parallelism: {GlobalVariables.argon2Parallelism}.");
             }
             catch (Exception x)
             {

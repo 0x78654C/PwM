@@ -1,255 +1,841 @@
-﻿<Window x:Class="PwM.MainWindow"
-xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+<Window x:Class="PwM.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:adorners="http://gu.se/Adorners"
         mc:Ignorable="d"
         Name="Pwm"
-        xmlns:adorners="http://gu.se/Adorners"
-        Title="PwM" Icon="pack://application:,,,/Resources/Logo.ico"  Height="704.594" Width="1074.808" ResizeMode="CanMinimize" WindowStartupLocation="CenterScreen" Visibility="Visible" MouseDown="Window_MouseDown" AllowsTransparency="True"  Background="Transparent" WindowStyle="None" Closing="Pwm_Closing">
+        Title="PwM"
+        Icon="pack://application:,,,/Resources/logo-modern.ico"
+        Height="720"
+        Width="1120"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        MouseDown="Window_MouseDown"
+        AllowsTransparency="True"
+        Background="Transparent"
+        WindowStyle="None"
+        Closing="Pwm_Closing">
     <Window.Resources>
-        <Style x:Key="MyWaterMarkStyle" TargetType="{x:Type TextBox}">
+        <Style x:Key="NavItemStyle" TargetType="{x:Type ListViewItem}">
+            <Setter Property="Height" Value="46"/>
+            <Setter Property="Margin" Value="12,3"/>
+            <Setter Property="Padding" Value="14,0"/>
+            <Setter Property="Foreground" Value="#CBD5E1"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type TextBox}">
-                        <Grid>
-                            <Border Background="White" BorderBrush="#FF7D8683" BorderThickness="1" CornerRadius="10"/>
-                            <ScrollViewer x:Name="PART_ContentHost" Margin="5,0,0,0" VerticalAlignment="Center" />
-                            <Label Margin="5,0,0,0" x:Name="WaterMarkLabel" Content="{TemplateBinding Tag}" HorizontalAlignment="Center" VerticalAlignment="Center"
-                               Visibility="Collapsed" Foreground="Gray" FontFamily="Arial"/>
-
-                        </Grid>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Border x:Name="NavBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="9"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
                         <ControlTemplate.Triggers>
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="Text" Value=""/>
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Visibility" TargetName="WaterMarkLabel" Value="Visible"/>
-                            </MultiTrigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="NavBorder" Property="Background" Value="#1E293B"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Foreground" Value="DimGray"/>
+                                <Setter Property="Opacity" Value="0.45"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
         <Style x:Key="GridViewColumnHeaderStyle1" TargetType="{x:Type GridViewColumnHeader}">
-            <Setter Property="Foreground" Value="#f3f5f2" />
-            <Setter Property="Background" Value="#6f2be3" />
-            <Setter Property="FontFamily" Value="Segoe UI" />
-            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="16,0"/>
+            <Setter Property="Foreground" Value="#64748B"/>
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+        <Style x:Key="DataListStyle" TargetType="{x:Type ListView}">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="SelectionMode" Value="Single"/>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="MinHeight" Value="44"/>
+                        <Setter Property="Padding" Value="16,0"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Background" Value="White"/>
+                        <Setter Property="BorderBrush" Value="#F1F5F9"/>
+                        <Setter Property="BorderThickness" Value="0,0,0,1"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                    <Border x:Name="RowBorder"
+                                            Background="{TemplateBinding Background}"
+                                            BorderBrush="{TemplateBinding BorderBrush}"
+                                            BorderThickness="{TemplateBinding BorderThickness}"
+                                            Padding="{TemplateBinding Padding}">
+                                        <GridViewRowPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="RowBorder" Property="Background" Value="#F8FAFC"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="RowBorder" Property="Background" Value="#4F46E5"/>
+                                            <Setter TargetName="RowBorder" Property="BorderBrush" Value="#4338CA"/>
+                                            <Setter TargetName="RowBorder" Property="BorderThickness" Value="4,0,0,1"/>
+                                            <Setter Property="Foreground" Value="White"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="IconActionBorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="Background" Value="#F8FAFC"/>
+            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="11,7"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+
+        <Style x:Key="ModernContextMenuStyle" TargetType="{x:Type ContextMenu}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="HasDropShadow" Value="False"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ContextMenu}">
+                        <Border Background="White"
+                                BorderBrush="#E2E8F0"
+                                BorderThickness="1"
+                                CornerRadius="10"
+                                Padding="6">
+                            <Border.Effect>
+                                <DropShadowEffect BlurRadius="18" ShadowDepth="5" Opacity="0.18" Color="#0F172A"/>
+                            </Border.Effect>
+                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernMenuItemStyle" TargetType="{x:Type MenuItem}">
+            <Setter Property="Height" Value="38"/>
+            <Setter Property="MinWidth" Value="230"/>
+            <Setter Property="Foreground" Value="#334155"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type MenuItem}">
+                        <Border x:Name="MenuItemBorder"
+                                Margin="0,1"
+                                Padding="10,0"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="7">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="25"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter ContentSource="Icon"
+                                                  Width="17"
+                                                  Height="17"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"/>
+                                <ContentPresenter Grid.Column="1"
+                                                  ContentSource="Header"
+                                                  RecognizesAccessKey="True"
+                                                  VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="MenuItemBorder" Property="Background" Value="#4F46E5"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                                <Setter Property="Cursor" Value="Arrow"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="ModernDangerMenuItemStyle"
+               TargetType="{x:Type MenuItem}"
+               BasedOn="{StaticResource ModernMenuItemStyle}">
+            <Setter Property="Foreground" Value="#DC2626"/>
+        </Style>
+
+        <Style x:Key="ModernMenuSeparatorStyle" TargetType="{x:Type Separator}">
+            <Setter Property="Margin" Value="10,5"/>
+            <Setter Property="Height" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Separator}">
+                        <Border Height="1" Background="#E2E8F0"/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SettingsInputStyle" TargetType="{x:Type TextBox}">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
         </Style>
     </Window.Resources>
-    <Border BorderThickness="1,1,1,1" Background="White" BorderBrush="#690fc2">
-        <Grid RenderTransformOrigin="0.819,0.497" Margin="0,0,0,0" Background="#f3f5f2">
+
+    <Border Margin="12"
+            Background="Transparent"
+            CornerRadius="16"
+            SnapsToDevicePixels="True">
+        <Border.Effect>
+            <DropShadowEffect BlurRadius="30" ShadowDepth="8" Opacity="0.22" Color="#0F172A"/>
+        </Border.Effect>
+        <Grid x:Name="mainInnerGrid" SizeChanged="MainInnerGrid_SizeChanged">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="0*"/>
+                <ColumnDefinition Width="236"/>
+                <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TabControl Background="#f3f5f2" Name="tabControl" HorizontalAlignment="Left" Height="693" Margin="220,10,0,0" VerticalAlignment="Top" Width="853">
-                <TabItem Name="vaultTab" Header="vaultTab">
-                    <Grid Background="#f3f5f2">
-                        <ListView Name="vaultList" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="490" Margin="21,81,22,0" VerticalAlignment="Top" Width="804" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick" KeyDown="vaultList_KeyDown" SelectionMode="Single">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="{x:Type ListViewItem}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
-                    BorderThickness="{TemplateBinding BorderThickness}" 
-                    Background="{TemplateBinding Background}" 
-                    Padding="{TemplateBinding Padding}"
-                    SnapsToDevicePixels="true">
-                                                    <GridViewRowPresenter 
-                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="true">
-                                            <Setter Property="Background" Value="#B5A2FF"/>
-                                            <Setter Property="Foreground" Value="Black"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.View>
-                                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
-                                    <GridViewColumn Header="Vault Name" Width="266" DisplayMemberBinding="{Binding Name}"/>
-                                    <GridViewColumn Header="Creation Date" Width="266" DisplayMemberBinding="{Binding CreateDate}"/>
-                                    <GridViewColumn Header="Shared Vault Path" Width="266" DisplayMemberBinding="{Binding SharePoint}"/>
-                                </GridView>
-                            </ListView.View>
-                            <ListView.ContextMenu>
-                                <ContextMenu HasDropShadow="False" StaysOpen="True" >
-                                    <MenuItem  Header="Export Vault" Click="ExportVault_Click" Foreground="Black" Tag="2" >
-                                        <MenuItem.Icon>
-                                            <materialDesign:PackIcon Name="export" Kind="Export"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Change Master Password" Click="ChangeMasterPassword_Click" Foreground="Black" Tag="2" >
-                                        <MenuItem.Icon>
-                                            <materialDesign:PackIcon Name="change" Kind="PasswordAdd"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Delete/Remove Vault" Click="DeleteVault_Click" Foreground="Red" Tag="2" >
-                                        <MenuItem.Icon>
-                                            <materialDesign:PackIcon Name="delete" Kind="Delete"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </ListView.ContextMenu>
-                        </ListView>
-                        <Label Content="_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" Margin="10,55,10,0" VerticalAlignment="Top" Height="26" Width="827" Foreground="Red" />
-                        <Label Content="Vaults List" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold"/>
-                        <Label Content="  " ToolTip="Add Vault" HorizontalAlignment="Left" Margin="21,578,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="AddVaultIcon_PreviewMouseDown" />
-                        <Label Content="  " ToolTip="Delete/Remove Vault" HorizontalAlignment="Left" Margin="60,578,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="DelVaultIcon_PreviewMouseDown" />
-                        <Label Content="  " ToolTip="Import Vault" HorizontalAlignment="Left" Margin="96,578,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="ImportVaultIcon_PreviewMouseDown" />
-                        <materialDesign:PackIcon Name="AddVaultIcon" ToolTip="Add Vault" Foreground="#690fc2" Kind="Plus" Margin="18,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" FontWeight="Bold" PreviewMouseDown="AddVaultIcon_PreviewMouseDown" />
-                        <materialDesign:PackIcon x:Name="DelVaultIcon" ToolTip="Delete/Remove Vault" Foreground="#690fc2" Kind="Minus" Margin="56,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelVaultIcon_PreviewMouseDown" />
-                        <materialDesign:PackIcon x:Name="ImportVaultIcon" ToolTip="Import Vault" Foreground="#690fc2" Kind="LetterI" Margin="92,576,0,63" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="ImportVaultIcon_PreviewMouseDown" />
+            <Grid.RowDefinitions>
+                <RowDefinition Height="68"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border x:Name="GridMenu" Grid.RowSpan="2" Background="{StaticResource SidebarBrush}" CornerRadius="16,0,0,16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="88"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="22,22,18,18">
+                    <Image Source="pack://application:,,,/Resources/logo-modern.png"
+                           Width="44"
+                           Height="44"
+                           Stretch="Uniform"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"/>
+                    <StackPanel Margin="12,1,0,0">
+                        <TextBlock Text="PwM" Foreground="White" FontSize="20" FontWeight="SemiBold"/>
+                        <TextBlock Text="Password Manager" Foreground="#94A3B8" FontSize="11" Margin="0,1,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1">
+                    <TextBlock Text="WORKSPACE"
+                               Foreground="#64748B"
+                               FontSize="10"
+                               FontWeight="Bold"
+                               Margin="26,8,0,8"/>
+                    <ListViewItem Name="vaultsListVI"
+                                  Style="{StaticResource NavItemStyle}"
+                                  ToolTip="Vaults"
+                                  PreviewMouseDown="Vault_PreviewMouseDown">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Name="vaultIcon" Kind="SafeSquareOutline" Width="20" Height="20" Margin="0,0,12,0"/>
+                            <TextBlock Name="vaultTXT" Text="Vaults" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Name="appListVI"
+                                  Style="{StaticResource NavItemStyle}"
+                                  ToolTip="Applications"
+                                  PreviewMouseDown="App_PreviewMouseDown"
+                                  IsEnabled="False">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Name="appIcon" Kind="KeyVariant" Width="20" Height="20" Margin="0,0,12,0"/>
+                            <TextBlock x:Name="appTXT" Text="Applications" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Name="settingsListVI"
+                                  Style="{StaticResource NavItemStyle}"
+                                  ToolTip="Settings"
+                                  PreviewMouseDown="Settings_PreviewMouseDown">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon Name="settingIcon" Kind="TuneVariant" Width="20" Height="20" Margin="0,0,12,0"/>
+                            <TextBlock Name="settingsTXT" Text="Settings" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                        </StackPanel>
+                    </ListViewItem>
+                </StackPanel>
+
+                <Border Grid.Row="3"
+                        Margin="12,0,12,14"
+                        Padding="12,10"
+                        Background="#1E293B"
+                        CornerRadius="10"
+                        BorderBrush="#334155"
+                        BorderThickness="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="36"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Width="32" Height="32"
+                                Background="#4F46E5"
+                                CornerRadius="16"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center">
+                            <materialDesign:PackIcon Kind="AccountOutline"
+                                                     Width="17" Height="17"
+                                                     Foreground="White"
+                                                     HorizontalAlignment="Center"
+                                                     VerticalAlignment="Center"/>
+                        </Border>
+
+                        <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                            <TextBlock Name="userTXB"
+                                       Text="user"
+                                       Foreground="White"
+                                       FontSize="13"
+                                       FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis"/>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="0,8,0,0">
+                            <TextBlock Name="vaultExpireTb"
+                                       Visibility="Hidden"
+                                       Text="Vault Expire"
+                                       Foreground="#FBBF24"
+                                       Background="Transparent"
+                                       FontSize="11"
+                                       TextWrapping="Wrap"/>
+                            <materialDesign:PackIcon Name="vaultElapsed"
+                                                     Visibility="Hidden"
+                                                     Foreground="#FBBF24"
+                                                     Kind="AlertCircleOutline"
+                                                     Width="16"
+                                                     Height="16"
+                                                     HorizontalAlignment="Right"
+                                                     Margin="0,-18,0,0"/>
+                        </StackPanel>
                     </Grid>
-                </TabItem>
-                <TabItem Name="appTab" Header="appTab">
-                    <Grid Background="#f3f5f2">
-                        <ListView Name="appList"  GridViewColumnHeader.Click="AppListColumnHeaderClickedHandler" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Height="522" Margin="21,56,21,0" VerticalAlignment="Top" Width="805" Background="#f3f5f2" Foreground="#0d0300" FontSize="14" SelectionMode="Single">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="{x:Type ListViewItem}">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                <Border x:Name="Bd" BorderBrush="{TemplateBinding BorderBrush}" 
-                    BorderThickness="{TemplateBinding BorderThickness}" 
-                    Background="{TemplateBinding Background}" 
-                    Padding="{TemplateBinding Padding}"
-                    SnapsToDevicePixels="true">
-                                                    <GridViewRowPresenter 
-                    HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
-                    SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
-                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="true">
-                                            <Setter Property="Background" Value="#B5A2FF"/>
-                                            <Setter Property="Foreground" Value="Black"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                            <ListView.View>
-                                <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
-                                    <GridViewColumn Header="Application" Width="266" DisplayMemberBinding="{Binding Application}"/>
-                                    <GridViewColumn Header="Account" Width="266" DisplayMemberBinding="{Binding Account}"/>
-                                    <GridViewColumn Header="Password" Width="266" DisplayMemberBinding="{Binding Password}"/>
-                                </GridView>
-                            </ListView.View>
-                            <ListView.ContextMenu>
-                                <ContextMenu HasDropShadow="False" StaysOpen="True" >
-                                    <MenuItem Header="Copy to clipboard (15 seconds available)" Click="CopyToClipboard_Click" Tag="1" >
-                                        <MenuItem.Icon>
-                                            <materialDesign:PackIcon Name="copy" Kind="ContentCopy"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Show Password" Click="ShowPassword_Click" Tag="2" >
-                                        <MenuItem.Icon>
-                                            <materialDesign:PackIcon Name="show" Kind="Show"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Update Account Password" Click="UpdateAccountPass_Click" Tag="2" >
-                                        <MenuItem.Icon>
-                                            <materialDesign:PackIcon Name="update" Kind="PasswordAdd"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                    <MenuItem Header="Delete Account" Click="DeleteAccount_Click" Foreground="Red" Tag="2" >
-                                        <MenuItem.Icon>
-                                            <materialDesign:PackIcon Name="del" Kind="Delete"/>
-                                        </MenuItem.Icon>
-                                    </MenuItem>
-                                </ContextMenu>
-                            </ListView.ContextMenu>
-                        </ListView>
-                        <Label Content="_______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________" HorizontalAlignment="Center" Margin="12,30,10,0" VerticalAlignment="Top" Height="26" Width="825" Foreground="Red" />
-                        <Label Content="Applications list for: " HorizontalAlignment="Left" Margin="13,24,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold"/>
-                        <TextBlock Name="appListVaultLVL"  Text="vault" HorizontalAlignment="Left" Margin="160,29,0,0" VerticalAlignment="Top" Foreground="Green" FontSize="14" FontWeight="Bold"/>
-                        <Label Content="  " ToolTip="Add Application" HorizontalAlignment="Left" Margin="21,587,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="AddAppIcon_PreviewMouseDown"/>
-                        <Label Content="  " ToolTip="Delete Application" HorizontalAlignment="Left" Margin="58,587,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" FontWeight="Bold" Height="21" PreviewMouseDown="DelAppIcon_PreviewMouseDown"/>
-                        <materialDesign:PackIcon Name="AddAppIcon" ToolTip="Add Application" Foreground="#690fc2" Kind="Plus" Margin="17,585,0,54" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" FontWeight="Bold" PreviewMouseDown="AddAppIcon_PreviewMouseDown"/>
-                        <materialDesign:PackIcon x:Name="DelApp" ToolTip="Delete Application" Foreground="#690fc2" Kind="Minus" Margin="54,585,0,54" Width="25" Height="26" VerticalAlignment="Center" RenderTransformOrigin="0.556,-0.722" PreviewMouseDown="DelAppIcon_PreviewMouseDown"/>
-                        <materialDesign:PackIcon Kind="Logout" Name="logoutIconV" Margin="361,627,0,0" Width="26" Height="30" Foreground="Red" RenderTransformOrigin="1.547,0.52"/>
-                        <Button Name="vaultCloseLBL" BorderThickness="0" Style="{DynamicResource ExitVaultButton}" Content="Exit Vault" Background="#f3f5f2" HorizontalAlignment="Left" Margin="384,629,0,0" VerticalAlignment="Top" FontSize="14" RenderTransformOrigin="4.157,15.948" FontWeight="Bold" Click="vaultCloseLBL_Click" Width="72" Height="25"/>
-                    </Grid>
-                </TabItem>
-                <TabItem Name="settingsTab" Header="appTab">
-                    <Grid Background="#f3f5f2">
-                        <Label Content="_________________________________________________________________________________________" HorizontalAlignment="Center" Margin="12,30,10,0" VerticalAlignment="Top" Height="26" Width="825" Foreground="Red" />
-                        <Label Content="Vault Session Expire Period" HorizontalAlignment="Left" Margin="21,23,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="16" FontWeight="Bold"/>
-                        <Label Content="Expire after(minutes):" HorizontalAlignment="Left" Margin="17,49,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="16" Height="30"/>
-                        <TextBox Background="#f3f5f2" BorderThickness="0,0,0,1" BorderBrush="#8D0FC3" Foreground="Black" FontSize="14" VerticalContentAlignment="Center" adorners:Watermark.Text="" TextAlignment="Center" x:Name="expirePeriodTxT" HorizontalAlignment="Left" Height="23" Margin="177,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="57">
-                            <adorners:Watermark.TextStyle>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Opacity" Value="0.5" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                </Style>
-                            </adorners:Watermark.TextStyle>
-                        </TextBox>
-                        <Button Name="applyExpirePeriodBTN" Style="{DynamicResource RoundCorner2}" Content="Apply"  Margin="87,84,0,0"  Width="69" Height="31" Foreground="#FFE1DDEE" Click="applyExpirePeriodBTN_Click" IsEnabled="True" HorizontalAlignment="Left" VerticalAlignment="Top" IsDefault="True"/>
-                    </Grid>
-                </TabItem>
-            </TabControl>
-            <Grid VerticalAlignment="Top" Height="50" Background="#f3f5f2" >
-                <Border BorderThickness="0 0 0.4 0" BorderBrush="#690fc2"/>
-                <TextBlock Text="PwM - Password Manager"  TextAlignment="Center" HorizontalAlignment="Center" Foreground="Black" FontSize="18" Margin="450,13,220,7" Width="337"></TextBlock>
-                <StackPanel VerticalAlignment="Center">
-                    <materialDesign:PopupBox Foreground="Black" HorizontalAlignment="Right"  Margin="0,9,7,9" PlacementMode="BottomAndAlignRightEdges" StaysOpen="False" Width="26">
-                        <Border BorderBrush="#690fc2" BorderThickness="1">
-                            <StackPanel Width="150" Background="#f3f5f2">
-                                <Button Content="About" VerticalContentAlignment="Center" FontSize="18" Click="aboutBTN_Click"/>
-                                <Separator/>
-                                <Button Content="Exit" VerticalContentAlignment="Center" FontSize="18" Click="closeBTN_Click"/>
+                </Border>
+
+                <TextBlock Grid.Row="4"
+                           Name="versionLabel"
+                           Text="v1.0"
+                           Foreground="#334155"
+                           FontSize="10"
+                           Margin="18,6,0,10"
+                           HorizontalAlignment="Left"/>
+            </Grid>
+            </Border>
+
+            <Border Grid.Column="1" CornerRadius="0,16,0,0" Background="White">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <StackPanel Margin="28,13,0,0">
+                    <TextBlock Text="Password Manager" Foreground="#0F172A" FontSize="17" FontWeight="SemiBold"/>
+                    <TextBlock Text="Secure, local credential storage" Foreground="#94A3B8" FontSize="11" Margin="0,2,0,0"/>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,14,16,0">
+                    <Border Width="36" Height="36" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="0,0,8,0">
+                        <Label Name="miniMizeLBL"
+                               Content="−"
+                               PreviewMouseDown="minimizeLBL_PreviewMouseDown"
+                               FontSize="20"
+                               Foreground="#64748B"
+                               HorizontalContentAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Padding="0,-7,0,0"
+                               Cursor="Hand"/>
+                    </Border>
+                    <materialDesign:PopupBox Foreground="#475569"
+                                             PlacementMode="BottomAndAlignRightEdges"
+                                             StaysOpen="False"
+                                             Width="36"
+                                             Height="36"
+                                             Padding="6">
+                        <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Background="White">
+                            <StackPanel Width="150">
+                                <Button Content="About" Padding="14,10" HorizontalContentAlignment="Left" Click="aboutBTN_Click"/>
+                                <Separator Margin="8,0"/>
+                                <Button Content="Exit" Padding="14,10" Foreground="#DC2626" HorizontalContentAlignment="Left" Click="closeBTN_Click"/>
                             </StackPanel>
                         </Border>
                     </materialDesign:PopupBox>
                 </StackPanel>
-                <Label Name="miniMizeLBL" Content="_" PreviewMouseDown="minimizeLBL_PreviewMouseDown" FontSize="25" Foreground="Black" HorizontalAlignment="Left" Margin="1020,-3,0,0" VerticalAlignment="Top"/>
-                <materialDesign:PackIcon Kind="Key" Margin="503,9,0,0" Width="31" Height="33" Foreground="Black" RenderTransformOrigin="1.547,0.52"/>
+                <Border Grid.ColumnSpan="2" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1"/>
             </Grid>
-            <Grid x:Name="GridMenu" HorizontalAlignment="Left"  Width="221">
-                <Grid.Background>
-                    <ImageBrush ImageSource="pack://application:,,,/Resources/Menu.jpg"/>
-                </Grid.Background>
-                <Label Content="_____________________________________________________________________________" Foreground="#f3f5f2" HorizontalAlignment="Center" Margin="7,53,9,0" VerticalAlignment="Top" Height="26" Width="205"/>
-                <TextBlock Name="vaultExpireTb" Visibility="Hidden" Text="Vault Expire" Foreground="#f3f5f2" Background="Transparent" HorizontalAlignment="Center" Margin="30,593,12,0" VerticalAlignment="Top" Height="66" Width="179"/>
-                <materialDesign:PackIcon Name="vaultElapsed" Visibility="Hidden" Foreground="Orange" Kind="Warning" Margin="9,593,0,92" Width="18" Height="18" VerticalAlignment="Center"/>
-                <TextBlock Text=" user" Name="userTXB" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="15" Margin="8,50,10,626" Width="203"></TextBlock>
-                <ListViewItem  Name="appListVI" ToolTip="Applications" Height="39" Foreground="Red" FontSize="18" PreviewMouseDown="App_PreviewMouseDown" Margin="0,166,0,498" IsEnabled="False">
-                    <StackPanel Orientation="Horizontal" >
-                        <materialDesign:PackIcon Name="appIcon" Kind="ApplicationBraces" Margin="9" Width="18" Height="18" VerticalAlignment="Center"/>
-                        <TextBlock x:Name="appTXT" Text="Applications" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </ListViewItem>
-                <ListViewItem Name="vaultsListVI" ToolTip="Vaults" Height="39" Foreground="#FFDCDCDC" FontSize="18" PreviewMouseDown="Vault_PreviewMouseDown" Margin="0,127,0,537">
-                    <StackPanel Orientation="Horizontal" >
-                        <materialDesign:PackIcon Name="vaultIcon" Kind="Lock" Margin="9" Width="18" Height="18" VerticalAlignment="Center"/>
-                        <TextBlock Name="vaultTXT" Text="Vaults" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </ListViewItem>
-                <ListViewItem Name="settingsListVI" ToolTip="Settings" Height="39" Foreground="#FFDCDCDC" FontSize="18" PreviewMouseDown="Settings_PreviewMouseDown" Margin="0,205,0,459">
-                    <StackPanel Orientation="Horizontal" >
-                        <materialDesign:PackIcon Name="settingIcon" Kind="Settings" Margin="9" Width="18" Height="18" VerticalAlignment="Center"/>
-                        <TextBlock Name="settingsTXT" Text="Settings" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </ListViewItem>
-                <Label Name="versionLabel" Content="v1.0" HorizontalAlignment="Left" Foreground="#FFDCDCDC" FontSize="12" Margin="179,679,0,-2"  VerticalAlignment="Top" Width="40"/>
-            </Grid>
+            </Border>
+
+            <TabControl Name="tabControl"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Background="{StaticResource AppBackgroundBrush}"
+                        BorderThickness="0"
+                        Padding="28,24">
+                <TabControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </Style>
+                </TabControl.ItemContainerStyle>
+
+                <TabItem Name="vaultTab" Header="Vaults">
+                    <Grid Background="{StaticResource AppBackgroundBrush}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Your vaults" Foreground="#0F172A" FontSize="24" FontWeight="SemiBold"/>
+                                <TextBlock Text="Open a vault to view and manage its saved credentials." Foreground="#64748B" FontSize="13" Margin="0,5,0,0"/>
+                            </StackPanel>
+                            <Border Grid.Column="1" Background="#EEF2FF" CornerRadius="9" Padding="12,8" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Name="vaultStorageIcon" Kind="ShieldOutline" Foreground="#4F46E5" Width="18" Height="18" Margin="0,0,7,0"/>
+                                    <TextBlock Name="vaultStorageLabel" Text="Select a vault" Foreground="#4338CA" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12">
+                            <ListView Name="vaultList"
+                                      Style="{StaticResource DataListStyle}"
+                                      PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick"
+                                      SelectionChanged="vaultList_SelectionChanged"
+                                      KeyDown="vaultList_KeyDown">
+                                <ListView.View>
+                                    <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
+                                        <GridViewColumn Header="Vault name" Width="225" DisplayMemberBinding="{Binding Name}"/>
+                                        <GridViewColumn Header="Storage" Width="150" DisplayMemberBinding="{Binding Storage}"/>
+                                        <GridViewColumn Header="Created" Width="205" DisplayMemberBinding="{Binding CreateDate}"/>
+                                        <GridViewColumn Header="Location" Width="210" DisplayMemberBinding="{Binding SharePoint}"/>
+                                    </GridView>
+                                </ListView.View>
+                                <ListView.ContextMenu>
+                                    <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                        <MenuItem Header="Export vault" Click="ExportVault_Click" Tag="2" Style="{StaticResource ModernMenuItemStyle}">
+                                            <MenuItem.Icon><materialDesign:PackIcon Kind="Export"/></MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Change master password" Click="ChangeMasterPassword_Click" Tag="2" Style="{StaticResource ModernMenuItemStyle}">
+                                            <MenuItem.Icon><materialDesign:PackIcon Kind="LockReset"/></MenuItem.Icon>
+                                        </MenuItem>
+                                        <Separator Style="{StaticResource ModernMenuSeparatorStyle}"/>
+                                        <MenuItem Header="Delete or remove vault" Click="DeleteVault_Click" Tag="2" Style="{StaticResource ModernDangerMenuItemStyle}">
+                                            <MenuItem.Icon><materialDesign:PackIcon Kind="DeleteOutline"/></MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </ListView.ContextMenu>
+                            </ListView>
+                        </Border>
+
+                        <StackPanel Grid.Row="4" Orientation="Horizontal">
+                            <Border Style="{StaticResource IconActionBorderStyle}" PreviewMouseDown="AddVaultIcon_PreviewMouseDown" ToolTip="Add Vault">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Name="AddVaultIcon" Kind="Plus" Foreground="#4F46E5" Width="17" Height="17" Margin="0,0,7,0"/>
+                                    <TextBlock Text="New vault" Foreground="#334155" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource IconActionBorderStyle}" PreviewMouseDown="ImportVaultIcon_PreviewMouseDown" ToolTip="Import Vault">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Name="ImportVaultIcon" Kind="Import" Foreground="#4F46E5" Width="17" Height="17" Margin="0,0,7,0"/>
+                                    <TextBlock Text="Import" Foreground="#334155" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource IconActionBorderStyle}" PreviewMouseDown="DelVaultIcon_PreviewMouseDown" ToolTip="Delete or remove vault">
+                                <StackPanel Orientation="Horizontal">
+                                    <materialDesign:PackIcon Name="DelVaultIcon" Kind="DeleteOutline" Foreground="#DC2626" Width="17" Height="17" Margin="0,0,7,0"/>
+                                    <TextBlock Text="Remove" Foreground="#991B1B" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Name="appTab" Header="Applications">
+                    <Grid Background="{StaticResource AppBackgroundBrush}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Saved credentials" Foreground="#0F172A" FontSize="24" FontWeight="SemiBold"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                    <TextBlock Text="Entries in " Foreground="#64748B" FontSize="13"/>
+                                    <TextBlock Name="appListVaultLVL" Text="vault" Foreground="#4F46E5" FontSize="13" FontWeight="SemiBold"/>
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                <materialDesign:PackIcon Kind="LockCheckOutline" Foreground="#16A34A" Width="18" Height="18" Margin="0,0,7,0"/>
+                                <TextBlock Text="Vault unlocked" Foreground="#15803D" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12">
+                            <ListView Name="appList"
+                                      Style="{StaticResource DataListStyle}"
+                                      GridViewColumnHeader.Click="AppListColumnHeaderClickedHandler">
+                                <ListView.View>
+                                    <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
+                                        <GridViewColumn Header="Application" Width="260" DisplayMemberBinding="{Binding Application}"/>
+                                        <GridViewColumn Header="Account" Width="260" DisplayMemberBinding="{Binding Account}"/>
+                                        <GridViewColumn Header="Password" Width="270" DisplayMemberBinding="{Binding Password}"/>
+                                    </GridView>
+                                </ListView.View>
+                                <ListView.ContextMenu>
+                                    <ContextMenu Style="{StaticResource ModernContextMenuStyle}">
+                                        <MenuItem Header="Copy password for 15 seconds" Click="CopyToClipboard_Click" Tag="1" Style="{StaticResource ModernMenuItemStyle}">
+                                            <MenuItem.Icon><materialDesign:PackIcon Kind="ContentCopy"/></MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Show password" Click="ShowPassword_Click" Tag="2" Style="{StaticResource ModernMenuItemStyle}">
+                                            <MenuItem.Icon><materialDesign:PackIcon Kind="EyeOutline"/></MenuItem.Icon>
+                                        </MenuItem>
+                                        <MenuItem Header="Update account password" Click="UpdateAccountPass_Click" Tag="2" Style="{StaticResource ModernMenuItemStyle}">
+                                            <MenuItem.Icon><materialDesign:PackIcon Kind="LockReset"/></MenuItem.Icon>
+                                        </MenuItem>
+                                        <Separator Style="{StaticResource ModernMenuSeparatorStyle}"/>
+                                        <MenuItem Header="Delete account" Click="DeleteAccount_Click" Tag="2" Style="{StaticResource ModernDangerMenuItemStyle}">
+                                            <MenuItem.Icon><materialDesign:PackIcon Kind="DeleteOutline"/></MenuItem.Icon>
+                                        </MenuItem>
+                                    </ContextMenu>
+                                </ListView.ContextMenu>
+                            </ListView>
+                        </Border>
+
+                        <Grid Grid.Row="4">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Style="{StaticResource IconActionBorderStyle}" PreviewMouseDown="AddAppIcon_PreviewMouseDown" ToolTip="Add Application">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Name="AddAppIcon" Kind="Plus" Foreground="#4F46E5" Width="17" Height="17" Margin="0,0,7,0"/>
+                                        <TextBlock Text="New credential" Foreground="#334155" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <Border Style="{StaticResource IconActionBorderStyle}" PreviewMouseDown="DelAppIcon_PreviewMouseDown" ToolTip="Delete Application">
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon x:Name="DelApp" Kind="DeleteOutline" Foreground="#DC2626" Width="17" Height="17" Margin="0,0,7,0"/>
+                                        <TextBlock Text="Delete" Foreground="#991B1B" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                <materialDesign:PackIcon Kind="Logout" Name="logoutIconV" Width="18" Height="18" Foreground="#DC2626" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                                <Button Name="vaultCloseLBL"
+                                        Style="{DynamicResource ExitVaultButton}"
+                                        Content="Lock vault"
+                                        Click="vaultCloseLBL_Click"/>
+                            </StackPanel>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Name="settingsTab" Header="Settings">
+                    <Grid Background="{StaticResource AppBackgroundBrush}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="16"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Page title -->
+                        <StackPanel>
+                            <TextBlock Text="Settings" Foreground="#0F172A" FontSize="24" FontWeight="SemiBold"/>
+                            <TextBlock Text="Configure how PwM protects active vault sessions." Foreground="#64748B" FontSize="13" Margin="0,5,0,0"/>
+                        </StackPanel>
+
+                        <!-- Scrollable cards -->
+                        <ScrollViewer Grid.Row="2"
+                                      VerticalScrollBarVisibility="Auto"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      Padding="0,0,6,0">
+                            <StackPanel>
+
+                                <!-- Vault session timeout card -->
+                                <Border Width="520"
+                                        HorizontalAlignment="Left"
+                                        Background="White"
+                                        BorderBrush="#E2E8F0"
+                                        BorderThickness="1"
+                                        CornerRadius="12"
+                                        Padding="22">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="18"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Header -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="42"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="38" Height="38" Background="#EEF2FF" CornerRadius="9">
+                                                <materialDesign:PackIcon Kind="TimerLockOutline"
+                                                                         Width="20" Height="20"
+                                                                         Foreground="#4F46E5"
+                                                                         HorizontalAlignment="Center"
+                                                                         VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                <TextBlock Text="Vault session timeout" Foreground="#0F172A" FontSize="15" FontWeight="SemiBold"/>
+                                                <TextBlock Text="Automatically lock an inactive vault after this period. Default: 10 minutes."
+                                                           Foreground="#64748B" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <!-- Input row -->
+                                        <Grid Grid.Row="2">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="90"/>
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="Expire after (minutes)" Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                                <TextBox x:Name="expirePeriodTxT"
+                                                         Style="{StaticResource SettingsInputStyle}"
+                                                         Width="180"
+                                                         HorizontalAlignment="Left"
+                                                         TextAlignment="Left"
+                                                         adorners:Watermark.Text="10">
+                                                    <adorners:Watermark.TextStyle>
+                                                        <Style TargetType="{x:Type TextBlock}">
+                                                            <Setter Property="Opacity" Value="0.5"/>
+                                                            <Setter Property="VerticalAlignment" Value="Center"/>
+                                                            <Setter Property="Margin" Value="12,0,0,0"/>
+                                                        </Style>
+                                                    </adorners:Watermark.TextStyle>
+                                                </TextBox>
+                                            </StackPanel>
+                                            <Button Grid.Column="1"
+                                                    Name="applyExpirePeriodBTN"
+                                                    Style="{DynamicResource RoundCorner2}"
+                                                    Content="Apply"
+                                                    Click="applyExpirePeriodBTN_Click"
+                                                    IsEnabled="True"
+                                                    IsDefault="True"
+                                                    VerticalAlignment="Bottom"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Spacer -->
+                                <Border Height="16"/>
+
+                                <!-- Argon2 hashing parameters card -->
+                                <Border Width="520"
+                                        HorizontalAlignment="Left"
+                                        Background="White"
+                                        BorderBrush="#E2E8F0"
+                                        BorderThickness="1"
+                                        CornerRadius="12"
+                                        Padding="22"
+                                        Margin="0,0,0,16">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="18"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="14"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="14"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="14"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="14"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <!-- Header -->
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="42"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="38" Height="38" Background="#EEF2FF" CornerRadius="9">
+                                                <materialDesign:PackIcon Kind="ShieldLockOutline"
+                                                                         Width="20" Height="20"
+                                                                         Foreground="#4F46E5"
+                                                                         HorizontalAlignment="Center"
+                                                                         VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                <TextBlock Text="Argon2 hashing parameters" Foreground="#0F172A" FontSize="15" FontWeight="SemiBold"/>
+                                                <TextBlock Text="Controls how the master password is derived into an encryption key. Higher values increase security but also login time."
+                                                           Foreground="#64748B" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <!-- Iterations -->
+                                        <StackPanel Grid.Row="2">
+                                            <TextBlock Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4">
+                                                <Run Text="Iterations "/>
+                                                <Run Text="(time cost, 10–200)" Foreground="#94A3B8" FontSize="11" FontWeight="Normal"/>
+                                            </TextBlock>
+                                            <TextBlock Text="Number of passes over memory. Default: 40."
+                                                       Foreground="#94A3B8" FontSize="11" Margin="0,0,0,6"/>
+                                            <TextBox x:Name="argon2IterationsTxt"
+                                                     Style="{StaticResource SettingsInputStyle}"
+                                                     Width="180"
+                                                     HorizontalAlignment="Left"
+                                                     TextAlignment="Left"
+                                                     adorners:Watermark.Text="40">
+                                                <adorners:Watermark.TextStyle>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Opacity" Value="0.5"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="Margin" Value="12,0,0,0"/>
+                                                    </Style>
+                                                </adorners:Watermark.TextStyle>
+                                            </TextBox>
+                                        </StackPanel>
+
+                                        <!-- Memory size -->
+                                        <StackPanel Grid.Row="4">
+                                            <TextBlock Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4">
+                                                <Run Text="Memory size "/>
+                                                <Run Text="(KB, 4096–1 048 576)" Foreground="#94A3B8" FontSize="11" FontWeight="Normal"/>
+                                            </TextBlock>
+                                            <TextBlock Text="RAM used per hash in kilobytes. Default: 4096 KB (4 MB)."
+                                                       Foreground="#94A3B8" FontSize="11" Margin="0,0,0,6"/>
+                                            <TextBox x:Name="argon2MemorySizeTxt"
+                                                     Style="{StaticResource SettingsInputStyle}"
+                                                     Width="180"
+                                                     HorizontalAlignment="Left"
+                                                     TextAlignment="Left"
+                                                     adorners:Watermark.Text="4096">
+                                                <adorners:Watermark.TextStyle>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Opacity" Value="0.5"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="Margin" Value="12,0,0,0"/>
+                                                    </Style>
+                                                </adorners:Watermark.TextStyle>
+                                            </TextBox>
+                                        </StackPanel>
+
+                                        <!-- Parallelism -->
+                                        <StackPanel Grid.Row="6">
+                                            <TextBlock Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,4">
+                                                <Run Text="Parallelism "/>
+                                                <Run Text="(threads, 1–16)" Foreground="#94A3B8" FontSize="11" FontWeight="Normal"/>
+                                            </TextBlock>
+                                            <TextBlock Text="Number of parallel threads used during hashing. Default: 2."
+                                                       Foreground="#94A3B8" FontSize="11" Margin="0,0,0,6"/>
+                                            <TextBox x:Name="argon2ParallelismTxt"
+                                                     Style="{StaticResource SettingsInputStyle}"
+                                                     Width="180"
+                                                     HorizontalAlignment="Left"
+                                                     TextAlignment="Left"
+                                                     adorners:Watermark.Text="2">
+                                                <adorners:Watermark.TextStyle>
+                                                    <Style TargetType="{x:Type TextBlock}">
+                                                        <Setter Property="Opacity" Value="0.5"/>
+                                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                                        <Setter Property="Margin" Value="12,0,0,0"/>
+                                                    </Style>
+                                                </adorners:Watermark.TextStyle>
+                                            </TextBox>
+                                        </StackPanel>
+
+                                        <!-- Warning -->
+                                        <Border Grid.Row="8"
+                                                Background="#FFF7ED"
+                                                BorderBrush="#FED7AA"
+                                                BorderThickness="1"
+                                                CornerRadius="8"
+                                                Padding="10,8">
+                                            <StackPanel Orientation="Horizontal">
+                                                <materialDesign:PackIcon Kind="AlertOutline"
+                                                                         Foreground="#EA580C"
+                                                                         Width="16" Height="16"
+                                                                         Margin="0,0,8,0"
+                                                                         VerticalAlignment="Center"/>
+                                                <TextBlock Text="Changing these settings affects all vaults. Re-create vaults after applying."
+                                                           Foreground="#C2410C"
+                                                           FontSize="11"
+                                                           TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <!-- Apply -->
+                                        <Grid Grid.Row="10">
+                                            <Button Name="applyArgon2SettingsBTN"
+                                                    Style="{DynamicResource RoundCorner2}"
+                                                    Content="Apply"
+                                                    Width="90"
+                                                    Height="38"
+                                                    HorizontalAlignment="Right"
+                                                    Click="applyArgon2SettingsBTN_Click"/>
+                                        </Grid>
+                                    </Grid>
+                                </Border>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+            </TabControl>
         </Grid>
     </Border>
 </Window>

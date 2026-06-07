@@ -1,19 +1,38 @@
-﻿<Window x:Class="PwM.PopMessage"
+<Window x:Class="PwM.PopMessage"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PwM"        
-        xmlns:materialDesign1="http://materialdesigninxaml.net/winfx/xaml/themes"
-        mc:Ignorable="d"
-        Title="PwM - Password Manager" Icon="pack://application:,,,/Resources/Logo.ico" AllowsTransparency="True" Height="199.636" Width="388.087" ResizeMode="NoResize" WindowStyle="None" WindowStartupLocation="CenterScreen" Topmost="True" >
-    <Border BorderBrush="#690fc2" BorderThickness="1">
-        <Grid Background="#f3f5f2" >
-            <Grid Name="popGrid" VerticalAlignment="Top" Height="39" Background="#551cc7" >
-                <TextBlock Text="notification status" Name="titleTxt" TextAlignment="Center" HorizontalAlignment="Center" Foreground="#f3f5f2" FontSize="18" Margin="65,6,77,4" Width="246" RenderTransformOrigin="0.5,0.5"/>
-            </Grid>
-            <Button Name="confirmBTN" Foreground="#FFE1DDEE" Style="{DynamicResource RoundCorner2}"  Content="OK" HorizontalAlignment="Left" Margin="282,152,0,0" VerticalAlignment="Top" Width="100" Height="41" Click="confirmBTN_Click" IsDefault="True"/>
-            <TextBox Name="notificationLBL" IsReadOnly="True" Background="#f3f5f2" BorderThickness="0" Text="notificationArea" HorizontalAlignment="Left" Margin="21,50,0,0" VerticalAlignment="Top" Foreground="#0d0300" FontSize="14" Height="97" TextWrapping="Wrap" AcceptsReturn="True" RenderTransformOrigin="0.469,1.118" Width="341"/>
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="PwM - Password Manager"
+        Icon="pack://application:,,,/Resources/logo-modern.ico"
+        AllowsTransparency="True"
+        Background="Transparent"
+        Height="290" Width="500"
+        ResizeMode="NoResize" WindowStyle="None"
+        WindowStartupLocation="CenterScreen" Topmost="True">
+    <Border Margin="10" Background="White" CornerRadius="14" BorderBrush="#E2E8F0" BorderThickness="1">
+        <Border.Effect><DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.2" Color="#0F172A"/></Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions><RowDefinition Height="68"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+            <Border Name="popGrid" Background="#0F172A" CornerRadius="13,13,0,0">
+                <Grid>
+                    <Image Source="pack://application:,,,/Resources/logo-modern.png" Width="38" Height="38" Margin="18,0,0,0" HorizontalAlignment="Left"/>
+                    <TextBlock Name="titleTxt" Text="Notification" Foreground="White" FontSize="16" FontWeight="SemiBold" Margin="68,0,0,0" VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+            <Grid Grid.Row="1" Margin="24,20,24,20">
+                    <Grid.RowDefinitions><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Border Name="statusIconBorder" Width="42" Height="42" Background="#EEF2FF" CornerRadius="10" Margin="0,0,14,0" VerticalAlignment="Top">
+                            <materialDesign:PackIcon Name="statusIcon" Kind="InformationOutline" Foreground="#4F46E5" Width="22" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <TextBlock Name="notificationLBL" Grid.Column="1" Text="notificationArea" Foreground="#334155" FontSize="13" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                    </Grid>
+                    <Button Grid.Row="1" Name="confirmBTN" Style="{DynamicResource RoundCorner2}" Content="OK" Width="96" Height="38" HorizontalAlignment="Right" Click="confirmBTN_Click" IsDefault="True"/>
+                </Grid>
         </Grid>
     </Border>
 </Window>
