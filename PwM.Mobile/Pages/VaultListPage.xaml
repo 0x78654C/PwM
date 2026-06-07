@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PwM.Mobile.ViewModels"
+             x:Class="PwM.Mobile.Pages.VaultListPage"
+             x:DataType="vm:VaultListViewModel"
+             Title="{Binding Title}">
+
+    <Shell.TitleView>
+        <Label Text="🔐 PwM" FontSize="20" FontAttributes="Bold"
+               TextColor="White" VerticalOptions="Center" />
+    </Shell.TitleView>
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="12">
+
+        <!-- Header count -->
+        <Label Grid.Row="0"
+               Text="{Binding Vaults.Count, StringFormat='{0} vault(s)'}"
+               FontSize="13" TextColor="{StaticResource SecondaryTextColor}" />
+
+        <!-- Vault list -->
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Vaults}"
+                        EmptyView="No vaults yet. Create one below.">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView>
+                        <SwipeView.RightItems>
+                            <SwipeItems>
+                                <SwipeItem Text="Delete" BackgroundColor="{StaticResource DangerColor}"
+                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:VaultListViewModel}}, Path=DeleteVaultCommand}"
+                                           CommandParameter="{Binding .}" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Border Margin="0,4" Padding="16,12"
+                                BackgroundColor="{StaticResource SurfaceColor}"
+                                StrokeShape="RoundRectangle 10"
+                                Stroke="{StaticResource BorderColor}">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                    <Label Text="{Binding Name}" FontSize="16"
+                                           FontAttributes="Bold" TextColor="{StaticResource PrimaryTextColor}" />
+                                    <Label Text="{Binding CreatedAt, StringFormat='Created {0:MMM d, yyyy}'}"
+                                           FontSize="12" TextColor="{StaticResource SecondaryTextColor}" />
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1" Text="Open"
+                                        Style="{StaticResource PrimaryButton}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:VaultListViewModel}}, Path=OpenVaultCommand}"
+                                        CommandParameter="{Binding .}" />
+                            </Grid>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Create vault form -->
+        <Border Grid.Row="2" Padding="16" BackgroundColor="{StaticResource SurfaceColor}"
+                StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderColor}">
+            <VerticalStackLayout Spacing="10">
+                <Label Text="Create new vault" FontAttributes="Bold"
+                       TextColor="{StaticResource PrimaryTextColor}" />
+                <Entry Placeholder="Vault name" Text="{Binding NewVaultName}"
+                       Style="{StaticResource EntryStyle}" />
+                <Entry Placeholder="Master password" Text="{Binding NewMasterPassword}"
+                       IsPassword="True" Style="{StaticResource EntryStyle}" />
+                <Entry Placeholder="Confirm password" Text="{Binding ConfirmMasterPassword}"
+                       IsPassword="True" Style="{StaticResource EntryStyle}" />
+                <Button Text="Create Vault" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding CreateVaultCommand}"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}"
+                                   Color="{StaticResource AccentColor}" />
+            </VerticalStackLayout>
+        </Border>
+
+    </Grid>
+</ContentPage>
