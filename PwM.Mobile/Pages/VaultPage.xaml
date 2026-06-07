@@ -7,60 +7,89 @@
              x:DataType="vm:VaultViewModel"
              Title="{Binding Title}">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Password" Command="{Binding ChangeMasterPasswordCommand}" />
+        <ToolbarItem Text="Lock" Command="{Binding LockVaultCommand}" />
+    </ContentPage.ToolbarItems>
+
     <Shell.TitleView>
-        <Grid ColumnDefinitions="*,Auto">
-            <Label Grid.Column="0" Text="{Binding VaultName, StringFormat='🔓 {0}'}"
-                   FontSize="18" FontAttributes="Bold" TextColor="White" VerticalOptions="Center" />
-            <Button Grid.Column="1" Text="Lock" Style="{StaticResource DangerButton}"
-                    Command="{Binding LockVaultCommand}" Margin="0,0,8,0" />
-        </Grid>
+        <Label Text="{Binding VaultName}"
+               FontSize="18"
+               FontAttributes="Bold"
+               TextColor="White"
+               MaxLines="1"
+               LineBreakMode="TailTruncation"
+               VerticalOptions="Center" />
     </Shell.TitleView>
 
-    <Grid RowDefinitions="*,Auto" Padding="16" RowSpacing="12">
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16,8,16,16" RowSpacing="12"
+          MaximumWidthRequest="720" HorizontalOptions="Fill">
+        <SearchBar Grid.Row="0"
+                   Placeholder="Search applications or accounts"
+                   Text="{Binding SearchText}"
+                   Style="{StaticResource SearchBarStyle}" />
 
-        <!-- Credential list -->
-        <CollectionView Grid.Row="0" ItemsSource="{Binding Credentials}"
-                        EmptyView="No credentials. Tap + to add one.">
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Credentials}"
+                        SelectionMode="None"
+                        VerticalScrollBarVisibility="Never">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Padding="24,40" Spacing="6">
+                    <Label Text="No credentials yet"
+                           HorizontalTextAlignment="Center"
+                           Style="{StaticResource CardTitle}" />
+                    <Label Text="Add a login to this vault."
+                           HorizontalTextAlignment="Center"
+                           Style="{StaticResource BodyText}" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="model:CredentialEntry">
-                    <SwipeView>
+                    <SwipeView Margin="0,5">
                         <SwipeView.LeftItems>
                             <SwipeItems Mode="Execute">
-                                <SwipeItem Text="Copy" BackgroundColor="{StaticResource AccentColor}"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:VaultViewModel}}, Path=CopyPasswordCommand}"
-                                           CommandParameter="{Binding .}" />
+                                <SwipeItem Text="Copy"
+                                           BackgroundColor="{StaticResource AccentColor}"
+                                           BindingContext="{Binding .}"
+                                           CommandParameter="{Binding .}"
+                                           Invoked="OnCopyPasswordInvoked" />
                             </SwipeItems>
                         </SwipeView.LeftItems>
                         <SwipeView.RightItems>
-                            <SwipeItems>
-                                <SwipeItem Text="Update" BackgroundColor="{StaticResource WarningColor}"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:VaultViewModel}}, Path=UpdatePasswordCommand}"
-                                           CommandParameter="{Binding .}" />
-                                <SwipeItem Text="Delete" BackgroundColor="{StaticResource DangerColor}"
-                                           Command="{Binding Source={RelativeSource AncestorType={x:Type vm:VaultViewModel}}, Path=DeleteCredentialCommand}"
-                                           CommandParameter="{Binding .}" />
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="Update"
+                                           BackgroundColor="{StaticResource WarningColor}"
+                                           BindingContext="{Binding .}"
+                                           CommandParameter="{Binding .}"
+                                           Invoked="OnUpdatePasswordInvoked" />
+                                <SwipeItem Text="Delete"
+                                           BackgroundColor="{StaticResource DangerColor}"
+                                           BindingContext="{Binding .}"
+                                           CommandParameter="{Binding .}"
+                                           Invoked="OnDeleteCredentialInvoked" />
                             </SwipeItems>
                         </SwipeView.RightItems>
 
-                        <Border Margin="0,4" Padding="16,12"
-                                BackgroundColor="{StaticResource SurfaceColor}"
-                                StrokeShape="RoundRectangle 10"
-                                Stroke="{StaticResource BorderColor}">
-                            <Grid ColumnDefinitions="*,Auto">
-                                <VerticalStackLayout Grid.Column="0" Spacing="2">
-                                    <Label Text="{Binding Application}" FontSize="15"
-                                           FontAttributes="Bold" TextColor="{StaticResource PrimaryTextColor}" />
-                                    <Label Text="{Binding Account}" FontSize="13"
-                                           TextColor="{StaticResource SecondaryTextColor}" />
-                                    <Label Text="⚠️ Breached password" FontSize="12"
-                                           TextColor="{StaticResource DangerColor}"
-                                           IsVisible="{Binding HasBreach}" />
+                        <Border Style="{StaticResource Card}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <VerticalStackLayout Grid.Column="0" Spacing="3"
+                                                     VerticalOptions="Center">
+                                    <Label Text="{Binding Application}"
+                                           Style="{StaticResource CardTitle}"
+                                           MaxLines="1"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Account}"
+                                           Style="{StaticResource BodyText}"
+                                           MaxLines="1"
+                                           LineBreakMode="TailTruncation" />
                                 </VerticalStackLayout>
-                                <Button Grid.Column="1" Text="👁" FontSize="18"
-                                        BackgroundColor="Transparent"
-                                        TextColor="{StaticResource AccentColor}"
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:VaultViewModel}}, Path=ShowPasswordCommand}"
-                                        CommandParameter="{Binding .}" />
+                                <Button Grid.Column="1"
+                                        Text="Show"
+                                        Style="{StaticResource IconButton}"
+                                        BindingContext="{Binding .}"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnShowPasswordClicked" />
                             </Grid>
                         </Border>
                     </SwipeView>
@@ -68,14 +97,16 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
 
-        <!-- Action bar -->
-        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" ColumnSpacing="10">
-            <Button Grid.Column="0" Text="+ Add Credential" Style="{StaticResource PrimaryButton}"
-                    Command="{Binding AddCredentialCommand}" />
-            <Button Grid.Column="1" Text="⚙" FontSize="20"
-                    BackgroundColor="Transparent" TextColor="{StaticResource AccentColor}"
-                    Command="{Binding ChangeMasterPasswordCommand}" />
-        </Grid>
+        <Button Grid.Row="2"
+                Text="Add Credential"
+                Style="{StaticResource PrimaryButton}"
+                Command="{Binding AddCredentialCommand}" />
 
+        <ActivityIndicator Grid.RowSpan="3"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource AccentColor}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
     </Grid>
 </ContentPage>

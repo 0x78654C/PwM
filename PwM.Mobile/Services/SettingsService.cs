@@ -9,6 +9,7 @@ public class SettingsService
     private const string KeyMemorySize = "Argon2MemorySize";
     private const string KeyParallelism = "Argon2Parallelism";
     private const string KeyAutoLockMinutes = "AutoLockMinutes";
+    private const string KeyTheme = "Theme";
 
     public int Argon2Iterations
     {
@@ -46,6 +47,16 @@ public class SettingsService
         set => Preferences.Default.Set(KeyAutoLockMinutes, value);
     }
 
+    public string Theme
+    {
+        get => Preferences.Default.Get(KeyTheme, "System");
+        set
+        {
+            Preferences.Default.Set(KeyTheme, value);
+            ApplyTheme(value);
+        }
+    }
+
     /// <summary>
     /// Loads stored settings into PwMLib global state. Call at startup.
     /// </summary>
@@ -54,5 +65,19 @@ public class SettingsService
         PwMLib.GlobalVariables.argon2Iterations = Argon2Iterations;
         PwMLib.GlobalVariables.argon2MemorySize = Argon2MemorySize;
         PwMLib.GlobalVariables.argon2Parallelism = Argon2Parallelism;
+        ApplyTheme(Theme);
+    }
+
+    private static void ApplyTheme(string theme)
+    {
+        if (Application.Current is null)
+            return;
+
+        Application.Current.UserAppTheme = theme switch
+        {
+            "Light" => AppTheme.Light,
+            "Dark" => AppTheme.Dark,
+            _ => AppTheme.Unspecified
+        };
     }
 }

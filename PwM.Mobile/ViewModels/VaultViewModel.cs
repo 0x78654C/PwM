@@ -7,98 +7,138 @@ using PwM.Mobile.Services;
 
 namespace PwM.Mobile.ViewModels;
 
-[QueryProperty(nameof(VaultName), "vaultName")]
-[QueryProperty(nameof(MasterPassword), "masterPassword")]
 public partial class VaultViewModel : BaseViewModel, IDisposable
 {
     private readonly VaultService _vaultService;
+    private readonly VaultSession _vaultSession;
+    private readonly PasswordPromptService _passwordPromptService;
     private readonly SettingsService _settingsService;
-    private readonly HibpService _hibpService;
+    private readonly List<CredentialEntry> _allCredentials = [];
     private System.Timers.Timer? _autoLockTimer;
 
     public ObservableCollection<CredentialEntry> Credentials { get; } = [];
 
-    [ObservableProperty]
-    private string _vaultName = string.Empty;
+    public string VaultName => _vaultSession.VaultName;
 
     [ObservableProperty]
-    private string _masterPassword = string.Empty;
+    private string _searchText = string.Empty;
 
     [ObservableProperty]
     private bool _isLocked = true;
 
-    public VaultViewModel(VaultService vaultService, SettingsService settingsService, HibpService hibpService)
+    public VaultViewModel(
+        VaultService vaultService,
+        VaultSession vaultSession,
+        PasswordPromptService passwordPromptService,
+        SettingsService settingsService)
     {
         _vaultService = vaultService;
+        _vaultSession = vaultSession;
+        _passwordPromptService = passwordPromptService;
         _settingsService = settingsService;
-        _hibpService = hibpService;
+        Title = vaultSession.VaultName;
     }
 
-    partial void OnVaultNameChanged(string value)
-    {
-        Title = value;
-    }
-
-    partial void OnMasterPasswordChanged(string value)
-    {
-        if (!string.IsNullOrEmpty(value) && !string.IsNullOrEmpty(VaultName))
-            LoadCredentials();
-    }
-
-    public void LoadCredentials()
+    public async Task LoadCredentialsAsync()
     {
         Credentials.Clear();
-        var (ok, err, entries) = _vaultService.OpenVault(VaultName, MasterPassword);
-        if (!ok) return;
+        _allCredentials.Clear();
+        if (!_vaultSession.IsUnlocked)
+        {
+            IsLocked = true;
+            StopAutoLockTimer();
+            return;
+        }
 
-        foreach (var e in entries.OrderBy(e => e.Application))
-            Credentials.Add(e);
+        Title = VaultName;
+        OnPropertyChanged(nameof(VaultName));
+        var vaultName = VaultName;
+        var masterPassword = _vaultSession.MasterPassword;
+        IsBusy = true;
+        var (ok, _, entries) = await Task.Run(
+            () => _vaultService.OpenVault(vaultName, masterPassword));
+        IsBusy = false;
+
+        if (!ok ||
+            !_vaultSession.IsUnlocked ||
+            !string.Equals(VaultName, vaultName, StringComparison.Ordinal))
+            return;
+
+        _allCredentials.AddRange(entries.OrderBy(e => e.Application));
+        ApplyCredentialFilter();
 
         IsLocked = false;
         StartAutoLockTimer();
     }
 
     [RelayCommand]
-    public async Task DeleteCredentialAsync(CredentialEntry entry)
+    public async Task DeleteCredentialAsync(CredentialEntry? entry)
     {
-        bool confirmed = await Shell.Current.DisplayAlert(
+        if (entry is null)
+        {
+            await ShowMissingCredentialErrorAsync();
+            return;
+        }
+
+        ResetAutoLockTimer();
+        bool confirmed = await Shell.Current.DisplayAlertAsync(
             "Delete Credential",
             $"Remove '{entry.Account}' from '{entry.Application}'?",
             "Delete", "Cancel");
         if (!confirmed) return;
 
-        var (ok, err) = _vaultService.DeleteCredential(VaultName, MasterPassword, entry.Application, entry.Account);
+        IsBusy = true;
+        var (ok, err) = await Task.Run(() => _vaultService.DeleteCredential(
+            VaultName, _vaultSession.MasterPassword, entry.Application, entry.Account));
+        IsBusy = false;
         if (!ok)
-            await Shell.Current.DisplayAlert("Error", err, "OK");
+            await Shell.Current.DisplayAlertAsync("Error", err, "OK");
         else
-            LoadCredentials();
+            await LoadCredentialsAsync();
     }
 
     [RelayCommand]
-    public async Task UpdatePasswordAsync(CredentialEntry entry)
+    public async Task UpdatePasswordAsync(CredentialEntry? entry)
     {
-        string? newPwd = await Shell.Current.DisplayPromptAsync(
+        if (entry is null)
+        {
+            await ShowMissingCredentialErrorAsync();
+            return;
+        }
+
+        ResetAutoLockTimer();
+        string? newPwd = await _passwordPromptService.ShowAsync(
             "Update Password",
             $"New password for '{entry.Account}' @ '{entry.Application}':",
-            placeholder: "New password");
+            "New password");
 
         if (string.IsNullOrEmpty(newPwd)) return;
 
-        var (ok, err) = _vaultService.UpdatePassword(VaultName, MasterPassword, entry.Application, entry.Account, newPwd);
+        IsBusy = true;
+        var (ok, err) = await Task.Run(() => _vaultService.UpdatePassword(
+            VaultName, _vaultSession.MasterPassword, entry.Application, entry.Account, newPwd));
+        IsBusy = false;
         if (!ok)
-            await Shell.Current.DisplayAlert("Error", err, "OK");
+            await Shell.Current.DisplayAlertAsync("Error", err, "OK");
         else
         {
-            await Shell.Current.DisplayAlert("Updated", "Password updated.", "OK");
-            LoadCredentials();
+            await Shell.Current.DisplayAlertAsync("Updated", "Password updated.", "OK");
+            await LoadCredentialsAsync();
         }
     }
 
     [RelayCommand]
-    public async Task CopyPasswordAsync(CredentialEntry entry)
+    public async Task CopyPasswordAsync(CredentialEntry? entry)
     {
+        if (entry is null)
+        {
+            await ShowMissingCredentialErrorAsync();
+            return;
+        }
+
+        ResetAutoLockTimer();
         await Clipboard.Default.SetTextAsync(entry.Password);
-        await Shell.Current.DisplayAlert("Copied", "Password copied. It will be cleared in 15 seconds.", "OK");
+        await Shell.Current.DisplayAlertAsync("Copied", "Password copied. It will be cleared in 15 seconds.", "OK");
 
         // Auto-clear clipboard after 15 seconds
         _ = Task.Run(async () =>
@@ -111,46 +151,64 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     }
 
     [RelayCommand]
-    public async Task ShowPasswordAsync(CredentialEntry entry)
+    public async Task ShowPasswordAsync(CredentialEntry? entry)
     {
-        await Shell.Current.DisplayAlert("Password", entry.Password, "OK");
+        if (entry is null)
+        {
+            await ShowMissingCredentialErrorAsync();
+            return;
+        }
+
+        ResetAutoLockTimer();
+        try
+        {
+            await Shell.Current.DisplayAlertAsync("Password", entry.Password, "OK");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlertAsync("Error", $"Could not show password: {ex.Message}", "OK");
+        }
     }
 
     [RelayCommand]
     public async Task AddCredentialAsync()
     {
-        await Shell.Current.GoToAsync(
-            $"{nameof(Pages.AddCredentialPage)}?vaultName={Uri.EscapeDataString(VaultName)}&masterPassword={Uri.EscapeDataString(MasterPassword)}");
+        ResetAutoLockTimer();
+        await Shell.Current.GoToAsync(nameof(Pages.AddCredentialPage));
     }
 
     [RelayCommand]
     public async Task ChangeMasterPasswordAsync()
     {
-        string? newPwd = await Shell.Current.DisplayPromptAsync(
+        ResetAutoLockTimer();
+        string? newPwd = await _passwordPromptService.ShowAsync(
             "Change Master Password",
             "Enter new master password:",
-            placeholder: "New master password");
+            "New master password");
 
         if (string.IsNullOrEmpty(newPwd)) return;
 
-        string? confirmPwd = await Shell.Current.DisplayPromptAsync(
+        string? confirmPwd = await _passwordPromptService.ShowAsync(
             "Confirm",
             "Confirm new master password:",
-            placeholder: "Confirm new master password");
+            "Confirm new master password");
 
         if (newPwd != confirmPwd)
         {
-            await Shell.Current.DisplayAlert("Error", "Passwords do not match.", "OK");
+            await Shell.Current.DisplayAlertAsync("Error", "Passwords do not match.", "OK");
             return;
         }
 
-        var (ok, err) = _vaultService.ChangeMasterPassword(VaultName, MasterPassword, newPwd);
+        IsBusy = true;
+        var (ok, err) = await Task.Run(
+            () => _vaultService.ChangeMasterPassword(VaultName, _vaultSession.MasterPassword, newPwd));
+        IsBusy = false;
         if (!ok)
-            await Shell.Current.DisplayAlert("Error", err, "OK");
+            await Shell.Current.DisplayAlertAsync("Error", err, "OK");
         else
         {
-            MasterPassword = newPwd;
-            await Shell.Current.DisplayAlert("Success", "Master password changed.", "OK");
+            _vaultSession.Unlock(VaultName, newPwd);
+            await Shell.Current.DisplayAlertAsync("Success", "Master password changed.", "OK");
         }
     }
 
@@ -158,10 +216,10 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     public async Task LockVaultAsync()
     {
         StopAutoLockTimer();
-        MasterPassword = string.Empty;
+        _vaultSession.Lock();
         IsLocked = true;
         Credentials.Clear();
-        await Shell.Current.GoToAsync("..");
+        await Shell.Current.GoToAsync("//VaultListPage");
     }
 
     private void StartAutoLockTimer()
@@ -187,7 +245,10 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            await Shell.Current.DisplayAlert("Auto-locked", "Vault was locked due to inactivity.", "OK");
+            if (IsLocked || !_vaultSession.IsUnlocked)
+                return;
+
+            await Shell.Current.DisplayAlertAsync("Auto-locked", "Vault was locked due to inactivity.", "OK");
             await LockVaultAsync();
         });
     }
@@ -195,11 +256,41 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     /// <summary>
     /// Called by the page when the user interacts — resets the auto-lock timer.
     /// </summary>
-    public void ResetAutoLockTimer() => StartAutoLockTimer();
+    public void ResetAutoLockTimer()
+    {
+        if (IsLocked || !_vaultSession.IsUnlocked)
+            StopAutoLockTimer();
+        else
+            StartAutoLockTimer();
+    }
+
+    partial void OnSearchTextChanged(string value)
+    {
+        ApplyCredentialFilter();
+    }
+
+    private void ApplyCredentialFilter()
+    {
+        var query = SearchText.Trim();
+        var matches = string.IsNullOrEmpty(query)
+            ? _allCredentials
+            : _allCredentials
+                .Where(entry =>
+                    entry.Application.Contains(query, StringComparison.OrdinalIgnoreCase) ||
+                    entry.Account.Contains(query, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+
+        Credentials.Clear();
+        foreach (var entry in matches)
+            Credentials.Add(entry);
+    }
+
+    private static Task ShowMissingCredentialErrorAsync() =>
+        Shell.Current.DisplayAlertAsync("Error", "The selected credential could not be loaded.", "OK");
 
     public void Dispose()
     {
         StopAutoLockTimer();
-        MasterPassword = string.Empty;
+        _vaultSession.Lock();
     }
 }

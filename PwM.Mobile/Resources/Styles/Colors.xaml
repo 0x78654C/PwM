@@ -5,8 +5,10 @@
     <!-- Brand colors matching the WPF app -->
     <Color x:Key="AccentColor">#6366F1</Color>
     <Color x:Key="AccentHoverColor">#4F46E5</Color>
+    <Color x:Key="AccentSurfaceColor">#EEF2FF</Color>
     <Color x:Key="AppBackgroundColor">#F8FAFC</Color>
     <Color x:Key="SurfaceColor">#FFFFFF</Color>
+    <Color x:Key="MutedSurfaceColor">#F1F5F9</Color>
     <Color x:Key="SidebarColor">#0F172A</Color>
     <Color x:Key="PrimaryTextColor">#0F172A</Color>
     <Color x:Key="SecondaryTextColor">#64748B</Color>
@@ -14,4 +16,13 @@
     <Color x:Key="DangerColor">#DC2626</Color>
     <Color x:Key="WarningColor">#D97706</Color>
     <Color x:Key="SuccessColor">#16A34A</Color>
+
+    <!-- Dark theme -->
+    <Color x:Key="DarkAccentSurfaceColor">#252B52</Color>
+    <Color x:Key="DarkAppBackgroundColor">#090E1A</Color>
+    <Color x:Key="DarkSurfaceColor">#111827</Color>
+    <Color x:Key="DarkMutedSurfaceColor">#1E293B</Color>
+    <Color x:Key="DarkPrimaryTextColor">#F8FAFC</Color>
+    <Color x:Key="DarkSecondaryTextColor">#CBD5E1</Color>
+    <Color x:Key="DarkBorderColor">#334155</Color>
 </ResourceDictionary>

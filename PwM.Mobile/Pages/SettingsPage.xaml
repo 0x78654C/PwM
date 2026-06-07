@@ -6,75 +6,119 @@
              x:DataType="vm:SettingsViewModel"
              Title="{Binding Title}">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="20">
+    <ScrollView VerticalScrollBarVisibility="Never">
+        <VerticalStackLayout Style="{StaticResource PageContent}">
+            <VerticalStackLayout Spacing="4">
+                <Label Text="Settings" Style="{StaticResource SectionTitle}" />
+                <Label Text="Tune vault security and automatic locking."
+                       Style="{StaticResource BodyText}" />
+            </VerticalStackLayout>
 
-            <Label Text="⚙️ Settings" FontSize="22" FontAttributes="Bold"
-                   TextColor="{StaticResource PrimaryTextColor}" />
-
-            <!-- Argon2 settings -->
-            <Border Padding="16" BackgroundColor="{StaticResource SurfaceColor}"
-                    StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderColor}">
+            <Border Style="{StaticResource Card}">
                 <VerticalStackLayout Spacing="14">
-                    <Label Text="Argon2id Parameters" FontAttributes="Bold" FontSize="15"
-                           TextColor="{StaticResource PrimaryTextColor}" />
-                    <Label Text="⚠️ Changing these affects all vaults. Re-create vaults to apply."
-                           FontSize="12" TextColor="{StaticResource WarningColor}"
-                           TextType="Html" />
+                    <Label Text="Argon2id parameters" Style="{StaticResource CardTitle}" />
+                    <Label Text="Changing these affects all vaults. Re-create vaults to apply."
+                           FontSize="12"
+                           TextColor="{StaticResource WarningColor}" />
 
                     <Label Text="Iterations (time cost)" Style="{StaticResource FieldLabel}" />
-                    <Grid ColumnDefinitions="*,80" ColumnSpacing="8">
-                        <Slider Grid.Column="0" Minimum="10" Maximum="200"
+                    <Grid ColumnDefinitions="*,88" ColumnSpacing="10">
+                        <Slider Grid.Column="0"
+                                Minimum="10"
+                                Maximum="200"
                                 Value="{Binding Argon2Iterations}"
                                 ThumbColor="{StaticResource AccentColor}"
                                 MinimumTrackColor="{StaticResource AccentColor}" />
-                        <Entry Grid.Column="1" Text="{Binding Argon2Iterations}"
-                               Keyboard="Numeric" Style="{StaticResource EntryStyle}" />
+                        <Entry Grid.Column="1"
+                               Text="{Binding Argon2Iterations}"
+                               Keyboard="Numeric"
+                               Style="{StaticResource EntryStyle}" />
                     </Grid>
 
                     <Label Text="Memory size (KB)" Style="{StaticResource FieldLabel}" />
-                    <Entry Text="{Binding Argon2MemorySize}" Keyboard="Numeric"
+                    <Entry Text="{Binding Argon2MemorySize}"
+                           Keyboard="Numeric"
                            Style="{StaticResource EntryStyle}" />
 
                     <Label Text="Parallelism (threads)" Style="{StaticResource FieldLabel}" />
-                    <Grid ColumnDefinitions="*,80" ColumnSpacing="8">
-                        <Slider Grid.Column="0" Minimum="1" Maximum="16"
+                    <Grid ColumnDefinitions="*,88" ColumnSpacing="10">
+                        <Slider Grid.Column="0"
+                                Minimum="1"
+                                Maximum="16"
                                 Value="{Binding Argon2Parallelism}"
                                 ThumbColor="{StaticResource AccentColor}"
                                 MinimumTrackColor="{StaticResource AccentColor}" />
-                        <Entry Grid.Column="1" Text="{Binding Argon2Parallelism}"
-                               Keyboard="Numeric" Style="{StaticResource EntryStyle}" />
+                        <Entry Grid.Column="1"
+                               Text="{Binding Argon2Parallelism}"
+                               Keyboard="Numeric"
+                               Style="{StaticResource EntryStyle}" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Auto-lock -->
-            <Border Padding="16" BackgroundColor="{StaticResource SurfaceColor}"
-                    StrokeShape="RoundRectangle 12" Stroke="{StaticResource BorderColor}">
+            <Border Style="{StaticResource Card}">
                 <VerticalStackLayout Spacing="10">
-                    <Label Text="Auto-lock" FontAttributes="Bold" FontSize="15"
-                           TextColor="{StaticResource PrimaryTextColor}" />
-                    <Label Text="Minutes of inactivity before vault locks (0 = disabled)"
-                           FontSize="12" TextColor="{StaticResource SecondaryTextColor}" />
-                    <Grid ColumnDefinitions="*,80" ColumnSpacing="8">
-                        <Slider Grid.Column="0" Minimum="0" Maximum="60"
+                    <Label Text="Appearance" Style="{StaticResource CardTitle}" />
+                    <Label Text="Use the device theme or choose a fixed light or dark appearance."
+                           Style="{StaticResource BodyText}" />
+                    <Picker Title="Theme"
+                            ItemsSource="{Binding ThemeOptions}"
+                            SelectedItem="{Binding SelectedTheme}"
+                            Style="{StaticResource PickerStyle}" />
+                </VerticalStackLayout>
+            </Border>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Auto-lock" Style="{StaticResource CardTitle}" />
+                    <Label Text="Minutes of inactivity before the vault locks. Vaults also lock when the app is backgrounded. Use 0 to disable inactivity locking."
+                           Style="{StaticResource BodyText}" />
+                    <Grid ColumnDefinitions="*,88" ColumnSpacing="10">
+                        <Slider Grid.Column="0"
+                                Minimum="0"
+                                Maximum="60"
                                 Value="{Binding AutoLockMinutes}"
                                 ThumbColor="{StaticResource AccentColor}"
                                 MinimumTrackColor="{StaticResource AccentColor}" />
-                        <Entry Grid.Column="1" Text="{Binding AutoLockMinutes}"
-                               Keyboard="Numeric" Style="{StaticResource EntryStyle}" />
+                        <Entry Grid.Column="1"
+                               Text="{Binding AutoLockMinutes}"
+                               Keyboard="Numeric"
+                               Style="{StaticResource EntryStyle}" />
                     </Grid>
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Buttons -->
-            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
-                <Button Grid.Column="0" Text="Reset Defaults" Style="{StaticResource SecondaryButton}"
-                        Command="{Binding ResetDefaultsCommand}" />
-                <Button Grid.Column="1" Text="Save Settings" Style="{StaticResource PrimaryButton}"
-                        Command="{Binding SaveCommand}" />
-            </Grid>
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="Mobile capabilities" Style="{StaticResource CardTitle}" />
+                    <Label Text="Local vault create, import, export/share, password changes, credential management, breach checks, search, and automatic locking are supported."
+                           Style="{StaticResource BodyText}" />
+                    <Label Text="Linked shared/network vaults are not supported on mobile because Android and iOS do not provide the desktop file-locking and persistent-path behavior they require."
+                           Style="{StaticResource BodyText}" />
+                </VerticalStackLayout>
+            </Border>
 
+            <VerticalStackLayout Spacing="10">
+                <Button Text="Save Settings"
+                        Style="{StaticResource PrimaryButton}"
+                        Command="{Binding SaveCommand}" />
+                <Button Text="Reset Defaults"
+                        Style="{StaticResource SecondaryButton}"
+                        Command="{Binding ResetDefaultsCommand}" />
+            </VerticalStackLayout>
+
+            <Border Style="{StaticResource Card}">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="About PwM" Style="{StaticResource CardTitle}" />
+                    <Label Text="{Binding AppVersion, StringFormat='Version {0}'}"
+                           Style="{StaticResource BodyText}" />
+                    <Label Text="Offline AES-encrypted password manager. No cloud and no telemetry."
+                           Style="{StaticResource BodyText}" />
+                    <Button Text="Project and Support"
+                            Style="{StaticResource SecondaryButton}"
+                            Command="{Binding OpenProjectPageCommand}" />
+                </VerticalStackLayout>
+            </Border>
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

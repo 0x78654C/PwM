@@ -22,12 +22,82 @@ public class VaultService
         EnsureDirectoryExists();
         return new DirectoryInfo(VaultDir)
             .GetFiles("*.x")
+            .OrderBy(f => f.Name, StringComparer.OrdinalIgnoreCase)
             .Select(f => new VaultInfo
             {
                 Name = Path.GetFileNameWithoutExtension(f.Name),
                 FilePath = f.FullName,
                 CreatedAt = f.CreationTime
-            });
+            })
+            .ToList();
+    }
+
+    public bool VaultExists(string vaultName) =>
+        File.Exists(VaultPath(vaultName));
+
+    public async Task<(bool success, string error)> ImportVaultAsync(FileResult file, bool overwrite)
+    {
+        EnsureDirectoryExists();
+
+        var fileName = Path.GetFileName(file.FileName);
+        if (!string.Equals(Path.GetExtension(fileName), ".x", StringComparison.OrdinalIgnoreCase))
+            return (false, $"'{fileName}' is not a PwM vault file.");
+
+        var vaultName = Path.GetFileNameWithoutExtension(fileName);
+        if (string.IsNullOrWhiteSpace(vaultName) || !IsValidVaultName(vaultName))
+            return (false, $"'{fileName}' has an invalid vault name.");
+
+        byte[] content;
+        try
+        {
+            await using var source = await file.OpenReadAsync();
+            using var buffer = new MemoryStream();
+            await source.CopyToAsync(buffer);
+            content = buffer.ToArray();
+        }
+        catch (Exception ex)
+        {
+            return (false, $"Could not read '{fileName}': {ex.Message}");
+        }
+
+        if (!LooksLikeVault(content))
+            return (false, $"'{fileName}' is not a valid PwM vault file.");
+
+        var destination = VaultPath(vaultName);
+        if (File.Exists(destination) && !overwrite)
+            return (false, $"Vault '{vaultName}' already exists.");
+
+        try
+        {
+            await File.WriteAllBytesAsync(destination, content);
+            return (true, string.Empty);
+        }
+        catch (Exception ex)
+        {
+            return (false, $"Could not import '{fileName}': {ex.Message}");
+        }
+    }
+
+    public async Task<(bool success, string error, string exportPath)> PrepareVaultExportAsync(string vaultName)
+    {
+        var source = VaultPath(vaultName);
+        if (!File.Exists(source))
+            return (false, $"Vault '{vaultName}' not found.", string.Empty);
+
+        try
+        {
+            var exportDirectory = Path.Combine(FileSystem.CacheDirectory, "vault-exports");
+            Directory.CreateDirectory(exportDirectory);
+            var exportPath = Path.Combine(exportDirectory, $"{vaultName}.x");
+            await using var sourceStream = File.OpenRead(source);
+            await using var destinationStream = File.Create(exportPath);
+            await sourceStream.CopyToAsync(destinationStream);
+            return (true, string.Empty, exportPath);
+        }
+        catch (Exception ex)
+        {
+            return (false, $"Could not export '{vaultName}': {ex.Message}", string.Empty);
+        }
     }
 
     public (bool success, string error) CreateVault(string name, string password, string confirmPassword)
@@ -36,6 +106,8 @@ public class VaultService
 
         if (name.Length < 3)
             return (false, "Vault name must be at least 3 characters.");
+        if (!IsValidVaultName(name))
+            return (false, "Vault name contains unsupported characters.");
 
         if (!PasswordValidator.ValidatePassword(confirmPassword))
             return (false, "Password must be ≥ 12 characters with upper, lower, digit, special, no spaces.");
@@ -176,6 +248,27 @@ public class VaultService
 
     private static string VaultPath(string name) =>
         Path.Combine(VaultDir, $"{name}.x");
+
+    private static bool IsValidVaultName(string name) =>
+        name is not "." and not ".." &&
+        name.IndexOfAny(['\\', '/', ':', '*', '?', '"', '<', '>', '|']) < 0;
+
+    private static bool LooksLikeVault(byte[] content)
+    {
+        try
+        {
+            var decoded = Convert.FromBase64String(System.Text.Encoding.UTF8.GetString(content));
+            var payload = JsonSerializer.Deserialize<Dictionary<string, string>>(decoded);
+            return payload != null &&
+                   payload.ContainsKey("iv") &&
+                   payload.ContainsKey("value") &&
+                   payload.ContainsKey("mac");
+        }
+        catch
+        {
+            return false;
+        }
+    }
 
     private static List<CredentialEntry> ParseEntries(string decryptedVault)
     {

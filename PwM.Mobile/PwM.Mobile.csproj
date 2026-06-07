@@ -22,9 +22,13 @@
 
   <ItemGroup>
     <!-- App icon -->
-    <MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#6366F1" />
+    <MauiIcon Include="Resources\AppIcon\logo_modern.png"
+              Color="#0F172A"
+              BaseSize="512,512" />
     <!-- Splash screen -->
-    <MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#6366F1" BaseSize="128,128" />
+    <MauiSplashScreen Include="Resources\Splash\pwm_splash.png"
+                      Color="#0F172A"
+                      BaseSize="256,256" />
     <!-- Images -->
     <MauiImage Include="Resources\Images\*" />
     <!-- Fonts -->
@@ -41,5 +45,6 @@
     <PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
     <PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="10.0.8" />
   </ItemGroup>
 </Project>

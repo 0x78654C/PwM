@@ -5,15 +5,12 @@ using PwMLib;
 
 namespace PwM.Mobile.ViewModels;
 
-[QueryProperty(nameof(VaultName), "vaultName")]
-[QueryProperty(nameof(MasterPassword), "masterPassword")]
 public partial class AddCredentialViewModel : BaseViewModel
 {
     private readonly VaultService _vaultService;
+    private readonly VaultSession _vaultSession;
     private readonly HibpService _hibpService;
 
-    [ObservableProperty] private string _vaultName = string.Empty;
-    [ObservableProperty] private string _masterPassword = string.Empty;
     [ObservableProperty] private string _application = string.Empty;
     [ObservableProperty] private string _account = string.Empty;
     [ObservableProperty] private string _password = string.Empty;
@@ -21,12 +18,18 @@ public partial class AddCredentialViewModel : BaseViewModel
     [ObservableProperty] private string _breachWarning = string.Empty;
     [ObservableProperty] private int _generatedLength = 16;
 
-    public AddCredentialViewModel(VaultService vaultService, HibpService hibpService)
+    public string PasswordVisibilityLabel => IsPasswordVisible ? "Hide" : "Show";
+
+    public AddCredentialViewModel(VaultService vaultService, VaultSession vaultSession, HibpService hibpService)
     {
         _vaultService = vaultService;
+        _vaultSession = vaultSession;
         _hibpService = hibpService;
         Title = "Add Credential";
     }
+
+    partial void OnIsPasswordVisibleChanged(bool value) =>
+        OnPropertyChanged(nameof(PasswordVisibilityLabel));
 
     [RelayCommand]
     public void GeneratePassword()
@@ -55,7 +58,14 @@ public partial class AddCredentialViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(Application) || string.IsNullOrWhiteSpace(Account) || string.IsNullOrWhiteSpace(Password))
         {
-            await Shell.Current.DisplayAlert("Error", "All fields are required.", "OK");
+            await Shell.Current.DisplayAlertAsync("Error", "All fields are required.", "OK");
+            return;
+        }
+
+        if (!_vaultSession.IsUnlocked)
+        {
+            await Shell.Current.DisplayAlertAsync("Locked", "Unlock the vault before adding a credential.", "OK");
+            await Shell.Current.GoToAsync("//VaultListPage");
             return;
         }
 
@@ -65,19 +75,29 @@ public partial class AddCredentialViewModel : BaseViewModel
         bool breached = await _hibpService.IsBreachedAsync(Password);
         if (breached)
         {
-            bool proceed = await Shell.Current.DisplayAlert(
+            bool proceed = await Shell.Current.DisplayAlertAsync(
                 "⚠️ Breach Warning",
                 "This password was found in a known data breach. Save anyway?",
                 "Save Anyway", "Cancel");
             if (!proceed) { IsBusy = false; return; }
         }
 
-        var (ok, err) = _vaultService.AddCredential(VaultName, MasterPassword, Application.Trim(), Account.Trim(), Password);
+        var vaultName = _vaultSession.VaultName;
+        var masterPassword = _vaultSession.MasterPassword;
+        var application = Application.Trim();
+        var account = Account.Trim();
+        var entryPassword = Password;
+        var (ok, err) = await Task.Run(() => _vaultService.AddCredential(
+            vaultName,
+            masterPassword,
+            application,
+            account,
+            entryPassword));
         IsBusy = false;
 
         if (!ok)
         {
-            await Shell.Current.DisplayAlert("Error", err, "OK");
+            await Shell.Current.DisplayAlertAsync("Error", err, "OK");
             return;
         }
 
