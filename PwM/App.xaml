@@ -8,16 +8,60 @@
         <SolidColorBrush x:Key="AccentPressedBrush" Color="#4338CA"/>
         <SolidColorBrush x:Key="AppBackgroundBrush" Color="#F8FAFC"/>
         <SolidColorBrush x:Key="SurfaceBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SurfaceAltBrush" Color="#F8FAFC"/>
+        <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#F1F5F9"/>
         <SolidColorBrush x:Key="SidebarBrush" Color="#0F172A"/>
+        <SolidColorBrush x:Key="SidebarUserCardBrush" Color="#172033"/>
+        <SolidColorBrush x:Key="SidebarUserCardBorderBrush" Color="#3A4962"/>
+        <SolidColorBrush x:Key="SidebarUserPrimaryBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SidebarUserSecondaryBrush" Color="#B5C2D3"/>
+        <SolidColorBrush x:Key="SidebarNavTextBrush" Color="#C7D2E3"/>
+        <SolidColorBrush x:Key="SidebarNavDisabledTextBrush" Color="#7B8797"/>
+        <SolidColorBrush x:Key="SidebarNavSelectedTextBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SidebarNavSelectionBrush" Color="#4F46E5"/>
+        <SolidColorBrush x:Key="SidebarVersionTextBrush" Color="#91A3BA"/>
+        <SolidColorBrush x:Key="TitleBarButtonBrush" Color="#182235"/>
+        <SolidColorBrush x:Key="TitleBarButtonHoverBrush" Color="#27364D"/>
+        <SolidColorBrush x:Key="TitleBarButtonBorderBrush" Color="#40516B"/>
+        <SolidColorBrush x:Key="TitleBarButtonForegroundBrush" Color="#D3DCE9"/>
         <SolidColorBrush x:Key="TextPrimaryBrush" Color="#0F172A"/>
         <SolidColorBrush x:Key="TextSecondaryBrush" Color="#64748B"/>
+        <SolidColorBrush x:Key="TextTertiaryBrush" Color="#94A3B8"/>
         <SolidColorBrush x:Key="BorderBrush" Color="#E2E8F0"/>
+        <SolidColorBrush x:Key="InputBorderBrush" Color="#CBD5E1"/>
+        <SolidColorBrush x:Key="AccentSurfaceBrush" Color="#EEF2FF"/>
+        <SolidColorBrush x:Key="AccentTextBrush" Color="#4338CA"/>
         <SolidColorBrush x:Key="DangerBrush" Color="#DC2626"/>
+        <SolidColorBrush x:Key="DangerSurfaceBrush" Color="#FEF2F2"/>
+        <SolidColorBrush x:Key="DangerHoverBrush" Color="#FEE2E2"/>
+        <SolidColorBrush x:Key="DangerPressedBrush" Color="#FECACA"/>
+        <SolidColorBrush x:Key="DangerTextBrush" Color="#991B1B"/>
+        <SolidColorBrush x:Key="WarningSurfaceBrush" Color="#FFF7ED"/>
+        <SolidColorBrush x:Key="WarningBorderBrush" Color="#FED7AA"/>
+        <SolidColorBrush x:Key="WarningTextBrush" Color="#C2410C"/>
+        <SolidColorBrush x:Key="SuccessTextBrush" Color="#15803D"/>
+
+        <Style x:Key="TitleBarButtonBorder" TargetType="{x:Type Border}">
+            <Setter Property="Width" Value="34"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Background" Value="{DynamicResource TitleBarButtonBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource TitleBarButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource TitleBarButtonHoverBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <Style x:Key="RoundCorner2" TargetType="{x:Type Button}">
             <Setter Property="MinHeight" Value="36"/>
             <Setter Property="Padding" Value="18,8"/>
-            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource AccentBrush}"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
@@ -37,14 +81,14 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource AccentHoverBrush}"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource AccentHoverBrush}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource AccentPressedBrush}"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource AccentPressedBrush}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#E2E8F0"/>
-                                <Setter Property="Foreground" Value="#94A3B8"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource TextTertiaryBrush}"/>
                                 <Setter Property="Cursor" Value="Arrow"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -55,8 +99,8 @@
 
         <Style x:Key="ExitVaultButton" TargetType="{x:Type Button}">
             <Setter Property="Padding" Value="14,7"/>
-            <Setter Property="Foreground" Value="{StaticResource DangerBrush}"/>
-            <Setter Property="Background" Value="#FEF2F2"/>
+            <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource DangerSurfaceBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="13"/>
@@ -74,10 +118,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#FEE2E2"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource DangerHoverBrush}"/>
                             </Trigger>
                             <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#FECACA"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource DangerPressedBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -88,9 +132,9 @@
         <Style x:Key="SecondaryButton" TargetType="{x:Type Button}">
             <Setter Property="MinHeight" Value="36"/>
             <Setter Property="Padding" Value="18,8"/>
-            <Setter Property="Background" Value="#F8FAFC"/>
-            <Setter Property="Foreground" Value="#334155"/>
-            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="13"/>
@@ -109,8 +153,8 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="ButtonBorder" Property="Background" Value="#F1F5F9"/>
-                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="#94A3B8"/>
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource SurfaceHoverBrush}"/>
+                                <Setter TargetName="ButtonBorder" Property="BorderBrush" Value="{DynamicResource TextTertiaryBrush}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:PwM.Mobile.ViewModels"
+             xmlns:model="clr-namespace:PwM.Mobile.Models"
+             x:Class="PwM.Mobile.Pages.VaultPage"
+             x:DataType="vm:VaultViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Password" Command="{Binding ChangeMasterPasswordCommand}" />
+        <ToolbarItem Text="Lock" Command="{Binding LockVaultCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <Shell.TitleView>
+        <Label Text="{Binding VaultName}"
+               FontSize="18"
+               FontAttributes="Bold"
+               TextColor="White"
+               MaxLines="1"
+               LineBreakMode="TailTruncation"
+               VerticalOptions="Center" />
+    </Shell.TitleView>
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16,8,16,16" RowSpacing="12"
+          MaximumWidthRequest="720" HorizontalOptions="Fill">
+        <SearchBar Grid.Row="0"
+                   Placeholder="Search applications or accounts"
+                   Text="{Binding SearchText}"
+                   Style="{StaticResource SearchBarStyle}" />
+
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Credentials}"
+                        SelectionMode="None"
+                        VerticalScrollBarVisibility="Never">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Padding="24,40" Spacing="6">
+                    <Label Text="No credentials yet"
+                           HorizontalTextAlignment="Center"
+                           Style="{StaticResource CardTitle}" />
+                    <Label Text="Add a login to this vault."
+                           HorizontalTextAlignment="Center"
+                           Style="{StaticResource BodyText}" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:CredentialEntry">
+                    <SwipeView Margin="0,5">
+                        <SwipeView.LeftItems>
+                            <SwipeItems Mode="Execute">
+                                <SwipeItem Text="Copy"
+                                           BackgroundColor="{StaticResource AccentColor}"
+                                           BindingContext="{Binding .}"
+                                           CommandParameter="{Binding .}"
+                                           Invoked="OnCopyPasswordInvoked" />
+                            </SwipeItems>
+                        </SwipeView.LeftItems>
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="Update"
+                                           BackgroundColor="{StaticResource WarningColor}"
+                                           BindingContext="{Binding .}"
+                                           CommandParameter="{Binding .}"
+                                           Invoked="OnUpdatePasswordInvoked" />
+                                <SwipeItem Text="Delete"
+                                           BackgroundColor="{StaticResource DangerColor}"
+                                           BindingContext="{Binding .}"
+                                           CommandParameter="{Binding .}"
+                                           Invoked="OnDeleteCredentialInvoked" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+
+                        <Border Style="{StaticResource Card}">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+                                <VerticalStackLayout Grid.Column="0" Spacing="3"
+                                                     VerticalOptions="Center">
+                                    <Label Text="{Binding Application}"
+                                           Style="{StaticResource CardTitle}"
+                                           MaxLines="1"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding Account}"
+                                           Style="{StaticResource BodyText}"
+                                           MaxLines="1"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="Checking password safety..."
+                                           FontSize="11"
+                                           TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}"
+                                           IsVisible="{Binding IsBreachCheckPending}" />
+                                    <Label Text="Vulnerable password"
+                                           FontSize="11"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource DangerColor}"
+                                           IsVisible="{Binding HasBreach}" />
+                                </VerticalStackLayout>
+                                <Button Grid.Column="1"
+                                        Text="Copy"
+                                        Style="{StaticResource IconButton}"
+                                        BindingContext="{Binding .}"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnCopyPasswordClicked" />
+                                <Button Grid.Column="2"
+                                        Text="Show"
+                                        Style="{StaticResource IconButton}"
+                                        BindingContext="{Binding .}"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnShowPasswordClicked" />
+                            </Grid>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Grid.Row="2"
+                Text="Add Credential"
+                Style="{StaticResource PrimaryButton}"
+                Command="{Binding AddCredentialCommand}" />
+
+        <ActivityIndicator Grid.RowSpan="3"
+                           IsRunning="{Binding IsBusy}"
+                           IsVisible="{Binding IsBusy}"
+                           Color="{StaticResource AccentColor}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+    </Grid>
+</ContentPage>

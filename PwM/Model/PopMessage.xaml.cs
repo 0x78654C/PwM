@@ -68,29 +68,33 @@ namespace PwM
             switch (gridColor)
             {
                 case "green":
-                    statusIconBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#F0FDF4"));
-                    statusIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#16A34A"));
+                    statusIconBorder.Background = ThemeColor("#F0FDF4", "#052E16");
+                    statusIcon.Foreground = ThemeColor("#16A34A", "#4ADE80");
                     statusIcon.Kind = PackIconKind.CheckCircleOutline;
                     titleTxt.Text = "Notification";
                     notificationLBL.Text = messageData;
                     break;
 
                 case "red":
-                    statusIconBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FEF2F2"));
-                    statusIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#DC2626"));
+                    statusIconBorder.Background = ThemeColor("#FEF2F2", "#450A0A");
+                    statusIcon.Foreground = ThemeColor("#DC2626", "#F87171");
                     statusIcon.Kind = PackIconKind.AlertCircleOutline;
                     titleTxt.Text = "Error";
                     notificationLBL.Text = messageData;
                     break;
 
                 case "orange":
-                    statusIconBorder.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFBEB"));
-                    statusIcon.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#D97706"));
+                    statusIconBorder.Background = ThemeColor("#FFFBEB", "#431407");
+                    statusIcon.Foreground = ThemeColor("#D97706", "#FDBA74");
                     statusIcon.Kind = PackIconKind.AlertOutline;
                     titleTxt.Text = "Warning";
                     notificationLBL.Text = messageData;
                     break;
             }
         }
+
+        private static SolidColorBrush ThemeColor(string lightColor, string darkColor) =>
+            new((Color)ColorConverter.ConvertFromString(
+                Utils.ThemeManager.IsDarkTheme ? darkColor : lightColor));
     }
 }

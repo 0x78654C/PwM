@@ -27,13 +27,22 @@ namespace PwMLib
         public static bool vaultOpen = false;
         public static bool sharedVault = false;
         public static bool masterPasswordCheck = true;
-        private static string s_rootPath = Path.GetPathRoot(Environment.SystemDirectory);
-        private static readonly string s_accountName = Environment.UserName;
-        public static readonly string passwordManagerDirectory = $"{s_rootPath}Users\\{s_accountName}\\AppData\\Local\\PwM\\";
+        public static string passwordManagerDirectory { get; set; } = GetDefaultPasswordManagerDirectory();
         public static readonly string registryPath = "SOFTWARE\\PwM";
-        public static readonly string jsonSharedVaults = Path.Combine(passwordManagerDirectory, "PwM.Json");
+        public static string jsonSharedVaults => Path.Combine(passwordManagerDirectory, "PwM.Json");
         public static readonly string vaultExpireReg = "VaultExpireSession";
-        public static readonly string lockedUser = $"{passwordManagerDirectory}lockedUser";
+        public static string lockedUser => Path.Combine(passwordManagerDirectory, "lockedUser");
+
+        private static string GetDefaultPasswordManagerDirectory()
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                var rootPath = Path.GetPathRoot(Environment.SystemDirectory);
+                var accountName = Environment.UserName;
+                return $"{rootPath}Users\\{accountName}\\AppData\\Local\\PwM\\";
+            }
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PwM");
+        }
         public static int vaultExpireInterval { get; set; }
         public const string apiHIBP = "https://api.pwnedpasswords.com/range/";
         public const string apiHIBPMain = "api.pwnedpasswords.com";

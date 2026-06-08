@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace PwM.Utils
 {
@@ -13,15 +12,7 @@ namespace PwM.Utils
         /// <param name="reset"></param>
         public static void SetListViewColor(ListViewItem listViewItem, bool reset)
         {
-            var converter = new BrushConverter();
-            if (reset)
-            {
-                listViewItem.Background = Brushes.Transparent;
-                listViewItem.Foreground = (Brush)converter.ConvertFromString("#CBD5E1");
-                return;
-            }
-            listViewItem.Background = (Brush)converter.ConvertFromString("#4F46E5");
-            listViewItem.Foreground = Brushes.White;
+            listViewItem.IsSelected = !reset;
         }
 
         /// <summary>
@@ -31,18 +22,7 @@ namespace PwM.Utils
         /// <param name="reset"></param>
         public static void SetListViewColorApp(ListViewItem listViewItem, bool reset)
         {
-            if (listViewItem.IsEnabled)
-            {
-                var converter = new BrushConverter();
-                if (reset)
-                {
-                    listViewItem.Background = Brushes.Transparent;
-                    listViewItem.Foreground = (Brush)converter.ConvertFromString("#CBD5E1");
-                    return;
-                }
-                listViewItem.Background = (Brush)converter.ConvertFromString("#4F46E5");
-                listViewItem.Foreground = Brushes.White;
-            }
+            listViewItem.IsSelected = listViewItem.IsEnabled && !reset;
         }
 
         /// <summary>

@@ -69,16 +69,19 @@
                         <TextBlock Text="Add credential" Foreground="White" FontSize="17" FontWeight="SemiBold"/>
                         <TextBlock Text="Save a new account in the active vault" Foreground="#94A3B8" FontSize="11" Margin="0,3,0,0"/>
                     </StackPanel>
-                    <materialDesign:PackIcon Grid.Column="2"
-                                             Name="vaultIcon"
-                                             Foreground="#CBD5E1"
-                                             PreviewMouseDown="closeLBL_PreviewMouseDown"
-                                             Kind="Close"
-                                             Width="20"
-                                             Height="20"
-                                             Cursor="Hand"
-                                             HorizontalAlignment="Center"
-                                             VerticalAlignment="Center"/>
+                    <Border Grid.Column="2"
+                            Style="{DynamicResource TitleBarButtonBorder}"
+                            ToolTip="Close"
+                            PreviewMouseDown="closeLBL_PreviewMouseDown">
+                        <materialDesign:PackIcon Name="vaultIcon"
+                                                 Kind="Close"
+                                                 Foreground="{DynamicResource TitleBarButtonForegroundBrush}"
+                                                 Width="18"
+                                                 Height="18"
+                                                 IsHitTestVisible="False"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"/>
+                    </Border>
                 </Grid>
             </Border>
 

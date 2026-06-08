@@ -23,7 +23,7 @@
             <Setter Property="Height" Value="46"/>
             <Setter Property="Margin" Value="12,3"/>
             <Setter Property="Padding" Value="14,0"/>
-            <Setter Property="Foreground" Value="#CBD5E1"/>
+            <Setter Property="Foreground" Value="{DynamicResource SidebarNavTextBrush}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="14"/>
@@ -39,11 +39,16 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="NavBorder" Property="Background" Value="#1E293B"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter TargetName="NavBorder" Property="Background" Value="{DynamicResource SidebarNavSelectionBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource SidebarNavSelectedTextBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="NavBorder" Property="Background" Value="{DynamicResource SidebarNavSelectionBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource SidebarNavSelectedTextBrush}"/>
                             </Trigger>
                             <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Opacity" Value="0.45"/>
+                                <Setter TargetName="NavBorder" Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="{DynamicResource SidebarNavDisabledTextBrush}"/>
                                 <Setter Property="Cursor" Value="Arrow"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
@@ -55,9 +60,9 @@
         <Style x:Key="GridViewColumnHeaderStyle1" TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="Height" Value="42"/>
             <Setter Property="Padding" Value="16,0"/>
-            <Setter Property="Foreground" Value="#64748B"/>
-            <Setter Property="Background" Value="#F8FAFC"/>
-            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
             <Setter Property="BorderThickness" Value="0,0,0,1"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="12"/>
@@ -66,8 +71,8 @@
         </Style>
 
         <Style x:Key="DataListStyle" TargetType="{x:Type ListView}">
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="#0F172A"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="13"/>
@@ -80,8 +85,8 @@
                         <Setter Property="Padding" Value="16,0"/>
                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
                         <Setter Property="VerticalContentAlignment" Value="Center"/>
-                        <Setter Property="Background" Value="White"/>
-                        <Setter Property="BorderBrush" Value="#F1F5F9"/>
+                        <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+                        <Setter Property="BorderBrush" Value="{DynamicResource SurfaceHoverBrush}"/>
                         <Setter Property="BorderThickness" Value="0,0,0,1"/>
                         <Setter Property="Template">
                             <Setter.Value>
@@ -96,7 +101,7 @@
                                     </Border>
                                     <ControlTemplate.Triggers>
                                         <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter TargetName="RowBorder" Property="Background" Value="#F8FAFC"/>
+                                            <Setter TargetName="RowBorder" Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
                                         </Trigger>
                                         <Trigger Property="IsSelected" Value="True">
                                             <Setter TargetName="RowBorder" Property="Background" Value="#4F46E5"/>
@@ -114,8 +119,8 @@
         </Style>
 
         <Style x:Key="IconActionBorderStyle" TargetType="{x:Type Border}">
-            <Setter Property="Background" Value="#F8FAFC"/>
-            <Setter Property="BorderBrush" Value="#E2E8F0"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceAltBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="CornerRadius" Value="8"/>
             <Setter Property="Padding" Value="11,7"/>
@@ -133,8 +138,8 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ContextMenu}">
-                        <Border Background="White"
-                                BorderBrush="#E2E8F0"
+                        <Border Background="{DynamicResource SurfaceBrush}"
+                                BorderBrush="{DynamicResource BorderBrush}"
                                 BorderThickness="1"
                                 CornerRadius="10"
                                 Padding="6">
@@ -151,7 +156,7 @@
         <Style x:Key="ModernMenuItemStyle" TargetType="{x:Type MenuItem}">
             <Setter Property="Height" Value="38"/>
             <Setter Property="MinWidth" Value="230"/>
-            <Setter Property="Foreground" Value="#334155"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="12"/>
@@ -208,7 +213,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Separator}">
-                        <Border Height="1" Background="#E2E8F0"/>
+                        <Border Height="1" Background="{DynamicResource BorderBrush}"/>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
@@ -217,13 +222,160 @@
         <Style x:Key="SettingsInputStyle" TargetType="{x:Type TextBox}">
             <Setter Property="Height" Value="42"/>
             <Setter Property="Padding" Value="12,0"/>
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="Foreground" Value="#0F172A"/>
-            <Setter Property="BorderBrush" Value="#CBD5E1"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
             <Setter Property="FontFamily" Value="Segoe UI"/>
             <Setter Property="FontSize" Value="14"/>
+        </Style>
+
+        <Style x:Key="SettingsComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="MinHeight" Value="34"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                        <Border x:Name="ItemBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              TextElement.Foreground="{TemplateBinding Foreground}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource SurfaceHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="{DynamicResource AccentSurfaceBrush}"/>
+                                <Setter Property="Foreground" Value="{DynamicResource AccentTextBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="SettingsComboBoxStyle" TargetType="{x:Type ComboBox}">
+            <Setter Property="Height" Value="42"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="Background" Value="{DynamicResource SurfaceBrush}"/>
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource InputBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="ItemContainerStyle" Value="{StaticResource SettingsComboBoxItemStyle}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <Border x:Name="ComboBorder"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="8">
+                                <Grid>
+                                    <ContentPresenter Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                      ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}"
+                                                      Margin="{TemplateBinding Padding}"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Left"
+                                                      TextElement.Foreground="{TemplateBinding Foreground}"/>
+                                    <Path Data="M 0 0 L 4 4 L 8 0"
+                                          Stroke="{DynamicResource TextSecondaryBrush}"
+                                          StrokeThickness="1.5"
+                                          HorizontalAlignment="Right"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,12,0"/>
+                                </Grid>
+                            </Border>
+                            <ToggleButton Focusable="False"
+                                          Background="Transparent"
+                                          BorderThickness="0"
+                                          ClickMode="Press"
+                                          IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="{x:Type ToggleButton}">
+                                        <Border Background="Transparent"/>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <Popup x:Name="PART_Popup"
+                                   AllowsTransparency="True"
+                                   Placement="Bottom"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   PopupAnimation="Fade">
+                                <Border MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                        Margin="0,4,0,0"
+                                        Padding="4"
+                                        Background="{DynamicResource SurfaceBrush}"
+                                        BorderBrush="{DynamicResource BorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="8">
+                                    <ScrollViewer MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ComboBorder" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="ComboBorder" Property="BorderBrush" Value="{DynamicResource AccentBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.55"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PopupMenuButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="PopupButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="PopupButtonBorder" Property="Background" Value="{DynamicResource SurfaceHoverBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="PopupDangerButtonStyle"
+               TargetType="{x:Type Button}"
+               BasedOn="{StaticResource PopupMenuButtonStyle}">
+            <Setter Property="Foreground" Value="{DynamicResource DangerBrush}"/>
         </Style>
     </Window.Resources>
 
@@ -244,7 +396,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Border x:Name="GridMenu" Grid.RowSpan="2" Background="{StaticResource SidebarBrush}" CornerRadius="16,0,0,16">
+            <Border x:Name="GridMenu"
+                    Grid.RowSpan="2"
+                    Background="{StaticResource SidebarBrush}"
+                    CornerRadius="16,0,0,16"
+                    SizeChanged="RoundedBorder_SizeChanged">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="88"/>
@@ -278,7 +434,13 @@
                                   ToolTip="Vaults"
                                   PreviewMouseDown="Vault_PreviewMouseDown">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Name="vaultIcon" Kind="SafeSquareOutline" Width="20" Height="20" Margin="0,0,12,0"/>
+                            <materialDesign:PackIcon Name="vaultIcon"
+                                                     Kind="SafeSquareOutline"
+                                                     Tag="PreserveThemeForeground"
+                                                     Foreground="{DynamicResource SidebarNavSelectedTextBrush}"
+                                                     Width="20"
+                                                     Height="20"
+                                                     Margin="0,0,12,0"/>
                             <TextBlock Name="vaultTXT" Text="Vaults" VerticalAlignment="Center" FontWeight="SemiBold"/>
                         </StackPanel>
                     </ListViewItem>
@@ -288,7 +450,13 @@
                                   PreviewMouseDown="App_PreviewMouseDown"
                                   IsEnabled="False">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Name="appIcon" Kind="KeyVariant" Width="20" Height="20" Margin="0,0,12,0"/>
+                            <materialDesign:PackIcon Name="appIcon"
+                                                     Kind="KeyVariant"
+                                                     Tag="PreserveThemeForeground"
+                                                     Foreground="{DynamicResource SidebarNavDisabledTextBrush}"
+                                                     Width="20"
+                                                     Height="20"
+                                                     Margin="0,0,12,0"/>
                             <TextBlock x:Name="appTXT" Text="Applications" VerticalAlignment="Center" FontWeight="SemiBold"/>
                         </StackPanel>
                     </ListViewItem>
@@ -297,7 +465,13 @@
                                   ToolTip="Settings"
                                   PreviewMouseDown="Settings_PreviewMouseDown">
                         <StackPanel Orientation="Horizontal">
-                            <materialDesign:PackIcon Name="settingIcon" Kind="TuneVariant" Width="20" Height="20" Margin="0,0,12,0"/>
+                            <materialDesign:PackIcon Name="settingIcon"
+                                                     Kind="TuneVariant"
+                                                     Tag="PreserveThemeForeground"
+                                                     Foreground="{DynamicResource SidebarNavTextBrush}"
+                                                     Width="20"
+                                                     Height="20"
+                                                     Margin="0,0,12,0"/>
                             <TextBlock Name="settingsTXT" Text="Settings" VerticalAlignment="Center" FontWeight="SemiBold"/>
                         </StackPanel>
                     </ListViewItem>
@@ -306,9 +480,9 @@
                 <Border Grid.Row="3"
                         Margin="12,0,12,14"
                         Padding="12,10"
-                        Background="#1E293B"
+                        Background="{DynamicResource SidebarUserCardBrush}"
                         CornerRadius="10"
-                        BorderBrush="#334155"
+                        BorderBrush="{DynamicResource SidebarUserCardBorderBrush}"
                         BorderThickness="1">
                     <Grid>
                         <Grid.RowDefinitions>
@@ -335,9 +509,15 @@
                         <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
                             <TextBlock Name="userTXB"
                                        Text="user"
-                                       Foreground="White"
+                                       Foreground="{DynamicResource SidebarUserPrimaryBrush}"
                                        FontSize="13"
                                        FontWeight="SemiBold"
+                                       TextTrimming="CharacterEllipsis"/>
+                            <TextBlock Name="userTypeTXB"
+                                       Text="Local user"
+                                       Foreground="{DynamicResource SidebarUserSecondaryBrush}"
+                                       FontSize="10"
+                                       Margin="0,2,0,0"
                                        TextTrimming="CharacterEllipsis"/>
                         </StackPanel>
 
@@ -364,58 +544,72 @@
                 <TextBlock Grid.Row="4"
                            Name="versionLabel"
                            Text="v1.0"
-                           Foreground="#334155"
+                           Foreground="{DynamicResource SidebarVersionTextBrush}"
                            FontSize="10"
                            Margin="18,6,0,10"
                            HorizontalAlignment="Left"/>
             </Grid>
             </Border>
 
-            <Border Grid.Column="1" CornerRadius="0,16,0,0" Background="White">
+            <Border Grid.Column="1"
+                    CornerRadius="0,16,0,0"
+                    Background="{DynamicResource SurfaceBrush}"
+                    SizeChanged="RoundedBorder_SizeChanged">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <StackPanel Margin="28,13,0,0">
-                    <TextBlock Text="Password Manager" Foreground="#0F172A" FontSize="17" FontWeight="SemiBold"/>
-                    <TextBlock Text="Secure, local credential storage" Foreground="#94A3B8" FontSize="11" Margin="0,2,0,0"/>
+                    <TextBlock Text="Password Manager" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="17" FontWeight="SemiBold"/>
+                    <TextBlock Text="Secure, local credential storage" Foreground="{DynamicResource TextTertiaryBrush}" FontSize="11" Margin="0,2,0,0"/>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,14,16,0">
-                    <Border Width="36" Height="36" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Margin="0,0,8,0">
+                    <Border Width="36" Height="36" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,0,8,0">
                         <Label Name="miniMizeLBL"
                                Content="−"
                                PreviewMouseDown="minimizeLBL_PreviewMouseDown"
                                FontSize="20"
-                               Foreground="#64748B"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
                                HorizontalContentAlignment="Center"
                                VerticalContentAlignment="Center"
                                Padding="0,-7,0,0"
                                Cursor="Hand"/>
                     </Border>
-                    <materialDesign:PopupBox Foreground="#475569"
+                    <materialDesign:PopupBox Foreground="{DynamicResource TextSecondaryBrush}"
                                              PlacementMode="BottomAndAlignRightEdges"
                                              StaysOpen="False"
                                              Width="36"
                                              Height="36"
                                              Padding="6">
-                        <Border BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="8" Background="White">
+                        <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8" Background="{DynamicResource SurfaceBrush}">
                             <StackPanel Width="150">
-                                <Button Content="About" Padding="14,10" HorizontalContentAlignment="Left" Click="aboutBTN_Click"/>
+                                <Button Content="About"
+                                        Style="{StaticResource PopupMenuButtonStyle}"
+                                        Padding="14,10"
+                                        HorizontalContentAlignment="Left"
+                                        Click="aboutBTN_Click"/>
                                 <Separator Margin="8,0"/>
-                                <Button Content="Exit" Padding="14,10" Foreground="#DC2626" HorizontalContentAlignment="Left" Click="closeBTN_Click"/>
+                                <Button Content="Exit"
+                                        Style="{StaticResource PopupDangerButtonStyle}"
+                                        Padding="14,10"
+                                        HorizontalContentAlignment="Left"
+                                        Click="closeBTN_Click"/>
                             </StackPanel>
                         </Border>
                     </materialDesign:PopupBox>
                 </StackPanel>
-                <Border Grid.ColumnSpan="2" BorderBrush="#E2E8F0" BorderThickness="0,0,0,1"/>
+                <Border Grid.ColumnSpan="2" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="0,0,0,1"/>
             </Grid>
             </Border>
 
+            <Border Grid.Column="1"
+                    Grid.Row="1"
+                    Background="{DynamicResource AppBackgroundBrush}"
+                    CornerRadius="0,0,16,0"
+                    SizeChanged="RoundedBorder_SizeChanged">
             <TabControl Name="tabControl"
-                        Grid.Column="1"
-                        Grid.Row="1"
-                        Background="{StaticResource AppBackgroundBrush}"
+                        Background="Transparent"
                         BorderThickness="0"
                         Padding="28,24">
                 <TabControl.ItemContainerStyle>
@@ -425,7 +619,7 @@
                 </TabControl.ItemContainerStyle>
 
                 <TabItem Name="vaultTab" Header="Vaults">
-                    <Grid Background="{StaticResource AppBackgroundBrush}">
+                    <Grid Background="{DynamicResource AppBackgroundBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="16"/>
@@ -439,20 +633,26 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Your vaults" Foreground="#0F172A" FontSize="24" FontWeight="SemiBold"/>
-                                <TextBlock Text="Open a vault to view and manage its saved credentials." Foreground="#64748B" FontSize="13" Margin="0,5,0,0"/>
+                                <TextBlock Text="Your vaults" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="24" FontWeight="SemiBold"/>
+                                <TextBlock Text="Open a vault to view and manage its saved credentials." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" Margin="0,5,0,0"/>
                             </StackPanel>
-                            <Border Grid.Column="1" Background="#EEF2FF" CornerRadius="9" Padding="12,8" VerticalAlignment="Center">
+                            <Border Grid.Column="1" Background="{DynamicResource AccentSurfaceBrush}" CornerRadius="9" Padding="12,8" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
                                     <materialDesign:PackIcon Name="vaultStorageIcon" Kind="ShieldOutline" Foreground="#4F46E5" Width="18" Height="18" Margin="0,0,7,0"/>
-                                    <TextBlock Name="vaultStorageLabel" Text="Select a vault" Foreground="#4338CA" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                    <TextBlock Name="vaultStorageLabel" Text="Select a vault" Foreground="{DynamicResource AccentTextBrush}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </Border>
                         </Grid>
 
-                        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12">
+                        <Border Grid.Row="2"
+                                Background="{DynamicResource SurfaceBrush}"
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                SizeChanged="RoundedListBorder_SizeChanged">
                             <ListView Name="vaultList"
                                       Style="{StaticResource DataListStyle}"
+                                      Margin="8,8,8,0"
                                       PreviewMouseDoubleClick="vaultList_PreviewMouseDoubleClick"
                                       SelectionChanged="vaultList_SelectionChanged"
                                       KeyDown="vaultList_KeyDown">
@@ -505,7 +705,7 @@
                 </TabItem>
 
                 <TabItem Name="appTab" Header="Applications">
-                    <Grid Background="{StaticResource AppBackgroundBrush}">
+                    <Grid Background="{DynamicResource AppBackgroundBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="16"/>
@@ -519,21 +719,27 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <StackPanel>
-                                <TextBlock Text="Saved credentials" Foreground="#0F172A" FontSize="24" FontWeight="SemiBold"/>
+                                <TextBlock Text="Saved credentials" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="24" FontWeight="SemiBold"/>
                                 <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
-                                    <TextBlock Text="Entries in " Foreground="#64748B" FontSize="13"/>
+                                    <TextBlock Text="Entries in " Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13"/>
                                     <TextBlock Name="appListVaultLVL" Text="vault" Foreground="#4F46E5" FontSize="13" FontWeight="SemiBold"/>
                                 </StackPanel>
                             </StackPanel>
                             <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
                                 <materialDesign:PackIcon Kind="LockCheckOutline" Foreground="#16A34A" Width="18" Height="18" Margin="0,0,7,0"/>
-                                <TextBlock Text="Vault unlocked" Foreground="#15803D" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                <TextBlock Text="Vault unlocked" Foreground="{DynamicResource SuccessTextBrush}" FontSize="12" FontWeight="SemiBold" VerticalAlignment="Center"/>
                             </StackPanel>
                         </Grid>
 
-                        <Border Grid.Row="2" Background="White" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="12">
+                        <Border Grid.Row="2"
+                                Background="{DynamicResource SurfaceBrush}"
+                                BorderBrush="{DynamicResource BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                SizeChanged="RoundedListBorder_SizeChanged">
                             <ListView Name="appList"
                                       Style="{StaticResource DataListStyle}"
+                                      Margin="8,8,8,0"
                                       GridViewColumnHeader.Click="AppListColumnHeaderClickedHandler">
                                 <ListView.View>
                                     <GridView ColumnHeaderContainerStyle="{StaticResource GridViewColumnHeaderStyle1}">
@@ -589,7 +795,7 @@
                 </TabItem>
 
                 <TabItem Name="settingsTab" Header="Settings">
-                    <Grid Background="{StaticResource AppBackgroundBrush}">
+                    <Grid Background="{DynamicResource AppBackgroundBrush}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"/>
                             <RowDefinition Height="16"/>
@@ -598,8 +804,8 @@
 
                         <!-- Page title -->
                         <StackPanel>
-                            <TextBlock Text="Settings" Foreground="#0F172A" FontSize="24" FontWeight="SemiBold"/>
-                            <TextBlock Text="Configure how PwM protects active vault sessions." Foreground="#64748B" FontSize="13" Margin="0,5,0,0"/>
+                            <TextBlock Text="Settings" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="24" FontWeight="SemiBold"/>
+                            <TextBlock Text="Configure appearance and how PwM protects active vault sessions." Foreground="{DynamicResource TextSecondaryBrush}" FontSize="13" Margin="0,5,0,0"/>
                         </StackPanel>
 
                         <!-- Scrollable cards -->
@@ -609,11 +815,61 @@
                                       Padding="0,0,6,0">
                             <StackPanel>
 
+                                <!-- Appearance card -->
+                                <Border Width="520"
+                                        HorizontalAlignment="Left"
+                                        Background="{DynamicResource SurfaceBrush}"
+                                        BorderBrush="{DynamicResource BorderBrush}"
+                                        BorderThickness="1"
+                                        CornerRadius="12"
+                                        Padding="22">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="18"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="42"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Border Width="38" Height="38" Background="{DynamicResource AccentSurfaceBrush}" CornerRadius="9">
+                                                <materialDesign:PackIcon Kind="ThemeLightDark"
+                                                                         Width="20" Height="20"
+                                                                         Foreground="{DynamicResource AccentBrush}"
+                                                                         HorizontalAlignment="Center"
+                                                                         VerticalAlignment="Center"/>
+                                            </Border>
+                                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                <TextBlock Text="Appearance" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="15" FontWeight="SemiBold"/>
+                                                <TextBlock Text="Choose the desktop theme. The selection is saved and applied to all PwM windows."
+                                                           Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                            </StackPanel>
+                                        </Grid>
+
+                                        <StackPanel Grid.Row="2">
+                                            <TextBlock Text="Theme" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                            <ComboBox x:Name="themeModeComboBox"
+                                                      Style="{StaticResource SettingsComboBoxStyle}"
+                                                      Width="180"
+                                                      HorizontalAlignment="Left"
+                                                      SelectionChanged="themeModeComboBox_SelectionChanged">
+                                                <ComboBoxItem Content="Light" Tag="Light"/>
+                                                <ComboBoxItem Content="Dark" Tag="Dark"/>
+                                            </ComboBox>
+                                        </StackPanel>
+                                    </Grid>
+                                </Border>
+
+                                <Border Height="16"/>
+
                                 <!-- Vault session timeout card -->
                                 <Border Width="520"
                                         HorizontalAlignment="Left"
-                                        Background="White"
-                                        BorderBrush="#E2E8F0"
+                                        Background="{DynamicResource SurfaceBrush}"
+                                        BorderBrush="{DynamicResource BorderBrush}"
                                         BorderThickness="1"
                                         CornerRadius="12"
                                         Padding="22">
@@ -630,7 +886,7 @@
                                                 <ColumnDefinition Width="42"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <Border Width="38" Height="38" Background="#EEF2FF" CornerRadius="9">
+                                            <Border Width="38" Height="38" Background="{DynamicResource AccentSurfaceBrush}" CornerRadius="9">
                                                 <materialDesign:PackIcon Kind="TimerLockOutline"
                                                                          Width="20" Height="20"
                                                                          Foreground="#4F46E5"
@@ -638,9 +894,9 @@
                                                                          VerticalAlignment="Center"/>
                                             </Border>
                                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                                <TextBlock Text="Vault session timeout" Foreground="#0F172A" FontSize="15" FontWeight="SemiBold"/>
+                                                <TextBlock Text="Vault session timeout" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="15" FontWeight="SemiBold"/>
                                                 <TextBlock Text="Automatically lock an inactive vault after this period. Default: 10 minutes."
-                                                           Foreground="#64748B" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                           Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap"/>
                                             </StackPanel>
                                         </Grid>
 
@@ -651,7 +907,7 @@
                                                 <ColumnDefinition Width="90"/>
                                             </Grid.ColumnDefinitions>
                                             <StackPanel>
-                                                <TextBlock Text="Expire after (minutes)" Foreground="#475569" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                                                <TextBlock Text="Expire after (minutes)" Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" FontWeight="SemiBold" Margin="0,0,0,6"/>
                                                 <TextBox x:Name="expirePeriodTxT"
                                                          Style="{StaticResource SettingsInputStyle}"
                                                          Width="180"
@@ -685,8 +941,8 @@
                                 <!-- Argon2 hashing parameters card -->
                                 <Border Width="520"
                                         HorizontalAlignment="Left"
-                                        Background="White"
-                                        BorderBrush="#E2E8F0"
+                                        Background="{DynamicResource SurfaceBrush}"
+                                        BorderBrush="{DynamicResource BorderBrush}"
                                         BorderThickness="1"
                                         CornerRadius="12"
                                         Padding="22"
@@ -712,7 +968,7 @@
                                                 <ColumnDefinition Width="42"/>
                                                 <ColumnDefinition Width="*"/>
                                             </Grid.ColumnDefinitions>
-                                            <Border Width="38" Height="38" Background="#EEF2FF" CornerRadius="9">
+                                            <Border Width="38" Height="38" Background="{DynamicResource AccentSurfaceBrush}" CornerRadius="9">
                                                 <materialDesign:PackIcon Kind="ShieldLockOutline"
                                                                          Width="20" Height="20"
                                                                          Foreground="#4F46E5"
@@ -720,9 +976,9 @@
                                                                          VerticalAlignment="Center"/>
                                             </Border>
                                             <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                                <TextBlock Text="Argon2 hashing parameters" Foreground="#0F172A" FontSize="15" FontWeight="SemiBold"/>
+                                                <TextBlock Text="Argon2 hashing parameters" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="15" FontWeight="SemiBold"/>
                                                 <TextBlock Text="Controls how the master password is derived into an encryption key. Higher values increase security but also login time."
-                                                           Foreground="#64748B" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap"/>
+                                                           Foreground="{DynamicResource TextSecondaryBrush}" FontSize="12" Margin="0,3,0,0" TextWrapping="Wrap"/>
                                             </StackPanel>
                                         </Grid>
 
@@ -800,8 +1056,8 @@
 
                                         <!-- Warning -->
                                         <Border Grid.Row="8"
-                                                Background="#FFF7ED"
-                                                BorderBrush="#FED7AA"
+                                                Background="{DynamicResource WarningSurfaceBrush}"
+                                                BorderBrush="{DynamicResource WarningBorderBrush}"
                                                 BorderThickness="1"
                                                 CornerRadius="8"
                                                 Padding="10,8">
@@ -812,7 +1068,7 @@
                                                                          Margin="0,0,8,0"
                                                                          VerticalAlignment="Center"/>
                                                 <TextBlock Text="Changing these settings affects all vaults. Re-create vaults after applying."
-                                                           Foreground="#C2410C"
+                                                           Foreground="{DynamicResource WarningTextBrush}"
                                                            FontSize="11"
                                                            TextWrapping="Wrap"/>
                                             </StackPanel>
@@ -836,6 +1092,7 @@
                     </Grid>
                 </TabItem>
             </TabControl>
+            </Border>
         </Grid>
     </Border>
 </Window>

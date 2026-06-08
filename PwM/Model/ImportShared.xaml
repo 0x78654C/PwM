@@ -3,7 +3,24 @@
     <Border Margin="10" Background="White" CornerRadius="14" BorderBrush="#E2E8F0" BorderThickness="1">
         <Border.Effect><DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.2" Color="#0F172A"/></Border.Effect>
         <Grid><Grid.RowDefinitions><RowDefinition Height="68"/><RowDefinition Height="*"/></Grid.RowDefinitions>
-            <Border Background="#0F172A" CornerRadius="13,13,0,0"><Grid><TextBlock Text="Import vault" Foreground="White" FontSize="16" FontWeight="SemiBold" Margin="22,0" VerticalAlignment="Center"/><materialDesign:PackIcon Kind="Close" Foreground="#CBD5E1" Width="20" Height="20" HorizontalAlignment="Right" Margin="0,0,20,0" Cursor="Hand" PreviewMouseDown="CloseLbl_PreviewMouseDown"/></Grid></Border>
+            <Border Background="#0F172A" CornerRadius="13,13,0,0">
+                <Grid>
+                    <TextBlock Text="Import vault" Foreground="White" FontSize="16" FontWeight="SemiBold" Margin="22,0" VerticalAlignment="Center"/>
+                    <Border Style="{DynamicResource TitleBarButtonBorder}"
+                            HorizontalAlignment="Right"
+                            Margin="0,0,16,0"
+                            ToolTip="Close"
+                            PreviewMouseDown="CloseLbl_PreviewMouseDown">
+                        <materialDesign:PackIcon Kind="Close"
+                                                 Foreground="{DynamicResource TitleBarButtonForegroundBrush}"
+                                                 Width="18"
+                                                 Height="18"
+                                                 IsHitTestVisible="False"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center"/>
+                    </Border>
+                </Grid>
+            </Border>
             <Grid Grid.Row="1" Margin="24,20"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="18"/><RowDefinition Height="*"/></Grid.RowDefinitions>
                 <TextBlock Name="notificationLBL" Text="Choose how this vault should be imported." Foreground="#475569" FontSize="13" TextWrapping="Wrap"/>
                 <Grid Grid.Row="2"><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="12"/><ColumnDefinition/></Grid.ColumnDefinitions>
