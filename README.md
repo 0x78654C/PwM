@@ -105,7 +105,7 @@ First open a vault by double-clicking it. The sidebar switches to **Applications
 
 ## Mobile app
 
-The mobile version is built with **.NET MAUI** for Android and iOS and uses the same `.x` vault format and encryption library as the desktop app.
+The mobile version is built with **.NET MAUI** for Android and iOS and uses the same `.x` vault format and encryption library as the desktop app, so vault files can be moved between desktop and mobile.
 
 - Create, open, delete, import, and export/share local vaults
 - Add, search, update, show, copy, and delete credentials
