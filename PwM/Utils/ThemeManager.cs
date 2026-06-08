@@ -34,6 +34,10 @@ namespace PwM.Utils
             ["SidebarNavSelectedTextBrush"] = "#FFFFFF",
             ["SidebarNavSelectionBrush"] = "#4F46E5",
             ["SidebarVersionTextBrush"] = "#91A3BA",
+            ["TitleBarButtonBrush"] = "#182235",
+            ["TitleBarButtonHoverBrush"] = "#27364D",
+            ["TitleBarButtonBorderBrush"] = "#40516B",
+            ["TitleBarButtonForegroundBrush"] = "#D3DCE9",
             ["TextPrimaryBrush"] = "#0F172A",
             ["TextSecondaryBrush"] = "#64748B",
             ["TextTertiaryBrush"] = "#94A3B8",
@@ -67,6 +71,10 @@ namespace PwM.Utils
             ["SidebarNavSelectedTextBrush"] = "#FFFFFF",
             ["SidebarNavSelectionBrush"] = "#4F46E5",
             ["SidebarVersionTextBrush"] = "#91A3BA",
+            ["TitleBarButtonBrush"] = "#182235",
+            ["TitleBarButtonHoverBrush"] = "#27364D",
+            ["TitleBarButtonBorderBrush"] = "#40516B",
+            ["TitleBarButtonForegroundBrush"] = "#D3DCE9",
             ["TextPrimaryBrush"] = "#F8FAFC",
             ["TextSecondaryBrush"] = "#CBD5E1",
             ["TextTertiaryBrush"] = "#94A3B8",
@@ -173,10 +181,13 @@ namespace PwM.Utils
         private static void ApplyToWindow(Window window)
         {
             var visited = new HashSet<DependencyObject>();
-            ApplyElement(window, visited);
+            ApplyElement(window, visited, false);
         }
 
-        private static void ApplyElement(DependencyObject element, HashSet<DependencyObject> visited)
+        private static void ApplyElement(
+            DependencyObject element,
+            HashSet<DependencyObject> visited,
+            bool preserveThemeForeground)
         {
             if (element is null || !visited.Add(element))
                 return;
@@ -184,11 +195,17 @@ namespace PwM.Utils
             var foregroundMap = IsDarkTheme ? DarkForegroundMap : LightForegroundMap;
             var backgroundMap = IsDarkTheme ? DarkBackgroundMap : LightBackgroundMap;
             var borderMap = IsDarkTheme ? DarkBorderMap : LightBorderMap;
+            preserveThemeForeground |= element is FrameworkElement frameworkElement &&
+                string.Equals(
+                    frameworkElement.Tag as string,
+                    "PreserveThemeForeground",
+                    StringComparison.Ordinal);
 
             switch (element)
             {
                 case Control control:
-                    ReplaceBrush(control, Control.ForegroundProperty, foregroundMap);
+                    if (!preserveThemeForeground)
+                        ReplaceBrush(control, Control.ForegroundProperty, foregroundMap);
                     ReplaceBrush(control, Control.BackgroundProperty, backgroundMap);
                     ReplaceBrush(control, Control.BorderBrushProperty, borderMap);
                     break;
@@ -200,16 +217,21 @@ namespace PwM.Utils
                     ReplaceBrush(panel, Panel.BackgroundProperty, backgroundMap);
                     break;
                 case TextBlock textBlock:
-                    ReplaceBrush(textBlock, TextBlock.ForegroundProperty, foregroundMap);
+                    if (!preserveThemeForeground)
+                        ReplaceBrush(textBlock, TextBlock.ForegroundProperty, foregroundMap);
                     ReplaceBrush(textBlock, TextBlock.BackgroundProperty, backgroundMap);
                     break;
                 case TextElement textElement:
-                    ReplaceBrush(textElement, TextElement.ForegroundProperty, foregroundMap);
+                    if (!preserveThemeForeground)
+                        ReplaceBrush(textElement, TextElement.ForegroundProperty, foregroundMap);
                     ReplaceBrush(textElement, TextElement.BackgroundProperty, backgroundMap);
                     break;
                 case Shape shape:
-                    ReplaceBrush(shape, Shape.FillProperty, backgroundMap);
-                    ReplaceBrush(shape, Shape.StrokeProperty, borderMap);
+                    if (!preserveThemeForeground)
+                    {
+                        ReplaceBrush(shape, Shape.FillProperty, backgroundMap);
+                        ReplaceBrush(shape, Shape.StrokeProperty, borderMap);
+                    }
                     break;
             }
 
@@ -217,13 +239,16 @@ namespace PwM.Utils
             {
                 var visualChildren = VisualTreeHelper.GetChildrenCount(element);
                 for (var index = 0; index < visualChildren; index++)
-                    ApplyElement(VisualTreeHelper.GetChild(element, index), visited);
+                    ApplyElement(
+                        VisualTreeHelper.GetChild(element, index),
+                        visited,
+                        preserveThemeForeground);
             }
 
             foreach (var child in LogicalTreeHelper.GetChildren(element))
             {
                 if (child is DependencyObject dependencyObject)
-                    ApplyElement(dependencyObject, visited);
+                    ApplyElement(dependencyObject, visited, preserveThemeForeground);
             }
         }
 

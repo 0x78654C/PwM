@@ -56,10 +56,46 @@ namespace PwM
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
+            RegisterSidebarNavigationIconUpdates();
+            RefreshSidebarNavigationIcons();
             VaultSessionExpire.LoadExpireTime(GlobalVariables.registryPath, GlobalVariables.vaultExpireReg, "10", expirePeriodTxT);
             Argon2SettingsManager.LoadSettings(GlobalVariables.registryPath, argon2IterationsTxt, argon2MemorySizeTxt, argon2ParallelismTxt);
             themeModeComboBox.SelectedIndex = ThemeManager.IsDarkTheme ? 1 : 0;
             _themeSettingInitialized = true;
+        }
+
+        private void RegisterSidebarNavigationIconUpdates()
+        {
+            foreach (ListViewItem item in new[] { vaultsListVI, appListVI, settingsListVI })
+            {
+                item.MouseEnter += (_, _) => RefreshSidebarNavigationIcons();
+                item.MouseLeave += (_, _) => RefreshSidebarNavigationIcons();
+                item.Selected += (_, _) => RefreshSidebarNavigationIcons();
+                item.Unselected += (_, _) => RefreshSidebarNavigationIcons();
+                item.IsEnabledChanged += (_, _) => RefreshSidebarNavigationIcons();
+            }
+
+            Loaded += (_, _) => RefreshSidebarNavigationIcons();
+        }
+
+        private void RefreshSidebarNavigationIcons()
+        {
+            SetSidebarNavigationIcon(vaultsListVI, vaultIcon);
+            SetSidebarNavigationIcon(appListVI, appIcon);
+            SetSidebarNavigationIcon(settingsListVI, settingIcon);
+        }
+
+        private void SetSidebarNavigationIcon(
+            ListViewItem item,
+            MaterialDesignThemes.Wpf.PackIcon icon)
+        {
+            string brushKey = !item.IsEnabled
+                ? "SidebarNavDisabledTextBrush"
+                : item.IsSelected || item.IsMouseOver
+                    ? "SidebarNavSelectedTextBrush"
+                    : "SidebarNavTextBrush";
+
+            icon.Foreground = (Brush)FindResource(brushKey);
         }
 
         private void MainInnerGrid_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -935,6 +971,7 @@ namespace PwM
             }
 
             ThemeManager.Apply(mode);
+            RefreshSidebarNavigationIcons();
         }
     }
 }

@@ -20,6 +20,10 @@
         <SolidColorBrush x:Key="SidebarNavSelectedTextBrush" Color="#FFFFFF"/>
         <SolidColorBrush x:Key="SidebarNavSelectionBrush" Color="#4F46E5"/>
         <SolidColorBrush x:Key="SidebarVersionTextBrush" Color="#91A3BA"/>
+        <SolidColorBrush x:Key="TitleBarButtonBrush" Color="#182235"/>
+        <SolidColorBrush x:Key="TitleBarButtonHoverBrush" Color="#27364D"/>
+        <SolidColorBrush x:Key="TitleBarButtonBorderBrush" Color="#40516B"/>
+        <SolidColorBrush x:Key="TitleBarButtonForegroundBrush" Color="#D3DCE9"/>
         <SolidColorBrush x:Key="TextPrimaryBrush" Color="#0F172A"/>
         <SolidColorBrush x:Key="TextSecondaryBrush" Color="#64748B"/>
         <SolidColorBrush x:Key="TextTertiaryBrush" Color="#94A3B8"/>
@@ -36,6 +40,23 @@
         <SolidColorBrush x:Key="WarningBorderBrush" Color="#FED7AA"/>
         <SolidColorBrush x:Key="WarningTextBrush" Color="#C2410C"/>
         <SolidColorBrush x:Key="SuccessTextBrush" Color="#15803D"/>
+
+        <Style x:Key="TitleBarButtonBorder" TargetType="{x:Type Border}">
+            <Setter Property="Width" Value="34"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Background" Value="{DynamicResource TitleBarButtonBrush}"/>
+            <Setter Property="BorderBrush" Value="{DynamicResource TitleBarButtonBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{DynamicResource TitleBarButtonHoverBrush}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <Style x:Key="RoundCorner2" TargetType="{x:Type Button}">
             <Setter Property="MinHeight" Value="36"/>

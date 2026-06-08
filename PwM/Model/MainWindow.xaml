@@ -436,7 +436,8 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Name="vaultIcon"
                                                      Kind="SafeSquareOutline"
-                                                     Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"
+                                                     Tag="PreserveThemeForeground"
+                                                     Foreground="{DynamicResource SidebarNavSelectedTextBrush}"
                                                      Width="20"
                                                      Height="20"
                                                      Margin="0,0,12,0"/>
@@ -451,7 +452,8 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Name="appIcon"
                                                      Kind="KeyVariant"
-                                                     Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"
+                                                     Tag="PreserveThemeForeground"
+                                                     Foreground="{DynamicResource SidebarNavDisabledTextBrush}"
                                                      Width="20"
                                                      Height="20"
                                                      Margin="0,0,12,0"/>
@@ -465,7 +467,8 @@
                         <StackPanel Orientation="Horizontal">
                             <materialDesign:PackIcon Name="settingIcon"
                                                      Kind="TuneVariant"
-                                                     Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"
+                                                     Tag="PreserveThemeForeground"
+                                                     Foreground="{DynamicResource SidebarNavTextBrush}"
                                                      Width="20"
                                                      Height="20"
                                                      Margin="0,0,12,0"/>
