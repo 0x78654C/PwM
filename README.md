@@ -177,7 +177,7 @@ dotnet build PwM.Mobile/PwM.Mobile.csproj -f net10.0-ios
 
 ## Screenshots
 
-### Desktop dark theme
+### Desktop dark/light theme
 
 ![Create vault in dark theme](Media/1.png)
 
