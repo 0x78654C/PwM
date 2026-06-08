@@ -9,7 +9,11 @@
         Height="290" Width="500"
         ResizeMode="NoResize" WindowStyle="None"
         WindowStartupLocation="CenterScreen" Topmost="True">
-    <Border Margin="10" Background="White" CornerRadius="14" BorderBrush="#E2E8F0" BorderThickness="1">
+    <Border Margin="10"
+            Background="{DynamicResource SurfaceBrush}"
+            CornerRadius="14"
+            BorderBrush="{DynamicResource BorderBrush}"
+            BorderThickness="1">
         <Border.Effect><DropShadowEffect BlurRadius="24" ShadowDepth="6" Opacity="0.2" Color="#0F172A"/></Border.Effect>
         <Grid>
             <Grid.RowDefinitions><RowDefinition Height="68"/><RowDefinition Height="*"/></Grid.RowDefinitions>
@@ -26,10 +30,10 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Border Name="statusIconBorder" Width="42" Height="42" Background="#EEF2FF" CornerRadius="10" Margin="0,0,14,0" VerticalAlignment="Top">
-                            <materialDesign:PackIcon Name="statusIcon" Kind="InformationOutline" Foreground="#4F46E5" Width="22" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Border Name="statusIconBorder" Width="42" Height="42" Background="{DynamicResource AccentSurfaceBrush}" CornerRadius="10" Margin="0,0,14,0" VerticalAlignment="Top">
+                            <materialDesign:PackIcon Name="statusIcon" Kind="InformationOutline" Foreground="{DynamicResource AccentBrush}" Width="22" Height="22" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
-                        <TextBlock Name="notificationLBL" Grid.Column="1" Text="notificationArea" Foreground="#334155" FontSize="13" TextWrapping="Wrap" VerticalAlignment="Center"/>
+                        <TextBlock Name="notificationLBL" Grid.Column="1" Text="notificationArea" Foreground="{DynamicResource TextPrimaryBrush}" FontSize="13" TextWrapping="Wrap" VerticalAlignment="Center"/>
                     </Grid>
                     <Button Grid.Row="1" Name="confirmBTN" Style="{DynamicResource RoundCorner2}" Content="OK" Width="96" Height="38" HorizontalAlignment="Right" Click="confirmBTN_Click" IsDefault="True"/>
                 </Grid>

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Reflection;
 using System.Runtime.Versioning;
+using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -37,6 +38,7 @@ namespace PwM
         public static DispatcherTimer s_masterPassCheckTimer;
         private string _vaultPath;
         private string _vaultName;
+        private bool _themeSettingInitialized;
         Mutex MyMutex;
 
         public MainWindow()
@@ -48,18 +50,119 @@ namespace PwM
             versionLabel.Text = "v" + Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(0, Assembly.GetExecutingAssembly().GetName().Version.ToString().Length-2);
             VaultManagement.ListVaults(s_passwordManagerDirectory, vaultList, false);
             userTXB.Text = s_accountName;
+            userTXB.ToolTip = GetWindowsIdentityName();
+            userTypeTXB.Text = GetWindowsAccountType();
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
             ListViewSettings.SetListViewColor(vaultsListVI, false);
             ListViewSettings.SetListViewColorApp(appListVI, true);
             VaultSessionExpire.LoadExpireTime(GlobalVariables.registryPath, GlobalVariables.vaultExpireReg, "10", expirePeriodTxT);
             Argon2SettingsManager.LoadSettings(GlobalVariables.registryPath, argon2IterationsTxt, argon2MemorySizeTxt, argon2ParallelismTxt);
+            themeModeComboBox.SelectedIndex = ThemeManager.IsDarkTheme ? 1 : 0;
+            _themeSettingInitialized = true;
         }
 
         private void MainInnerGrid_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             mainInnerGrid.Clip = new RectangleGeometry(
                 new Rect(0, 0, e.NewSize.Width, e.NewSize.Height), 16, 16);
+        }
+
+        private void RoundedListBorder_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (sender is Border border)
+            {
+                border.Clip = CreateRoundedRectangleGeometry(
+                    new Rect(0, 0, e.NewSize.Width, e.NewSize.Height),
+                    border.CornerRadius);
+            }
+        }
+
+        private void RoundedBorder_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (sender is Border border)
+            {
+                border.Clip = CreateRoundedRectangleGeometry(
+                    new Rect(0, 0, e.NewSize.Width, e.NewSize.Height),
+                    border.CornerRadius);
+            }
+        }
+
+        private static Geometry CreateRoundedRectangleGeometry(Rect rect, CornerRadius cornerRadius)
+        {
+            double maxRadius = Math.Min(rect.Width, rect.Height) / 2;
+            double topLeft = Math.Min(cornerRadius.TopLeft, maxRadius);
+            double topRight = Math.Min(cornerRadius.TopRight, maxRadius);
+            double bottomRight = Math.Min(cornerRadius.BottomRight, maxRadius);
+            double bottomLeft = Math.Min(cornerRadius.BottomLeft, maxRadius);
+
+            var geometry = new StreamGeometry();
+            using (StreamGeometryContext context = geometry.Open())
+            {
+                context.BeginFigure(new Point(rect.Left + topLeft, rect.Top), true, true);
+                context.LineTo(new Point(rect.Right - topRight, rect.Top), true, false);
+                AddCorner(context, new Point(rect.Right, rect.Top + topRight), topRight);
+                context.LineTo(new Point(rect.Right, rect.Bottom - bottomRight), true, false);
+                AddCorner(context, new Point(rect.Right - bottomRight, rect.Bottom), bottomRight);
+                context.LineTo(new Point(rect.Left + bottomLeft, rect.Bottom), true, false);
+                AddCorner(context, new Point(rect.Left, rect.Bottom - bottomLeft), bottomLeft);
+                context.LineTo(new Point(rect.Left, rect.Top + topLeft), true, false);
+                AddCorner(context, new Point(rect.Left + topLeft, rect.Top), topLeft);
+            }
+
+            geometry.Freeze();
+            return geometry;
+        }
+
+        private static void AddCorner(StreamGeometryContext context, Point point, double radius)
+        {
+            if (radius > 0)
+            {
+                context.ArcTo(
+                    point,
+                    new Size(radius, radius),
+                    0,
+                    false,
+                    SweepDirection.Clockwise,
+                    true,
+                    false);
+                return;
+            }
+
+            context.LineTo(point, true, false);
+        }
+
+        private static string GetWindowsAccountType()
+        {
+            string identityName = GetWindowsIdentityName();
+            int separatorIndex = identityName.IndexOf('\\');
+            string identityProvider = separatorIndex > 0
+                ? identityName.Substring(0, separatorIndex)
+                : Environment.UserDomainName;
+
+            if (identityProvider.Equals("MicrosoftAccount", StringComparison.OrdinalIgnoreCase))
+                return "Microsoft account";
+
+            if (identityProvider.Equals("AzureAD", StringComparison.OrdinalIgnoreCase))
+                return "Azure AD user";
+
+            if (identityProvider.Equals(Environment.MachineName, StringComparison.OrdinalIgnoreCase))
+                return $"Local user: {Environment.MachineName}";
+
+            return $"Domain user: {identityProvider}";
+        }
+
+        private static string GetWindowsIdentityName()
+        {
+            try
+            {
+                using WindowsIdentity identity = WindowsIdentity.GetCurrent();
+                return identity?.Name ?? $"{Environment.UserDomainName}\\{Environment.UserName}";
+            }
+            catch
+            {
+                return $"{Environment.UserDomainName}\\{Environment.UserName}";
+            }
         }
 
         /// <summary>
@@ -329,7 +432,6 @@ namespace PwM
         /// </summary>
         private void OpenVault()
         {
-            var converter = new BrushConverter();
             if (vaultList.SelectedItem != null)
             {
                 string vaultPath = VaultManagement.GetVaultPathFromList(vaultList);
@@ -350,7 +452,6 @@ namespace PwM
                     if (AppManagement.DecryptAndPopulateList(appList, vaultName, masterPassword, vaultPath))
                     {
                         appListVI.IsEnabled = true;
-                        appListVI.Foreground = (Brush)converter.ConvertFromString("#CBD5E1");
                         ListViewSettings.SetListViewColor(vaultsListVI, true);
                         ListViewSettings.SetListViewColor(settingsListVI, true);
                         ListViewSettings.SetListViewColorApp(appListVI, false);
@@ -369,8 +470,8 @@ namespace PwM
             }
             else
             {
-                appListVI.Foreground = Brushes.Red;
                 appListVI.IsEnabled = false;
+                ListViewSettings.SetListViewColorApp(appListVI, true);
             }
         }
 
@@ -822,6 +923,18 @@ namespace PwM
             {
                 Notification.ShowNotificationInfo("red", x.Message);
             }
+        }
+
+        private void themeModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (!_themeSettingInitialized ||
+                themeModeComboBox.SelectedItem is not ComboBoxItem selectedTheme ||
+                selectedTheme.Tag is not string mode)
+            {
+                return;
+            }
+
+            ThemeManager.Apply(mode);
         }
     }
 }

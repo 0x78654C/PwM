@@ -5,7 +5,6 @@ using System.Linq;
 using System.Runtime.Versioning;
 using System.Security.Cryptography;
 using System.Windows.Controls;
-using System.Windows.Media;
 using System.Windows.Threading;
 namespace PwM.Utils
 {
@@ -191,12 +190,11 @@ namespace PwM.Utils
             ListView appList, TabControl tabControl, DispatcherTimer masterPasswordTimer)
         {
             ListViewSettings.SetListViewColor(vaultListView, false);
-            ListViewSettings.SetListViewColorApp(appListView, true);
             ListViewSettings.SetListViewColor(settingsListView, true);
             appList.Items.Clear();
             tabControl.SelectedIndex = 0;
-            appListView.Foreground = Brushes.Red;
             appListView.IsEnabled = false;
+            ListViewSettings.SetListViewColorApp(appListView, true);
             PwMLib.GlobalVariables.masterPassword = null;
             PwMLib.GlobalVariables.vaultOpen = false;
             PwMLib.GlobalVariables.sharedVault = false;

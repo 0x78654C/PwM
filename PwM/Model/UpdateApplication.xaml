@@ -113,7 +113,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="70"/>
+                            <ColumnDefinition Width="76"/>
                         </Grid.ColumnDefinitions>
                         <PasswordBox Name="newPassAccBox"
                                      Style="{StaticResource CredentialPasswordStyle}"
@@ -140,25 +140,32 @@
                             </adorners:Watermark.TextStyle>
                         </TextBox>
                         <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right">
-                            <materialDesign:PackIcon Name="GenerateNewPassAcc"
-                                                     Kind="AutoFix"
-                                                     Foreground="#4F46E5"
-                                                     Width="18"
-                                                     Height="18"
-                                                     Margin="0,0,14,0"
-                                                     Cursor="Hand"
-                                                     ToolTip="Generate strong password"
-                                                     PreviewMouseDown="GenerateNewPassAcc_PreviewMouseDown"/>
-                            <materialDesign:PackIcon Name="ShowNewPassword"
-                                                     Kind="EyeOutline"
-                                                     Foreground="#64748B"
-                                                     Width="18"
-                                                     Height="18"
-                                                     Cursor="Hand"
-                                                     ToolTip="Hold right click to show password"
-                                                     PreviewMouseRightButtonDown="ShowHideNewPassword"
-                                                     PreviewMouseRightButtonUp="ShowHideNewPassword"
-                                                     PreviewMouseMove="ShowNewPassword_PreviewMouseMove"/>
+                            <Border Width="32" Height="42" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="7" Margin="6,0,4,0">
+                                <materialDesign:PackIcon Name="GenerateNewPassAcc"
+                                                         Kind="AutoFix"
+                                                         Foreground="#4F46E5"
+                                                         Width="17"
+                                                         Height="17"
+                                                         Cursor="Hand"
+                                                         ToolTip="Generate strong password"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"
+                                                         PreviewMouseDown="GenerateNewPassAcc_PreviewMouseDown"/>
+                            </Border>
+                            <Border Width="32" Height="42" Background="#F8FAFC" BorderBrush="#E2E8F0" BorderThickness="1" CornerRadius="7">
+                                <materialDesign:PackIcon Name="ShowNewPassword"
+                                                         Kind="EyeOutline"
+                                                         Foreground="#64748B"
+                                                         Width="17"
+                                                         Height="17"
+                                                         Cursor="Hand"
+                                                         ToolTip="Hold right click to show password"
+                                                         HorizontalAlignment="Center"
+                                                         VerticalAlignment="Center"
+                                                         PreviewMouseRightButtonDown="ShowHideNewPassword"
+                                                         PreviewMouseRightButtonUp="ShowHideNewPassword"
+                                                         PreviewMouseMove="ShowNewPassword_PreviewMouseMove"/>
+                            </Border>
                         </StackPanel>
                     </Grid>
                 </StackPanel>

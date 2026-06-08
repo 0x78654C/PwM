@@ -1,15 +1,19 @@
-﻿using System.Windows;
+using PwM.Utils;
+using System.Runtime.Versioning;
+using System.Windows;
 
 namespace PwM
 {
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
+    [SupportedOSPlatform("Windows")]
     public partial class App : Application
     {
         public App()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            ThemeManager.Initialize();
         }
     }
 }
