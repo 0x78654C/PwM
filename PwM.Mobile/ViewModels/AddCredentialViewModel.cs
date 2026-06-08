@@ -10,6 +10,7 @@ public partial class AddCredentialViewModel : BaseViewModel
     private readonly VaultService _vaultService;
     private readonly VaultSession _vaultSession;
     private readonly HibpService _hibpService;
+    private CancellationTokenSource? _breachCheckCancellation;
 
     [ObservableProperty] private string _application = string.Empty;
     [ObservableProperty] private string _account = string.Empty;
@@ -31,6 +32,12 @@ public partial class AddCredentialViewModel : BaseViewModel
     partial void OnIsPasswordVisibleChanged(bool value) =>
         OnPropertyChanged(nameof(PasswordVisibilityLabel));
 
+    partial void OnPasswordChanged(string value)
+    {
+        BreachWarning = string.Empty;
+        ScheduleBreachCheck(value);
+    }
+
     [RelayCommand]
     public void GeneratePassword()
     {
@@ -47,10 +54,12 @@ public partial class AddCredentialViewModel : BaseViewModel
     public async Task CheckBreachAsync()
     {
         if (string.IsNullOrEmpty(Password)) return;
+
+        CancelScheduledBreachCheck();
         IsBusy = true;
         bool breached = await _hibpService.IsBreachedAsync(Password);
         IsBusy = false;
-        BreachWarning = breached ? "⚠️ This password was found in a data breach!" : "✅ Not found in known breaches.";
+        SetBreachWarning(breached);
     }
 
     [RelayCommand]
@@ -70,18 +79,6 @@ public partial class AddCredentialViewModel : BaseViewModel
         }
 
         IsBusy = true;
-
-        // Auto breach check on save
-        bool breached = await _hibpService.IsBreachedAsync(Password);
-        if (breached)
-        {
-            bool proceed = await Shell.Current.DisplayAlertAsync(
-                "⚠️ Breach Warning",
-                "This password was found in a known data breach. Save anyway?",
-                "Save Anyway", "Cancel");
-            if (!proceed) { IsBusy = false; return; }
-        }
-
         var vaultName = _vaultSession.VaultName;
         var masterPassword = _vaultSession.MasterPassword;
         var application = Application.Trim();
@@ -108,5 +105,43 @@ public partial class AddCredentialViewModel : BaseViewModel
     public async Task CancelAsync()
     {
         await Shell.Current.GoToAsync("..");
+    }
+
+    private void ScheduleBreachCheck(string password)
+    {
+        CancelScheduledBreachCheck();
+        if (string.IsNullOrEmpty(password))
+            return;
+
+        _breachCheckCancellation = new CancellationTokenSource();
+        _ = CheckBreachAfterDelayAsync(password, _breachCheckCancellation.Token);
+    }
+
+    private async Task CheckBreachAfterDelayAsync(string password, CancellationToken cancellationToken)
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromMilliseconds(600), cancellationToken);
+            var breached = await _hibpService.IsBreachedAsync(password, cancellationToken);
+            if (Password == password)
+                SetBreachWarning(breached);
+        }
+        catch (OperationCanceledException)
+        {
+        }
+    }
+
+    private void CancelScheduledBreachCheck()
+    {
+        _breachCheckCancellation?.Cancel();
+        _breachCheckCancellation?.Dispose();
+        _breachCheckCancellation = null;
+    }
+
+    private void SetBreachWarning(bool breached)
+    {
+        BreachWarning = breached
+            ? "⚠️ This password was found in a data breach!"
+            : "✅ Not found in known breaches.";
     }
 }

@@ -13,8 +13,11 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     private readonly VaultSession _vaultSession;
     private readonly PasswordPromptService _passwordPromptService;
     private readonly SettingsService _settingsService;
+    private readonly HibpService _hibpService;
+    private readonly SensitiveClipboardService _clipboardService;
     private readonly List<CredentialEntry> _allCredentials = [];
     private System.Timers.Timer? _autoLockTimer;
+    private int _credentialLoadVersion;
 
     public ObservableCollection<CredentialEntry> Credentials { get; } = [];
 
@@ -30,17 +33,22 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
         VaultService vaultService,
         VaultSession vaultSession,
         PasswordPromptService passwordPromptService,
-        SettingsService settingsService)
+        SettingsService settingsService,
+        HibpService hibpService,
+        SensitiveClipboardService clipboardService)
     {
         _vaultService = vaultService;
         _vaultSession = vaultSession;
         _passwordPromptService = passwordPromptService;
         _settingsService = settingsService;
+        _hibpService = hibpService;
+        _clipboardService = clipboardService;
         Title = vaultSession.VaultName;
     }
 
     public async Task LoadCredentialsAsync()
     {
+        var loadVersion = ++_credentialLoadVersion;
         Credentials.Clear();
         _allCredentials.Clear();
         if (!_vaultSession.IsUnlocked)
@@ -55,20 +63,32 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
         var vaultName = VaultName;
         var masterPassword = _vaultSession.MasterPassword;
         IsBusy = true;
-        var (ok, _, entries) = await Task.Run(
-            () => _vaultService.OpenVault(vaultName, masterPassword));
-        IsBusy = false;
+        var entries = _vaultSession.TakePrefetchedCredentials(vaultName);
+        var ok = entries is not null;
+
+        if (entries is null)
+        {
+            var openResult = await Task.Run(
+                () => _vaultService.OpenVault(vaultName, masterPassword));
+            ok = openResult.success;
+            entries = openResult.entries;
+        }
 
         if (!ok ||
             !_vaultSession.IsUnlocked ||
             !string.Equals(VaultName, vaultName, StringComparison.Ordinal))
+        {
+            IsBusy = false;
             return;
+        }
 
         _allCredentials.AddRange(entries.OrderBy(e => e.Application));
         ApplyCredentialFilter();
 
+        IsBusy = false;
         IsLocked = false;
         StartAutoLockTimer();
+        _ = CheckBreachesAsync(entries, vaultName, loadVersion);
     }
 
     [RelayCommand]
@@ -137,17 +157,18 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
         }
 
         ResetAutoLockTimer();
-        await Clipboard.Default.SetTextAsync(entry.Password);
-        await Shell.Current.DisplayAlertAsync("Copied", "Password copied. It will be cleared in 15 seconds.", "OK");
-
-        // Auto-clear clipboard after 15 seconds
-        _ = Task.Run(async () =>
+        try
         {
-            await Task.Delay(TimeSpan.FromSeconds(15));
-            var current = await Clipboard.Default.GetTextAsync();
-            if (current == entry.Password)
-                await MainThread.InvokeOnMainThreadAsync(() => Clipboard.Default.SetTextAsync(string.Empty));
-        });
+            await _clipboardService.CopyForAsync(entry.Password, TimeSpan.FromSeconds(15));
+            await Shell.Current.DisplayAlertAsync(
+                "Copied",
+                "Password copied. It will be cleared in 15 seconds.",
+                "OK");
+        }
+        catch (Exception ex)
+        {
+            await Shell.Current.DisplayAlertAsync("Copy Failed", ex.Message, "OK");
+        }
     }
 
     [RelayCommand]
@@ -285,12 +306,34 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
             Credentials.Add(entry);
     }
 
+    private async Task CheckBreachesAsync(
+        IEnumerable<CredentialEntry> entries,
+        string vaultName,
+        int loadVersion)
+    {
+        await Task.WhenAll(entries.Select(async entry =>
+        {
+            var hasBreach = await _hibpService.IsBreachedAsync(entry.Password);
+            if (loadVersion != _credentialLoadVersion ||
+                !_vaultSession.IsUnlocked ||
+                !string.Equals(VaultName, vaultName, StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                entry.HasBreach = hasBreach;
+                entry.IsBreachCheckPending = false;
+            });
+        }));
+    }
+
     private static Task ShowMissingCredentialErrorAsync() =>
         Shell.Current.DisplayAlertAsync("Error", "The selected credential could not be loaded.", "OK");
 
     public void Dispose()
     {
         StopAutoLockTimer();
-        _vaultSession.Lock();
     }
 }

@@ -23,6 +23,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<PasswordPromptService>();
         builder.Services.AddSingleton<SettingsService>();
         builder.Services.AddSingleton<HibpService>();
+        builder.Services.AddSingleton<SensitiveClipboardService>();
 
         // ViewModels
         builder.Services.AddTransient<VaultListViewModel>();

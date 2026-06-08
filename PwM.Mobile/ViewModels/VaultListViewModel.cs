@@ -97,15 +97,29 @@ public partial class VaultListViewModel : BaseViewModel
     [RelayCommand]
     public async Task ChangeMasterPasswordAsync(VaultInfo? vault)
     {
-        if (!await EnsureVaultAsync(vault))
+        if (!await EnsureVaultAsync(vault) || vault is null)
             return;
 
-        string? oldPassword = await _passwordPromptService.ShowAsync(
-            "Change Master Password",
-            $"Enter the current master password for '{vault!.Name}':",
-            "Current master password");
-        if (string.IsNullOrEmpty(oldPassword))
-            return;
+        var vaultName = vault.Name;
+        var isOpenVault = _vaultSession.IsUnlocked &&
+                          string.Equals(vaultName, _vaultSession.VaultName, StringComparison.OrdinalIgnoreCase);
+
+        string oldPassword;
+        if (isOpenVault)
+        {
+            oldPassword = _vaultSession.MasterPassword;
+        }
+        else
+        {
+            string? promptedPassword = await _passwordPromptService.ShowAsync(
+                "Change Master Password",
+                $"Enter the current master password for '{vaultName}':",
+                "Current master password");
+            if (string.IsNullOrEmpty(promptedPassword))
+                return;
+
+            oldPassword = promptedPassword;
+        }
 
         string? newPassword = await _passwordPromptService.ShowAsync(
             "Change Master Password",
@@ -126,8 +140,12 @@ public partial class VaultListViewModel : BaseViewModel
 
         IsBusy = true;
         var (ok, error) = await Task.Run(
-            () => _vaultService.ChangeMasterPassword(vault.Name, oldPassword, newPassword));
+            () => _vaultService.ChangeMasterPassword(vaultName, oldPassword, newPassword));
         IsBusy = false;
+
+        if (ok && isOpenVault)
+            _vaultSession.Unlock(vaultName, newPassword);
+
         await Shell.Current.DisplayAlertAsync(
             ok ? "Success" : "Error",
             ok ? "Master password changed." : error,
@@ -274,6 +292,13 @@ public partial class VaultListViewModel : BaseViewModel
             return;
         }
 
+        if (_vaultSession.IsUnlocked &&
+            string.Equals(vault.Name, _vaultSession.VaultName, StringComparison.OrdinalIgnoreCase))
+        {
+            await Shell.Current.GoToAsync(nameof(Pages.VaultPage));
+            return;
+        }
+
         string? password = await _passwordPromptService.ShowAsync(
             "Open Vault",
             $"Enter master password for '{vault.Name}':",
@@ -284,7 +309,7 @@ public partial class VaultListViewModel : BaseViewModel
         try
         {
             IsBusy = true;
-            var (ok, err, _) = await Task.Run(
+            var (ok, err, entries) = await Task.Run(
                 () => _vaultService.OpenVault(vault.Name, password));
 
             if (!ok)
@@ -293,7 +318,7 @@ public partial class VaultListViewModel : BaseViewModel
                 return;
             }
 
-            _vaultSession.Unlock(vault.Name, password);
+            _vaultSession.Unlock(vault.Name, password, entries);
             await Shell.Current.GoToAsync(nameof(Pages.VaultPage));
         }
         catch (Exception ex)

@@ -72,7 +72,7 @@
                         </SwipeView.RightItems>
 
                         <Border Style="{StaticResource Card}">
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
                                 <VerticalStackLayout Grid.Column="0" Spacing="3"
                                                      VerticalOptions="Center">
                                     <Label Text="{Binding Application}"
@@ -83,8 +83,23 @@
                                            Style="{StaticResource BodyText}"
                                            MaxLines="1"
                                            LineBreakMode="TailTruncation" />
+                                    <Label Text="Checking password safety..."
+                                           FontSize="11"
+                                           TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}"
+                                           IsVisible="{Binding IsBreachCheckPending}" />
+                                    <Label Text="Vulnerable password"
+                                           FontSize="11"
+                                           FontAttributes="Bold"
+                                           TextColor="{StaticResource DangerColor}"
+                                           IsVisible="{Binding HasBreach}" />
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1"
+                                        Text="Copy"
+                                        Style="{StaticResource IconButton}"
+                                        BindingContext="{Binding .}"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="OnCopyPasswordClicked" />
+                                <Button Grid.Column="2"
                                         Text="Show"
                                         Style="{StaticResource IconButton}"
                                         BindingContext="{Binding .}"

@@ -36,6 +36,11 @@ public partial class VaultPage : ContentPage
         await RunCredentialActionAsync(sender, _vm.CopyPasswordAsync);
     }
 
+    private async void OnCopyPasswordClicked(object? sender, EventArgs e)
+    {
+        await RunCredentialActionAsync(sender, _vm.CopyPasswordAsync);
+    }
+
     private async void OnUpdatePasswordInvoked(object? sender, EventArgs e)
     {
         await RunCredentialActionAsync(sender, _vm.UpdatePasswordAsync);
