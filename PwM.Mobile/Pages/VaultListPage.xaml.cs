@@ -9,8 +9,8 @@ public partial class VaultListPage : ContentPage
 
     public VaultListPage(VaultListViewModel vm)
     {
-        InitializeComponent();
         _vm = vm;
+        InitializeComponent();
         BindingContext = vm;
     }
 
@@ -18,6 +18,11 @@ public partial class VaultListPage : ContentPage
     {
         base.OnAppearing();
         _vm.LoadVaults();
+    }
+
+    private void OnVaultSearchTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        _vm.SetVaultFilter(e.NewTextValue);
     }
 
     private async void OnVaultSelectionChanged(object? sender, SelectionChangedEventArgs e)
