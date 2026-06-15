@@ -12,142 +12,149 @@
                TextColor="White" VerticalOptions="Center" />
     </Shell.TitleView>
 
-    <CollectionView ItemsSource="{Binding Vaults}"
-                    SelectionMode="Single"
-                    SelectionChanged="OnVaultSelectionChanged"
-                    VerticalScrollBarVisibility="Never">
-        <CollectionView.Header>
-            <VerticalStackLayout Padding="16,12,16,4" Spacing="4"
-                                 MaximumWidthRequest="720" HorizontalOptions="Fill">
-                <Label Text="Your vaults" Style="{StaticResource SectionTitle}" />
-                <Label Text="{Binding Vaults.Count, StringFormat='{0} vault(s)'}"
-                       Style="{StaticResource BodyText}" />
-                <SearchBar Placeholder="Search vaults"
-                           Margin="0,8,0,0"
-                           Text="{Binding SearchText}"
-                           Style="{StaticResource SearchBarStyle}" />
-                <Button Text="Import Vault Files"
-                        Style="{StaticResource SecondaryButton}"
-                        Command="{Binding ImportVaultsCommand}"
-                        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
-            </VerticalStackLayout>
-        </CollectionView.Header>
+    <Grid RowDefinitions="Auto,*">
+        <VerticalStackLayout Grid.Row="0"
+                             Padding="16,12,16,4"
+                             Spacing="4"
+                             MaximumWidthRequest="720"
+                             HorizontalOptions="Fill">
+            <Label Text="Your vaults" Style="{StaticResource SectionTitle}" />
+            <Label Text="{Binding Vaults.Count, StringFormat='{0} vault(s)'}"
+                   Style="{StaticResource BodyText}" />
+            <!-- Keep the focused search input outside the collection while results update. -->
+            <Entry Placeholder="Search vaults"
+                   Margin="0,8,0,0"
+                   ClearButtonVisibility="WhileEditing"
+                   ReturnType="Search"
+                   TextChanged="OnVaultSearchTextChanged"
+                   Style="{StaticResource EntryStyle}" />
+            <Button Text="Import Vault Files"
+                    Style="{StaticResource SecondaryButton}"
+                    Command="{Binding ImportVaultsCommand}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+        </VerticalStackLayout>
 
-        <CollectionView.EmptyView>
-            <VerticalStackLayout Padding="24,28" Spacing="6"
-                                 MaximumWidthRequest="720" HorizontalOptions="Fill">
-                <Label Text="No vaults yet"
-                       HorizontalTextAlignment="Center"
-                       Style="{StaticResource CardTitle}" />
-                <Label Text="Create your first encrypted vault below."
-                       HorizontalTextAlignment="Center"
-                       Style="{StaticResource BodyText}" />
-            </VerticalStackLayout>
-        </CollectionView.EmptyView>
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Vaults}"
+                        SelectionMode="Single"
+                        SelectionChanged="OnVaultSelectionChanged"
+                        VerticalScrollBarVisibility="Never">
+            <CollectionView.EmptyView>
+                <VerticalStackLayout Padding="24,28" Spacing="6"
+                                     MaximumWidthRequest="720" HorizontalOptions="Fill">
+                    <Label Text="No vaults yet"
+                           HorizontalTextAlignment="Center"
+                           Style="{StaticResource CardTitle}" />
+                    <Label Text="Create your first encrypted vault below."
+                           HorizontalTextAlignment="Center"
+                           Style="{StaticResource BodyText}" />
+                </VerticalStackLayout>
+            </CollectionView.EmptyView>
 
-        <CollectionView.ItemTemplate>
-            <DataTemplate x:DataType="model:VaultInfo">
-                <SwipeView Margin="16,5">
-                    <SwipeView.RightItems>
-                        <SwipeItems Mode="Reveal">
-                            <SwipeItem Text="Export"
-                                       BackgroundColor="{StaticResource AccentColor}"
-                                       BindingContext="{Binding .}"
-                                       CommandParameter="{Binding .}"
-                                       Invoked="OnExportVaultInvoked" />
-                            <SwipeItem Text="Password"
-                                       BackgroundColor="{StaticResource WarningColor}"
-                                       BindingContext="{Binding .}"
-                                       CommandParameter="{Binding .}"
-                                       Invoked="OnChangeMasterPasswordInvoked" />
-                            <SwipeItem Text="Delete"
-                                       BackgroundColor="{StaticResource DangerColor}"
-                                       BindingContext="{Binding .}"
-                                       CommandParameter="{Binding .}"
-                                       Invoked="OnDeleteVaultInvoked" />
-                        </SwipeItems>
-                    </SwipeView.RightItems>
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="model:VaultInfo">
+                    <SwipeView Margin="16,5">
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem Text="Export"
+                                           BackgroundColor="{StaticResource AccentColor}"
+                                           BindingContext="{Binding .}"
+                                           CommandParameter="{Binding .}"
+                                           Invoked="OnExportVaultInvoked" />
+                                <SwipeItem Text="Password"
+                                           BackgroundColor="{StaticResource WarningColor}"
+                                           BindingContext="{Binding .}"
+                                           CommandParameter="{Binding .}"
+                                           Invoked="OnChangeMasterPasswordInvoked" />
+                                <SwipeItem Text="Delete"
+                                           BackgroundColor="{StaticResource DangerColor}"
+                                           BindingContext="{Binding .}"
+                                           CommandParameter="{Binding .}"
+                                           Invoked="OnDeleteVaultInvoked" />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
 
-                    <Border Style="{StaticResource Card}">
-                        <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
-                            <Border Grid.Column="0"
-                                    HeightRequest="44" WidthRequest="44"
-                                    Padding="0"
-                                    BackgroundColor="{AppThemeBinding Light={StaticResource AccentSurfaceColor}, Dark={StaticResource DarkAccentSurfaceColor}}"
-                                    StrokeThickness="0"
-                                    StrokeShape="RoundRectangle 12">
-                                <Label Text="V" FontAttributes="Bold"
-                                       FontSize="18"
-                                       TextColor="{StaticResource AccentColor}"
-                                       HorizontalOptions="Center"
-                                       VerticalOptions="Center" />
-                            </Border>
-                            <VerticalStackLayout Grid.Column="1" Spacing="2"
-                                                 VerticalOptions="Center">
-                                <Label Text="{Binding Name}"
-                                       Style="{StaticResource CardTitle}"
-                                       MaxLines="1"
-                                       LineBreakMode="TailTruncation" />
-                                <Label Text="{Binding CreatedAt, StringFormat='Created {0:MMM d, yyyy}'}"
-                                       Style="{StaticResource BodyText}" />
-                            </VerticalStackLayout>
-                            <VerticalStackLayout Grid.Column="2"
-                                                 Spacing="0"
-                                                 VerticalOptions="Center">
-                                <Border IsVisible="{Binding IsOpen}"
-                                        Padding="8,3"
+                        <Border Style="{StaticResource Card}">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                <Border Grid.Column="0"
+                                        HeightRequest="44" WidthRequest="44"
+                                        Padding="0"
                                         BackgroundColor="{AppThemeBinding Light={StaticResource AccentSurfaceColor}, Dark={StaticResource DarkAccentSurfaceColor}}"
                                         StrokeThickness="0"
-                                        StrokeShape="RoundRectangle 10">
-                                    <Label Text="Open"
-                                           FontSize="11"
-                                           FontAttributes="Bold"
-                                           TextColor="{StaticResource AccentColor}" />
+                                        StrokeShape="RoundRectangle 12">
+                                    <Label Text="V" FontAttributes="Bold"
+                                           FontSize="18"
+                                           TextColor="{StaticResource AccentColor}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
                                 </Border>
-                                <Label Text="›"
-                                       FontSize="28"
-                                       HorizontalTextAlignment="Center"
-                                       TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />
-                            </VerticalStackLayout>
-                        </Grid>
-                    </Border>
-                </SwipeView>
-            </DataTemplate>
-        </CollectionView.ItemTemplate>
+                                <VerticalStackLayout Grid.Column="1" Spacing="2"
+                                                     VerticalOptions="Center">
+                                    <Label Text="{Binding Name}"
+                                           Style="{StaticResource CardTitle}"
+                                           MaxLines="1"
+                                           LineBreakMode="TailTruncation" />
+                                    <Label Text="{Binding CreatedAt, StringFormat='Created {0:MMM d, yyyy}'}"
+                                           Style="{StaticResource BodyText}" />
+                                </VerticalStackLayout>
+                                <VerticalStackLayout Grid.Column="2"
+                                                     Spacing="0"
+                                                     VerticalOptions="Center">
+                                    <Border IsVisible="{Binding IsOpen}"
+                                            Padding="8,3"
+                                            BackgroundColor="{AppThemeBinding Light={StaticResource AccentSurfaceColor}, Dark={StaticResource DarkAccentSurfaceColor}}"
+                                            StrokeThickness="0"
+                                            StrokeShape="RoundRectangle 10">
+                                        <Label Text="Open"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="{StaticResource AccentColor}" />
+                                    </Border>
+                                    <Label Text="›"
+                                           FontSize="28"
+                                           HorizontalTextAlignment="Center"
+                                           TextColor="{AppThemeBinding Light={StaticResource SecondaryTextColor}, Dark={StaticResource DarkSecondaryTextColor}}" />
+                                </VerticalStackLayout>
+                            </Grid>
+                        </Border>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
 
-        <CollectionView.Footer>
-            <VerticalStackLayout Padding="16,12,16,28"
-                                 MaximumWidthRequest="720"
-                                 HorizontalOptions="Fill">
-                <Border Style="{StaticResource Card}">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="Create new vault" Style="{StaticResource CardTitle}" />
-                        <Label Text="Use at least 12 characters with upper and lower case, a number, and a symbol."
-                               Style="{StaticResource BodyText}" />
-                        <Entry Placeholder="Vault name"
-                               Text="{Binding NewVaultName}"
-                               ReturnType="Next"
-                               Style="{StaticResource EntryStyle}" />
-                        <Entry Placeholder="Master password"
-                               Text="{Binding NewMasterPassword}"
-                               IsPassword="True"
-                               ReturnType="Next"
-                               Style="{StaticResource EntryStyle}" />
-                        <Entry Placeholder="Confirm password"
-                               Text="{Binding ConfirmMasterPassword}"
-                               IsPassword="True"
-                               ReturnType="Done"
-                               Style="{StaticResource EntryStyle}" />
-                        <Button Text="Create Vault"
-                                Style="{StaticResource PrimaryButton}"
-                                Command="{Binding CreateVaultCommand}"
-                                IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
-                        <ActivityIndicator IsRunning="{Binding IsBusy}"
-                                           IsVisible="{Binding IsBusy}"
-                                           Color="{StaticResource AccentColor}" />
-                    </VerticalStackLayout>
-                </Border>
-            </VerticalStackLayout>
-        </CollectionView.Footer>
-    </CollectionView>
+            <CollectionView.Footer>
+                <VerticalStackLayout Padding="16,12,16,28"
+                                     MaximumWidthRequest="720"
+                                     HorizontalOptions="Fill">
+                    <Border Style="{StaticResource Card}">
+                        <VerticalStackLayout Spacing="10">
+                            <Label Text="Create new vault" Style="{StaticResource CardTitle}" />
+                            <Label Text="Use at least 12 characters with upper and lower case, a number, and a symbol."
+                                   Style="{StaticResource BodyText}" />
+                            <Entry Placeholder="Vault name"
+                                   Text="{Binding NewVaultName}"
+                                   ReturnType="Next"
+                                   Style="{StaticResource EntryStyle}" />
+                            <Entry Placeholder="Master password"
+                                   Text="{Binding NewMasterPassword}"
+                                   IsPassword="True"
+                                   ReturnType="Next"
+                                   Style="{StaticResource EntryStyle}" />
+                            <Entry Placeholder="Confirm password"
+                                   Text="{Binding ConfirmMasterPassword}"
+                                   IsPassword="True"
+                                   ReturnType="Done"
+                                   Style="{StaticResource EntryStyle}" />
+                            <Button Text="Create Vault"
+                                    Style="{StaticResource PrimaryButton}"
+                                    Command="{Binding CreateVaultCommand}"
+                                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}" />
+                            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                                               IsVisible="{Binding IsBusy}"
+                                               Color="{StaticResource AccentColor}" />
+                        </VerticalStackLayout>
+                    </Border>
+                </VerticalStackLayout>
+            </CollectionView.Footer>
+        </CollectionView>
+    </Grid>
 </ContentPage>

@@ -12,11 +12,9 @@ public partial class VaultListViewModel : BaseViewModel
     private readonly VaultSession _vaultSession;
     private readonly PasswordPromptService _passwordPromptService;
     private readonly List<VaultInfo> _allVaults = [];
+    private string _searchText = string.Empty;
 
     public ObservableCollection<VaultInfo> Vaults { get; } = [];
-
-    [ObservableProperty]
-    private string _searchText = string.Empty;
 
     [ObservableProperty]
     private string _newVaultName = string.Empty;
@@ -332,23 +330,40 @@ public partial class VaultListViewModel : BaseViewModel
         }
     }
 
-    partial void OnSearchTextChanged(string value)
+    public void SetVaultFilter(string? searchText)
     {
+        _searchText = searchText ?? string.Empty;
         ApplyVaultFilter();
     }
 
     private void ApplyVaultFilter()
     {
-        var query = SearchText.Trim();
+        var query = _searchText.Trim();
         var matches = string.IsNullOrEmpty(query)
             ? _allVaults
             : _allVaults
                 .Where(vault => vault.Name.Contains(query, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
-        Vaults.Clear();
-        foreach (var vault in matches)
-            Vaults.Add(vault);
+        // Avoid resetting the native collection while the user is typing.
+        for (var index = Vaults.Count - 1; index >= 0; index--)
+        {
+            if (!matches.Contains(Vaults[index]))
+                Vaults.RemoveAt(index);
+        }
+
+        for (var index = 0; index < matches.Count; index++)
+        {
+            var vault = matches[index];
+            var currentIndex = Vaults.IndexOf(vault);
+            if (currentIndex == index)
+                continue;
+
+            if (currentIndex >= 0)
+                Vaults.Move(currentIndex, index);
+            else
+                Vaults.Insert(index, vault);
+        }
     }
 
     private static async Task<bool> EnsureVaultAsync(VaultInfo? vault)
