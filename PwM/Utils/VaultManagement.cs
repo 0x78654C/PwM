@@ -21,7 +21,14 @@ namespace PwM.Utils
         {
             try
             {
-                string pathToVault = Path.Combine(vaultDirectory, $"{vaultName}.x");
+                if (!VaultFilePath.IsValidName(vaultName))
+                {
+                    Notification.ShowNotificationInfo("orange", "Vault name contains unsupported characters.");
+                    PwMLib.GlobalVariables.vaultChecks = true;
+                    return;
+                }
+
+                string pathToVault = VaultFilePath.GetPath(vaultDirectory, vaultName);
                 if (File.Exists(pathToVault))
                 {
                     Notification.ShowNotificationInfo("orange", $"Vault {vaultName} already exist!");
@@ -107,7 +114,7 @@ namespace PwM.Utils
             {
                 if (vaultDirectory.StartsWith("Local"))
                 {
-                    string pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                    string pathToVault = VaultFilePath.GetPath(PwMLib.GlobalVariables.passwordManagerDirectory, vaultName);
                     if (!File.Exists(pathToVault))
                     {
                         Notification.ShowNotificationInfo("orange", $"Vault {vaultName} does not exist!");
@@ -164,7 +171,14 @@ namespace PwM.Utils
                     FileInfo fileInfo;
                     foreach (var item in items)
                     {
-                        string vaultPathFile = Path.Combine(item.SharedPath, item.VaultName);
+                        string sharedVaultName = Path.GetFileNameWithoutExtension(item.VaultName);
+                        if (!VaultFilePath.IsValidName(sharedVaultName)
+                            || !string.Equals(item.VaultName, sharedVaultName + ".x", StringComparison.OrdinalIgnoreCase))
+                        {
+                            throw new InvalidDataException("Shared vault metadata contains an invalid vault name.");
+                        }
+
+                        string vaultPathFile = VaultFilePath.GetPath(item.SharedPath, sharedVaultName);
                         fileInfo = new FileInfo(vaultPathFile);
                         listView.Items.Add(new { Name = item.VaultName.Substring(0, item.VaultName.Length - 2), CreateDate = fileInfo.CreationTime, SharePoint = item.SharedPath, Storage = "Shared vault" });
                     }
@@ -239,11 +253,11 @@ namespace PwM.Utils
             string vaultPath = GetVaultPathFromList(vaultList);
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = VaultFilePath.GetPath(PwMLib.GlobalVariables.passwordManagerDirectory, vaultName);
             }
             else
             {
-                pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                pathToVault = VaultFilePath.GetPath(vaultPath, vaultName);
             }
             if (!File.Exists(pathToVault))
             {

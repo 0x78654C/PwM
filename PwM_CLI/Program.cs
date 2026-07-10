@@ -121,12 +121,15 @@ Password breach check is powered by https://haveibeenpwned.com/
                 Console.WriteLine("Vault Name: ");
                 vaultName = Console.ReadLine();
                 vaultName = vaultName.ToLower();
-                var vaultFiles = Directory.GetFiles(s_vaultsDir);
                 if (vaultName.Length < 3)
                 {
                     ColorConsoleTextLine(ConsoleColor.Yellow, "Vault name must be at least 3 characters long!");
                 }
-                else if (string.Join("\n", vaultFiles).Contains($"{vaultName}.x"))
+                else if (!VaultFilePath.IsValidName(vaultName))
+                {
+                    ColorConsoleTextLine(ConsoleColor.Yellow, "Vault name contains unsupported characters!");
+                }
+                else if (CheckVaultExist(vaultName))
                 {
                     ColorConsoleTextLine(ConsoleColor.Yellow, $"Vault {vaultName} already exist!");
                 }
@@ -167,7 +170,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             s_tries = 0;
             if (!passValidation) return;
             var sealVault = AES.Encrypt(string.Empty, masterPassword1);
-            File.WriteAllText(s_vaultsDir + $"//{vaultName}.x", sealVault);
+            File.WriteAllText(VaultFilePath.GetPath(s_vaultsDir, vaultName), sealVault);
             WordColorInLine("\n[+] Vault ", vaultName, " was created!\n", ConsoleColor.Cyan);
         }
 
@@ -179,8 +182,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             Console.WriteLine("Enter vault name: ");
             var vaultName = Console.ReadLine();
             vaultName = vaultName.ToLower();
-            var vaultFiles = Directory.GetFiles(s_vaultsDir);
-            while (!string.Join("\n", vaultFiles).Contains($"{vaultName}.x"))
+            while (!CheckVaultExist(vaultName))
             {
                 if (CheckMaxTries())
                     return;
@@ -190,7 +192,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(s_vaultsDir + $"//{vaultName}.x");
+            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vaultName));
             WordColorInLine("Enter master password for ", vaultName, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
@@ -205,9 +207,9 @@ Password breach check is powered by https://haveibeenpwned.com/
                 return;
             }
 
-            if (string.Join("\n", vaultFiles).Contains(vaultName))
+            if (CheckVaultExist(vaultName))
             {
-                File.Delete(s_vaultsDir + $"//{vaultName}.x");
+                File.Delete(VaultFilePath.GetPath(s_vaultsDir, vaultName));
                 WordColorInLine("\n[-] Vault ", vaultName, " was deleted!\n", ConsoleColor.Cyan);
             }
             else
@@ -241,9 +243,9 @@ Password breach check is powered by https://haveibeenpwned.com/
         /// </summary>
         /// <param name="vaultName"></param>
         /// <returns></returns>
-        private static bool CheckVaultExist(string vaultName) => Directory.GetFiles(s_vaultsDir)
-            .Select(file => new FileInfo(file))
-            .Any(fileInfo => fileInfo.Name.Contains(vaultName));
+        private static bool CheckVaultExist(string vaultName) =>
+            VaultFilePath.IsValidName(vaultName)
+            && File.Exists(VaultFilePath.GetPath(s_vaultsDir, vaultName));
 
 
         /// <summary>
@@ -264,7 +266,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(s_vaultsDir + $"//{vault}.x");
+            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
@@ -314,9 +316,9 @@ Password breach check is powered by https://haveibeenpwned.com/
                 { "password", password },
             };
             var encryptData = AES.Encrypt($"{decryptVault}\n{JsonSerializer.Serialize(keyValues)}", masterPassword);
-            if (File.Exists(s_vaultsDir + $"//{vault}.x"))
+            if (File.Exists(VaultFilePath.GetPath(s_vaultsDir, vault)))
             {
-                File.WriteAllText(s_vaultsDir + $"//{vault}.x", encryptData);
+                File.WriteAllText(VaultFilePath.GetPath(s_vaultsDir, vault), encryptData);
                 WordColorInLine("\n[+] Data for ", application, " is encrypted and added to vault!\n", ConsoleColor.Magenta);
                 return;
             }
@@ -415,7 +417,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(s_vaultsDir + $"//{vault}.x");
+            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
@@ -443,7 +445,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(s_vaultsDir + $"//{vault}.x");
+            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
@@ -507,7 +509,7 @@ Password breach check is powered by https://haveibeenpwned.com/
 
             var encryptdata = AES.Encrypt(string.Join("\n", listApps), masterPassword);
             listApps.Clear();
-            if (!File.Exists(s_vaultsDir + $"//{vault}.x"))
+            if (!File.Exists(VaultFilePath.GetPath(s_vaultsDir, vault)))
             {
                 ColorConsoleTextLine(ConsoleColor.Yellow, $"Vault {vault} does not exist!");
                 return;
@@ -515,7 +517,7 @@ Password breach check is powered by https://haveibeenpwned.com/
 
             if (accountCheck)
             {
-                File.WriteAllText(s_vaultsDir + $"//{vault}.x", encryptdata);
+                File.WriteAllText(VaultFilePath.GetPath(s_vaultsDir, vault), encryptdata);
                 Console.Write("\n[-]Account ");
                 ColorConsoleText(ConsoleColor.Green, accountName);
                 Console.Write(" for ");
@@ -548,7 +550,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(s_vaultsDir + $"//{vault}.x");
+            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
@@ -625,11 +627,11 @@ Password breach check is powered by https://haveibeenpwned.com/
 
             var encryptData = AES.Encrypt(string.Join("\n", listApps), masterPassword);
             listApps.Clear();
-            if (File.Exists(s_vaultsDir + $"//{vault}.x"))
+            if (File.Exists(VaultFilePath.GetPath(s_vaultsDir, vault)))
             {
                 if (accountCheck)
                 {
-                    File.WriteAllText(s_vaultsDir + $"//{vault}.x", encryptData);
+                    File.WriteAllText(VaultFilePath.GetPath(s_vaultsDir, vault), encryptData);
                     WordColorInLine("\n[*]Password for ", accountName, " was updated!\n", ConsoleColor.Green);
                     return;
                 }

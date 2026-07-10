@@ -1,69 +1,62 @@
-﻿using System;
-using System.Linq;
+using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 
 namespace PwMLib
 {
     public static class PasswordGenerator
     {
-        // Cryptograhic password generator class.
-        // Credits to: mkbmain
-        private const string Alphabet = "abcdefghijklmnopqrstuvwxyz";
+        private const string Lowercase = "abcdefghijklmnopqrstuvwxyz";
+        private const string Uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         private const string Numbers = "0123456789";
-        private const string Symbols = "`~!@#$%^&*()-_=+[]{}\\|;:'\\,<.>/?";
+        private const string Symbols = "`~!@#$%^&*()-_=+[]{}\\|;:',<.>/?";
 
-        public static string GeneratePassword(int length = 16, bool useUpper = true, bool useLower = true,
-            bool useSymbols = true, bool useNumbers = true)
+        public static string GeneratePassword(
+            int length = 16,
+            bool useUpper = true,
+            bool useLower = true,
+            bool useSymbols = true,
+            bool useNumbers = true)
         {
             if (length < 1)
-            {
-                throw new ArgumentException($"Can not make a string of {length} length");
-            }
+                throw new ArgumentException($"Can not make a string of {length} length", nameof(length));
 
-            if (!new[] { useLower, useUpper, useSymbols, useNumbers }.Any(e => e))
-            {
-                throw new ArgumentException($"Can not make a string of {length} length while not using any chars");
-            }
+            var characterSets = new List<string>(4);
+            if (useLower) characterSets.Add(Lowercase);
+            if (useUpper) characterSets.Add(Uppercase);
+            if (useNumbers) characterSets.Add(Numbers);
+            if (useSymbols) characterSets.Add(Symbols);
 
-            var collection = useLower ? Alphabet.ToLower() : "";
-            collection += useNumbers ? Numbers : "";
-            collection += useUpper ? Alphabet.ToUpper() : "";
-            collection += useSymbols ? Symbols : "";
+            if (characterSets.Count == 0)
+                throw new ArgumentException("At least one character type must be enabled.");
+            if (length < characterSets.Count)
+                throw new ArgumentException("Password length is too short for all enabled character types.", nameof(length));
 
-            return GeneratePassword(CryptoShuffle(collection.ToCharArray()), 0, length, useUpper, useLower, useSymbols, useNumbers);
-        }
-
-        private static char[] CryptoShuffle(char[] chars)
-        {
-            for (int i = chars.Length - 1; i > 0; i--)
-            {
-                int j = (int)(RandomNumberGenerator.GetInt32(i + 1));
-                (chars[i], chars[j]) = (chars[j], chars[i]);
-            }
-            return chars;
-        }
-
-        private static string GeneratePassword(char[] chars, int attempt, int length = 16, bool useUpper = true, bool useLower = true,
-             bool useSymbols = true, bool useNumbers = true)
-        {
-
-            var bytes = new byte[length * 8];
-            RandomNumberGenerator.Fill(bytes);
+            string allCharacters = string.Concat(characterSets);
             var result = new char[length];
-            for (int i = 0; i < length; i++)
+            int index = 0;
+
+            // Guarantee at least one character from every requested category.
+            foreach (string characterSet in characterSets)
+                result[index++] = RandomCharacter(characterSet);
+
+            while (index < result.Length)
+                result[index++] = RandomCharacter(allCharacters);
+
+            CryptoShuffle(result);
+            return new string(result);
+        }
+
+        private static char RandomCharacter(string characters) =>
+            characters[RandomNumberGenerator.GetInt32(characters.Length)];
+
+        private static void CryptoShuffle(char[] characters)
+        {
+            for (int i = characters.Length - 1; i > 0; i--)
             {
-                ulong value = BitConverter.ToUInt64(bytes, i * 8);
-                result[i] = chars[value % (uint)chars.Length];
+                int j = RandomNumberGenerator.GetInt32(i + 1);
+                (characters[i], characters[j]) = (characters[j], characters[i]);
             }
-            var password = string.Join("", result);
-            if (length > 7 && attempt < 5 && (useLower && !password.Any(e => Alphabet.ToLower().Contains(e))) ||
-                (useSymbols && !password.Any(e => Symbols.Contains(e))) ||
-                    (useNumbers && !password.Any(e => Numbers.Contains(e))) ||
-                (useUpper && !password.Any(e => Alphabet.ToUpper().Contains(e))))
-            {
-                return GeneratePassword(chars, attempt + 1, length, useUpper, useUpper, useSymbols, useNumbers);
-            }
-            return password;
         }
     }
 }

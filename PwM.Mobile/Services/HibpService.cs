@@ -15,6 +15,11 @@ public class HibpService
         new(StringComparer.OrdinalIgnoreCase);
     private readonly SemaphoreSlim _requestLimit = new(4);
 
+    public HibpService()
+    {
+        _httpClient.DefaultRequestHeaders.Add("Add-Padding", "true");
+    }
+
     public async Task<bool> IsBreachedAsync(
         string password,
         CancellationToken cancellationToken = default)

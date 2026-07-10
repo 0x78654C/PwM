@@ -57,11 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Gu.Wpf.Adorners" Version="2.1.1" />
-    <PackageReference Include="Konscious.Security.Cryptography.Blake2" Version="1.1.0" />
     <PackageReference Include="MaterialDesignColors" Version="3.0.0" />
     <PackageReference Include="MaterialDesignThemes" Version="5.0.0" />
-    <PackageReference Include="Mkb.ClipBoardManager" Version="1.1.0" />
-    <PackageReference Include="System.Management" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Utils\RegistryManage.cs" />

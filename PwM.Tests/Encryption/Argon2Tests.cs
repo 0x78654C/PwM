@@ -16,5 +16,16 @@ namespace PwM.Tests.Encryption
 
             Assert.Equal(expectedHex, hex);
         }
+
+        [Fact]
+        public void Different_salts_produce_different_keys()
+        {
+            const string password = "CorrectHorse1!Battery";
+
+            var first = PwMLib.Argon2.Argon2HashPassword(password, Encoding.UTF8.GetBytes("salt-one-value"));
+            var second = PwMLib.Argon2.Argon2HashPassword(password, Encoding.UTF8.GetBytes("salt-two-value"));
+
+            Assert.NotEqual(first, second);
+        }
     }
 }

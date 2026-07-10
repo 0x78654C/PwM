@@ -35,12 +35,12 @@ namespace PwM.Utils
                 string pathToVault = string.Empty;
                 if (vaultPath.StartsWith("Local"))
                 {
-                    pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                    pathToVault = VaultFilePath.GetPath(PwMLib.GlobalVariables.passwordManagerDirectory, vaultName);
                 }
                 else
                 {
                     PwMLib.GlobalVariables.sharedVault = true;
-                    pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                    pathToVault = VaultFilePath.GetPath(vaultPath, vaultName);
                 }
 
                 if (!File.Exists(pathToVault))
@@ -102,11 +102,11 @@ namespace PwM.Utils
             string pathToVault;
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = VaultFilePath.GetPath(PwMLib.GlobalVariables.passwordManagerDirectory, vaultName);
             }
             else
             {
-                pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                pathToVault = VaultFilePath.GetPath(vaultPath, vaultName);
                 if (LockedVault.IsVaultLocked(pathToVault)) return;
             }
             if (!File.Exists(pathToVault))
@@ -189,11 +189,11 @@ namespace PwM.Utils
             string pathToVault;
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = VaultFilePath.GetPath(PwMLib.GlobalVariables.passwordManagerDirectory, vaultName);
             }
             else
             {
-                pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                pathToVault = VaultFilePath.GetPath(vaultPath, vaultName);
                 if (LockedVault.IsVaultLocked(pathToVault)) return;
             }
             if (masterPassword == null)
@@ -293,11 +293,11 @@ namespace PwM.Utils
             string pathToVault;
             if (vaultPath.StartsWith("Local"))
             {
-                pathToVault = Path.Combine(PwMLib.GlobalVariables.passwordManagerDirectory, $"{vaultName}.x");
+                pathToVault = VaultFilePath.GetPath(PwMLib.GlobalVariables.passwordManagerDirectory, vaultName);
             }
             else
             {
-                pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+                pathToVault = VaultFilePath.GetPath(vaultPath, vaultName);
                 if (LockedVault.IsVaultLocked(pathToVault)) return;
             }
             if (!File.Exists(pathToVault))
@@ -543,7 +543,7 @@ namespace PwM.Utils
         /// <param name="vaultName"></param>
         public static void DeleteSelectedItem(ListView listView, string vaultName, string vaultPath, ListView vaultList)
         {
-            var pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            var pathToVault = VaultFilePath.GetPath(vaultPath, vaultName);
             if (LockedVault.IsVaultLocked(pathToVault)) return;
             string application = GetApplicationFromListView(listView);
             if (application.Length > 0)
@@ -617,7 +617,7 @@ namespace PwM.Utils
         /// <param name="vaultName"></param>
         public static void UpdateSelectedItemPassword(ListView listView, string vaultName, string vaultPath)
         {
-            var pathToVault = Path.Combine(vaultPath, $"{vaultName}.x");
+            var pathToVault = VaultFilePath.GetPath(vaultPath, vaultName);
             if (LockedVault.IsVaultLocked(pathToVault)) return;
             string application = GetApplicationFromListView(listView);
             string account = GetAccountFromListView(listView);

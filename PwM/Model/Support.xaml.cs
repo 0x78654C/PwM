@@ -67,7 +67,7 @@ namespace PwM
         /// <param name="e"></param>
         private void BitCopyLbl_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Mkb.ClipBoardManager.SetText(BitCoinTextBox.Text);
+            System.Windows.Clipboard.SetText(BitCoinTextBox.Text);
             HashCopyResultLbl.Content = "Bitcoin address was copied!";
             StartHashLabelClean();
         }
@@ -79,7 +79,7 @@ namespace PwM
         /// <param name="e"></param>
         private void EthCopyLbl_PreviewMouseDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
-            Mkb.ClipBoardManager.SetText(EthereumTextBox.Text);
+            System.Windows.Clipboard.SetText(EthereumTextBox.Text);
             HashCopyResultLbl.Content = "Ethereum address was copied!";
             StartHashLabelClean();
         }

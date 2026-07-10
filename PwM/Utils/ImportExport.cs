@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Versioning;
 using System.Windows.Forms;
+using PwMLib;
 
 namespace PwM.Utils
 {
@@ -41,7 +42,7 @@ namespace PwM.Utils
                         FileInfo fileInfo = new FileInfo(vaultfile);
                         vault = fileInfo.Name;
                         string vaultPath = fileInfo.DirectoryName;
-                        string vaultPwMLocation = vaultDirPath + vault;
+                        string vaultPwMLocation = VaultFilePath.GetPath(vaultDirPath, Path.GetFileNameWithoutExtension(vault));
                         if (sharedVault)
                         {
                             AddSharedVault(PwMLib.GlobalVariables.jsonSharedVaults, vault, vaultPath);
@@ -101,7 +102,7 @@ namespace PwM.Utils
             {
                 try
                 {
-                    string vaultPath = vaultDirPath + vault + ".x";
+                    string vaultPath = VaultFilePath.GetPath(vaultDirPath, vault);
                     File.Copy(vaultPath, s_saveFileDialog.FileName, true);
                     Notification.ShowNotificationInfo("green", $"Vault {vault} is exported!");
                 }
