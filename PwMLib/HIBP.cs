@@ -12,7 +12,13 @@ namespace PwMLib
         private readonly string API;
         public HIBP(string apiAddress)
         {
-            API = apiAddress;
+            if (!Uri.TryCreate(apiAddress, UriKind.Absolute, out Uri apiUri)
+                || apiUri.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new ArgumentException("HIBP API address must be an absolute HTTPS URI.", nameof(apiAddress));
+            }
+
+            API = apiUri.AbsoluteUri;
         }
 
         /// <summary>
@@ -34,9 +40,12 @@ namespace PwMLib
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
-                    var lineSplit = line.Split(':');
-                    if (string.Equals(lineSplit[0], suffixHash, StringComparison.OrdinalIgnoreCase))
-                        countBreachs = lineSplit[1];
+                    int separator = line.IndexOf(':');
+                    if (separator <= 0)
+                        continue;
+
+                    if (string.Equals(line[..separator], suffixHash, StringComparison.OrdinalIgnoreCase))
+                        countBreachs = line[(separator + 1)..].Trim();
                 }
             }
             return countBreachs;

@@ -327,7 +327,15 @@ namespace PwM
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
-                this.DragMove();
+            {
+                if (e.ClickCount == 2)
+                {
+                    ToggleMaximizeRestore();
+                    return;
+                }
+
+                DragMove();
+            }
 
         }
         /// <summary>
@@ -349,6 +357,23 @@ namespace PwM
         private void minimizeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
         {
             WindowState = WindowState.Minimized;
+            e.Handled = true;
+        }
+
+        /// <summary>
+        /// Toggle the window between maximized and restored states.
+        /// </summary>
+        private void maximizeLBL_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            ToggleMaximizeRestore();
+            e.Handled = true;
+        }
+
+        private void ToggleMaximizeRestore()
+        {
+            WindowState = WindowState == WindowState.Maximized
+                ? WindowState.Normal
+                : WindowState.Maximized;
         }
 
         /// <summary>
@@ -961,6 +986,11 @@ namespace PwM
             }
         }
 
+        /// <summary>
+        /// Theme mode selection changed event. Apply the selected theme and refresh sidebar navigation icons.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void themeModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!_themeSettingInitialized ||

@@ -44,7 +44,7 @@ public class VaultService
             return (false, $"'{fileName}' is not a PwM vault file.");
 
         var vaultName = Path.GetFileNameWithoutExtension(fileName);
-        if (string.IsNullOrWhiteSpace(vaultName) || !IsValidVaultName(vaultName))
+        if (!VaultFilePath.IsValidName(vaultName))
             return (false, $"'{fileName}' has an invalid vault name.");
 
         byte[] content;
@@ -88,7 +88,7 @@ public class VaultService
         {
             var exportDirectory = Path.Combine(FileSystem.CacheDirectory, "vault-exports");
             Directory.CreateDirectory(exportDirectory);
-            var exportPath = Path.Combine(exportDirectory, $"{vaultName}.x");
+            var exportPath = VaultFilePath.GetPath(exportDirectory, vaultName);
             await using var sourceStream = File.OpenRead(source);
             await using var destinationStream = File.Create(exportPath);
             await sourceStream.CopyToAsync(destinationStream);
@@ -106,7 +106,7 @@ public class VaultService
 
         if (name.Length < 3)
             return (false, "Vault name must be at least 3 characters.");
-        if (!IsValidVaultName(name))
+        if (!VaultFilePath.IsValidName(name))
             return (false, "Vault name contains unsupported characters.");
 
         if (!PasswordValidator.ValidatePassword(confirmPassword))
@@ -247,11 +247,7 @@ public class VaultService
     }
 
     private static string VaultPath(string name) =>
-        Path.Combine(VaultDir, $"{name}.x");
-
-    private static bool IsValidVaultName(string name) =>
-        name is not "." and not ".." &&
-        name.IndexOfAny(['\\', '/', ':', '*', '?', '"', '<', '>', '|']) < 0;
+        VaultFilePath.GetPath(VaultDir, name);
 
     private static bool LooksLikeVault(byte[] content)
     {
@@ -259,10 +255,15 @@ public class VaultService
         {
             var decoded = Convert.FromBase64String(System.Text.Encoding.UTF8.GetString(content));
             var payload = JsonSerializer.Deserialize<Dictionary<string, string>>(decoded);
-            return payload != null &&
-                   payload.ContainsKey("iv") &&
-                   payload.ContainsKey("value") &&
-                   payload.ContainsKey("mac");
+            if (payload == null || !payload.ContainsKey("value"))
+                return false;
+
+            return payload.TryGetValue("version", out var version)
+                ? version == "2"
+                  && payload.ContainsKey("salt")
+                  && payload.ContainsKey("nonce")
+                  && payload.ContainsKey("tag")
+                : payload.ContainsKey("iv") && payload.ContainsKey("mac");
         }
         catch
         {

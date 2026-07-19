@@ -1,25 +1,33 @@
-﻿using System.Net.Http;
+using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace PwMLib
 {
     public class HttpService
     {
-        private readonly HttpClient _client;
-
-        public HttpService()
+        private const long MaximumResponseSize = 8 * 1024 * 1024;
+        private static readonly HttpClient Client = new()
         {
-            _client = new HttpClient();
-        }
+            Timeout = TimeSpan.FromSeconds(10),
+            MaxResponseContentBufferSize = MaximumResponseSize
+        };
 
         /// <summary>
-        /// GET request on custom API.
+        /// Performs a bounded HTTPS GET request for the HIBP range API.
         /// </summary>
-        /// <param name="uri"></param>
-        /// <returns></returns>
         public async Task<string> GetAsync(string uri)
         {
-            using HttpResponseMessage response = await _client.GetAsync(uri);
+            if (!Uri.TryCreate(uri, UriKind.Absolute, out Uri requestUri)
+                || requestUri.Scheme != Uri.UriSchemeHttps)
+            {
+                throw new ArgumentException("Only absolute HTTPS API addresses are allowed.", nameof(uri));
+            }
+
+            using var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            request.Headers.Add("Add-Padding", "true");
+            using HttpResponseMessage response = await Client.SendAsync(request).ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         }
     }

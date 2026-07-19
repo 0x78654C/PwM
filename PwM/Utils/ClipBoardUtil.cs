@@ -1,16 +1,23 @@
-﻿namespace PwM.Utils
+using System.Runtime.InteropServices;
+using System.Windows;
+
+namespace PwM.Utils
 {
     public class ClipBoardUtil
     {
         /// <summary>
-        /// Check if password is copied on clipboard and clear if true only. 
+        /// Clears the clipboard only when it still contains the copied password.
         /// </summary>
-        /// <param name="accPassword"></param>
         public static void ClearClipboard(string accPassword)
         {
-            if (Mkb.ClipBoardManager.GetText() == accPassword)
+            try
             {
-                Mkb.ClipBoardManager.Clear();
+                if (Clipboard.ContainsText() && Clipboard.GetText() == accPassword)
+                    Clipboard.Clear();
+            }
+            catch (ExternalException)
+            {
+                // Another process can temporarily lock the Windows clipboard.
             }
         }
     }

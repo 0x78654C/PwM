@@ -11,7 +11,9 @@
         Icon="pack://application:,,,/Resources/logo-modern.ico"
         Height="720"
         Width="1120"
-        ResizeMode="CanMinimize"
+        MinHeight="560"
+        MinWidth="850"
+        ResizeMode="CanResizeWithGrip"
         WindowStartupLocation="CenterScreen"
         MouseDown="Window_MouseDown"
         AllowsTransparency="True"
@@ -568,12 +570,25 @@
                     <Border Width="36" Height="36" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,0,8,0">
                         <Label Name="miniMizeLBL"
                                Content="−"
+                               ToolTip="Minimize"
                                PreviewMouseDown="minimizeLBL_PreviewMouseDown"
                                FontSize="20"
                                Foreground="{DynamicResource TextSecondaryBrush}"
                                HorizontalContentAlignment="Center"
                                VerticalContentAlignment="Center"
                                Padding="0,-7,0,0"
+                               Cursor="Hand"/>
+                    </Border>
+                    <Border Width="36" Height="36" Background="{DynamicResource SurfaceAltBrush}" BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8" Margin="0,0,8,0">
+                        <Label Name="maximizeLBL"
+                               Content="□"
+                               ToolTip="Maximize or restore"
+                               PreviewMouseDown="maximizeLBL_PreviewMouseDown"
+                               FontSize="17"
+                               Foreground="{DynamicResource TextSecondaryBrush}"
+                               HorizontalContentAlignment="Center"
+                               VerticalContentAlignment="Center"
+                               Padding="0,-3,0,0"
                                Cursor="Hand"/>
                     </Border>
                     <materialDesign:PopupBox Foreground="{DynamicResource TextSecondaryBrush}"
