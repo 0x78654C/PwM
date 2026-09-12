@@ -12,4 +12,9 @@ namespace PwM.Mobile;
                            ConfigChanges.SmallestScreenSize | ConfigChanges.Density)]
 public class MainActivity : MauiAppCompatActivity
 {
+    protected override void OnCreate(Android.OS.Bundle? savedInstanceState)
+    {
+        base.OnCreate(savedInstanceState);
+        Window?.AddFlags(Android.Views.WindowManagerFlags.Secure);
+    }
 }

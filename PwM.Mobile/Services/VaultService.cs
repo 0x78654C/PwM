@@ -1,5 +1,6 @@
 using System.Text.Json;
 using PwM.Mobile.Models;
+using Microsoft.Maui.Storage;
 using PwMLib;
 
 namespace PwM.Mobile.Services;
@@ -51,9 +52,7 @@ public class VaultService
         try
         {
             await using var source = await file.OpenReadAsync();
-            using var buffer = new MemoryStream();
-            await source.CopyToAsync(buffer);
-            content = buffer.ToArray();
+            content = await VaultFile.ReadBytesAsync(source);
         }
         catch (Exception ex)
         {
@@ -133,15 +132,14 @@ public class VaultService
         string decrypted;
         try
         {
-            decrypted = AES.Decrypt(File.ReadAllText(path), password);
+            decrypted = AES.Decrypt(VaultFile.ReadAllText(path), password);
+            var entries = ParseEntries(decrypted);
+            return (true, string.Empty, entries);
         }
         catch
         {
             return (false, "Wrong master password or vault is corrupted.", []);
         }
-
-        var entries = ParseEntries(decrypted);
-        return (true, string.Empty, entries);
     }
 
     public (bool success, string error) AddCredential(string vaultName, string password,
@@ -166,7 +164,7 @@ public class VaultService
             { "password", entryPassword }
         });
 
-        var currentContent = AES.Decrypt(File.ReadAllText(path), password);
+        var currentContent = AES.Decrypt(VaultFile.ReadAllText(path), password);
         var updated = string.IsNullOrEmpty(currentContent)
             ? newLine
             : currentContent + "\n" + newLine;
@@ -230,7 +228,7 @@ public class VaultService
 
         var path = VaultPath(vaultName);
         string decrypted;
-        try { decrypted = AES.Decrypt(File.ReadAllText(path), oldPassword); }
+        try { decrypted = AES.Decrypt(VaultFile.ReadAllText(path), oldPassword); }
         catch { return (false, "Old master password is incorrect."); }
 
         File.WriteAllText(path, AES.Encrypt(decrypted, newPassword));
@@ -279,18 +277,20 @@ public class VaultService
         while ((line = reader.ReadLine()) != null)
         {
             if (string.IsNullOrWhiteSpace(line)) continue;
-            try
+            var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
+            if (dict is null
+                || !dict.TryGetValue("site/application", out var application) || application is null
+                || !dict.TryGetValue("account", out var account) || account is null
+                || !dict.TryGetValue("password", out var password) || password is null)
+                throw new InvalidDataException("The vault contains an invalid credential.");
+
+            // Refuse the whole vault so a later save cannot silently drop damaged entries.
+            entries.Add(new CredentialEntry
             {
-                var dict = JsonSerializer.Deserialize<Dictionary<string, string>>(line);
-                if (dict != null)
-                    entries.Add(new Models.CredentialEntry
-                    {
-                        Application = dict.GetValueOrDefault("site/application", ""),
-                        Account = dict.GetValueOrDefault("account", ""),
-                        Password = dict.GetValueOrDefault("password", "")
-                    });
-            }
-            catch { /* skip malformed lines */ }
+                Application = application,
+                Account = account,
+                Password = password
+            });
         }
         return entries;
     }

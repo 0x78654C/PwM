@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using PwM.Utils;
 using PwMLib;
-using System.ComponentModel;
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Input;
@@ -14,9 +13,7 @@ namespace PwM
     [SupportedOSPlatform("Windows")]
     public partial class UpdateApplication : Window
     {
-        private BackgroundWorker _worker;
-        private string _breaches = "";
-        Network network = new Network(PwMLib.GlobalVariables.apiHIBPMain);
+        private bool _isCheckingPassword;
         public UpdateApplication()
         {
             InitializeComponent();
@@ -24,6 +21,11 @@ namespace PwM
             ApplicationNameTXT.Text = PwMLib.GlobalVariables.applicationName;
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
+            Closed += (_, _) =>
+            {
+                SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+                SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+            };
         }
         /// <summary>
         /// Check if PC enters sleep or hibernate mode and closes window.
@@ -32,6 +34,11 @@ namespace PwM
         /// <param name="e"></param>
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.BeginInvoke(new System.Action(() => SystemEvents_PowerModeChanged(sender, e)));
+                return;
+            }
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
@@ -48,6 +55,11 @@ namespace PwM
         /// <param name="e"></param>
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.BeginInvoke(new System.Action(() => SystemEvents_SessionSwitch(sender, e)));
+                return;
+            }
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
                 PwMLib.GlobalVariables.closeAppConfirmation = true;
@@ -119,56 +131,38 @@ namespace PwM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void updateAccPassBTN_Click(object sender, RoutedEventArgs e)
+        private async void updateAccPassBTN_Click(object sender, RoutedEventArgs e)
         {
-            UpdatePassNotification updatePassNotification = new UpdatePassNotification();
-            updatePassNotification.ShowDialog();
-            if (PwMLib.GlobalVariables.updatePwdConfirmation)
+            if (_isCheckingPassword) return;
+            _isCheckingPassword = true;
+            try
             {
-                PwMLib.GlobalVariables.newAccountPassword = newPassAccBox.Password;
-                this.Close();
+                updateAccPassBTN.IsEnabled = false;
+                var password = newPassAccBox.Password;
+                if (!await PasswordBreachCheck.ConfirmAsync(this, password) || newPassAccBox.Password != password)
+                {
+                    updateAccPassBTN.IsEnabled = newPassAccBox.Password.Length > 0;
+                    return;
+                }
+                UpdatePassNotification updatePassNotification = new UpdatePassNotification();
+                updatePassNotification.ShowDialog();
+                if (IsVisible && PwMLib.GlobalVariables.updatePwdConfirmation)
+                {
+                    PwMLib.GlobalVariables.newAccountPassword = newPassAccBox.Password;
+                    this.Close();
+                }
+            }
+            finally
+            {
+                _isCheckingPassword = false;
+                updateAccPassBTN.IsEnabled = newPassAccBox.Password.Length > 0;
             }
         }
 
         private void newPassAccBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
-            updateAccPassBTN.IsEnabled = (newPassAccBox.Password.Length > 0) ? true : false;
-            if (network.PingHost())
-            {
-                _worker = new BackgroundWorker();
-                _worker.DoWork += BreackCheck_BW;
-                _worker.RunWorkerCompleted += BreackCheck_RunWorkerCompleted;
-                _worker.RunWorkerAsync();
-            }
-        }
-
-        /// <summary>
-        /// Set visibility if password breaches are found.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BreackCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (_breaches == "0")
-                breachLbl.Visibility = Visibility.Hidden;
-            else
-                breachLbl.Visibility = Visibility.Visible;
-        }
-
-        /// <summary>
-        /// Get password breaches.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BreackCheck_BW(object sender, DoWorkEventArgs e)
-        {
-            var hibp = new HIBP(PwMLib.GlobalVariables.apiHIBP);
-            if (!string.IsNullOrEmpty(newPassAccBox.Password))
-            {
-                _breaches = hibp.CheckIfPwnd(newPassAccBox.Password).Result;
-            }
-            else
-                _breaches = "0";
+            updateAccPassBTN.IsEnabled = newPassAccBox.Password.Length > 0;
+            breachLbl.Visibility = Visibility.Hidden;
         }
 
         /// <summary>

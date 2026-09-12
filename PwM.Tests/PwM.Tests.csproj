@@ -9,6 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Maui.Essentials" Version="10.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.6.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
@@ -22,6 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <!-- Exercise platform-independent mobile security code without MAUI workloads. -->
+    <Compile Include="..\PwM.Mobile\Services\VaultSession.cs" Link="Mobile\VaultSession.cs" />
+    <Compile Include="..\PwM.Mobile\Services\VaultService.cs" Link="Mobile\VaultService.cs" />
+    <Compile Include="..\PwM.Mobile\Models\VaultInfo.cs" Link="Mobile\VaultInfo.cs" />
+    <Compile Include="..\PwM.Mobile\Services\HibpService.cs" Link="Mobile\HibpService.cs" />
+    <Compile Include="..\PwM.Mobile\Models\CredentialEntry.cs" Link="Mobile\CredentialEntry.cs" />
     <ProjectReference Include="..\PwMLib\PwMLib.csproj" />
     <ProjectReference Include="..\PwM\PwM.csproj" />
   </ItemGroup>

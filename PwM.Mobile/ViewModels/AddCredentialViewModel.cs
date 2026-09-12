@@ -35,7 +35,7 @@ public partial class AddCredentialViewModel : BaseViewModel
     partial void OnPasswordChanged(string value)
     {
         BreachWarning = string.Empty;
-        ScheduleBreachCheck(value);
+        CancelScheduledBreachCheck();
     }
 
     [RelayCommand]
@@ -53,13 +53,21 @@ public partial class AddCredentialViewModel : BaseViewModel
     [RelayCommand]
     public async Task CheckBreachAsync()
     {
-        if (string.IsNullOrEmpty(Password)) return;
+        if (string.IsNullOrEmpty(Password) || !_vaultSession.IsUnlocked) return;
 
         CancelScheduledBreachCheck();
+        _breachCheckCancellation = new CancellationTokenSource();
+        var cancellationToken = _breachCheckCancellation.Token;
+        var password = Password;
         IsBusy = true;
-        bool breached = await _hibpService.IsBreachedAsync(Password);
-        IsBusy = false;
-        SetBreachWarning(breached);
+        try
+        {
+            var breached = await _hibpService.IsBreachedAsync(password, cancellationToken);
+            if (!cancellationToken.IsCancellationRequested && Password == password && _vaultSession.IsUnlocked)
+                SetBreachWarning(breached);
+        }
+        catch (OperationCanceledException) { }
+        finally { IsBusy = false; }
     }
 
     [RelayCommand]
@@ -80,6 +88,7 @@ public partial class AddCredentialViewModel : BaseViewModel
 
         IsBusy = true;
         var vaultName = _vaultSession.VaultName;
+        var sessionVersion = _vaultSession.Version;
         var masterPassword = _vaultSession.MasterPassword;
         var application = Application.Trim();
         var account = Account.Trim();
@@ -91,6 +100,7 @@ public partial class AddCredentialViewModel : BaseViewModel
             account,
             entryPassword));
         IsBusy = false;
+        if (!_vaultSession.IsCurrent(sessionVersion)) return;
 
         if (!ok)
         {
@@ -107,28 +117,27 @@ public partial class AddCredentialViewModel : BaseViewModel
         await Shell.Current.GoToAsync("..");
     }
 
-    private void ScheduleBreachCheck(string password)
+    public void Activate()
     {
-        CancelScheduledBreachCheck();
-        if (string.IsNullOrEmpty(password))
-            return;
-
-        _breachCheckCancellation = new CancellationTokenSource();
-        _ = CheckBreachAfterDelayAsync(password, _breachCheckCancellation.Token);
+        _vaultSession.Locked -= OnSessionLocked;
+        _vaultSession.Locked += OnSessionLocked;
     }
 
-    private async Task CheckBreachAfterDelayAsync(string password, CancellationToken cancellationToken)
+    public void Deactivate()
     {
-        try
-        {
-            await Task.Delay(TimeSpan.FromMilliseconds(600), cancellationToken);
-            var breached = await _hibpService.IsBreachedAsync(password, cancellationToken);
-            if (Password == password)
-                SetBreachWarning(breached);
-        }
-        catch (OperationCanceledException)
-        {
-        }
+        _vaultSession.Locked -= OnSessionLocked;
+        ClearFields();
+    }
+
+    private void OnSessionLocked(object? sender, EventArgs e) => ClearFields();
+
+    private void ClearFields()
+    {
+        CancelScheduledBreachCheck();
+        Password = string.Empty;
+        Account = string.Empty;
+        Application = string.Empty;
+        IsPasswordVisible = false;
     }
 
     private void CancelScheduledBreachCheck()
@@ -138,10 +147,13 @@ public partial class AddCredentialViewModel : BaseViewModel
         _breachCheckCancellation = null;
     }
 
-    private void SetBreachWarning(bool breached)
+    private void SetBreachWarning(bool? breached)
     {
-        BreachWarning = breached
-            ? "⚠️ This password was found in a data breach!"
-            : "✅ Not found in known breaches.";
+        BreachWarning = breached switch
+        {
+            true => "⚠️ This password was found in a data breach!",
+            false => "✅ Not found in known breaches.",
+            null => "Breach check unavailable. Try again when connected."
+        };
     }
 }

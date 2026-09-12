@@ -16,6 +16,20 @@ public partial class PasswordPromptPage : ContentPage
         PasswordEntry.Placeholder = placeholder;
     }
 
+    public PasswordPromptPage(string password) : this("Password", "Stored password:", string.Empty)
+    {
+        PasswordEntry.IsPassword = false;
+        PasswordEntry.IsReadOnly = true;
+        PasswordEntry.Text = password;
+    }
+
+    public Task CancelAsync()
+    {
+        PasswordEntry.Text = string.Empty;
+        _result.TrySetResult(null);
+        return CompleteAsync(null);
+    }
+
     protected override void OnAppearing()
     {
         base.OnAppearing();
@@ -63,7 +77,8 @@ public partial class PasswordPromptPage : ContentPage
 
         try
         {
-            await Navigation.PopModalAsync();
+            if (Navigation.ModalStack.LastOrDefault() == this)
+                await Navigation.PopModalAsync();
         }
         finally
         {

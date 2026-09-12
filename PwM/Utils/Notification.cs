@@ -16,7 +16,14 @@ namespace PwM.Utils
             PwMLib.GlobalVariables.gridColor = gridColor;
             PwMLib.GlobalVariables.messageData = messageData;
             PopMessage popMessage = new PopMessage();
-            popMessage.ShowDialog();
+            try
+            {
+                popMessage.ShowDialog();
+            }
+            finally
+            {
+                PwMLib.GlobalVariables.messageData = string.Empty;
+            }
         }
     }
 }

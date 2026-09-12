@@ -12,5 +12,8 @@ public partial class CredentialEntry : ObservableObject
     private bool _hasBreach;
 
     [ObservableProperty]
+    private bool _isBreachCheckUnavailable;
+
+    [ObservableProperty]
     private bool _isBreachCheckPending = true;
 }
