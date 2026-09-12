@@ -1,5 +1,5 @@
 ﻿using PwMLib;
-
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using static PwM.Utils.UI;
@@ -15,6 +15,7 @@ namespace PwM
         private static string s_vaultsDir;
         private static Network network = new Network(GlobalVariables.apiHIBPMain);
         private static readonly string s_helpMessage = $@"PwM Copyright @ 2020-2022 0x078654c
+Version: 1.2.3
 PwM - A simple password manager to store localy the authentification data encrypted for a application using Rijndael AES-256 and Argon2 for password hash.
 Contact: xcoding.dev@gmail.com
 
