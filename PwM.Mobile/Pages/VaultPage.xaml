@@ -92,6 +92,10 @@
                                            FontAttributes="Bold"
                                            TextColor="{StaticResource DangerColor}"
                                            IsVisible="{Binding HasBreach}" />
+                                    <Label Text="Breach check unavailable"
+                                           FontSize="11"
+                                           TextColor="{StaticResource WarningColor}"
+                                           IsVisible="{Binding IsBreachCheckUnavailable}" />
                                 </VerticalStackLayout>
                                 <Button Grid.Column="1"
                                         Text="Copy"

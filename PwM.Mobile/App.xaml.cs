@@ -24,9 +24,7 @@ public partial class App : Application
 
     private void OnWindowStopped(object? sender, EventArgs e)
     {
-        if (!_vaultSession.IsUnlocked)
-            return;
-
+        // Invalidate pending unlocks even when decryption has not completed yet.
         _vaultSession.Lock();
         _lockedForBackground = true;
     }

@@ -1,5 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace PwMLib
@@ -26,29 +29,40 @@ namespace PwMLib
         /// </summary>
         /// <param name="password"></param>
         /// <returns></returns>
-        public async Task<string> CheckIfPwnd(string password)
+        public async Task<string> CheckIfPwnd(string password, CancellationToken cancellationToken = default)
         {
             var sha1 = Sha1Converter.Hash(password);
             var prefixHash = sha1[..5];
             var suffixHash = sha1[5..];
             var httpService = new HttpService();
             var apiReq = $"{API}{prefixHash}";
-            var httpData = await httpService.GetAsync(apiReq);
-            var countBreachs = "0";
-            using (StringReader sr = new StringReader(httpData))
+            var httpData = await httpService.GetAsync(apiReq, cancellationToken);
+            return GetBreachCount(httpData, suffixHash).ToString(CultureInfo.InvariantCulture);
+        }
+
+        public static long GetBreachCount(string response, string suffixHash)
+        {
+            long count = 0;
+            bool hasEntries = false;
+            using (StringReader sr = new StringReader(response))
             {
                 string line;
                 while ((line = sr.ReadLine()) != null)
                 {
                     int separator = line.IndexOf(':');
-                    if (separator <= 0)
-                        continue;
+                    if (separator != 35 || !line[..separator].All(Uri.IsHexDigit)
+                        || !long.TryParse(line[(separator + 1)..], NumberStyles.None,
+                            CultureInfo.InvariantCulture, out long occurrences))
+                        throw new InvalidDataException("The breach service returned an invalid response.");
 
+                    hasEntries = true;
                     if (string.Equals(line[..separator], suffixHash, StringComparison.OrdinalIgnoreCase))
-                        countBreachs = line[(separator + 1)..].Trim();
+                        count = Math.Max(count, occurrences);
                 }
             }
-            return countBreachs;
+            if (!hasEntries)
+                throw new InvalidDataException("The breach service returned an empty response.");
+            return count;
         }
     }
 }

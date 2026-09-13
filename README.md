@@ -42,7 +42,7 @@
 
 ### 🛡️ Security
 - **Argon2id** key derivation with fully configurable parameters (see Settings)
-- **AES-256 (Rijndael)** vault encryption
+- **AES-256-GCM authenticated** vault encryption
 - Master password **re-prompt every 30 minutes** on any write action inside an open vault
 - **Auto-lock** open vault after configurable inactivity period (default 10 min)
 - Lock vault automatically on Windows lock screen or system suspend
@@ -67,7 +67,7 @@ Settings persist across sessions. The Windows desktop app stores them under `HKC
 
 ¹ The Windows desktop app supports Light and Dark. The mobile app also supports following the system theme.
 
-> ⚠️ Changing Argon2 parameters affects **all vaults**. Re-create your vaults after applying new values.
+> Current vaults store their Argon2 parameters in authenticated metadata. Changing settings affects future saves; existing version 2 vaults remain readable. Legacy vaults are upgraded when saved with this version.
 
 ---
 
@@ -97,7 +97,7 @@ First open a vault by double-clicking it. The sidebar switches to **Applications
 | **Copy to clipboard** | Right-click account → *Copy password for 15 seconds* |
 | **Lock vault** | Click **Lock vault** (top-right of the Applications tab) |
 
-> ⚠️ A breach warning is shown automatically when adding a credential whose password appears in a known data breach (powered by HaveIBeenPwned).
+> ⚠️ Desktop checks the completed password when you save a credential. Mobile provides **Check for Breaches** and checks stored credentials when opening a vault. Passwords are never queried while you type. Checks use HaveIBeenPwned; unavailable checks are not reported as clean.
 
 > Linked shared/network vaults are available only in the Windows desktop app. Mobile and CLI support local vaults.
 
@@ -110,7 +110,7 @@ The mobile version is built with **.NET MAUI** for Android and iOS and uses the 
 - Create, open, delete, import, and export/share local vaults
 - Add, search, update, show, copy, and delete credentials
 - Change vault master passwords
-- Automatic password breach checks
+- Password breach checks for stored credentials and an explicit check for new passwords
 - Auto-lock after inactivity and whenever the app is backgrounded
 - System, light, and dark themes
 - Swipe vaults and credentials to reveal additional actions
@@ -145,10 +145,12 @@ At least 12 characters — must include uppercase, lowercase, digit, special cha
 
 ## Encryption
 
+See [security review](SECURITY_REVIEW.md) for fixes, validation, and remaining compatibility limits.
+
 | Layer | Details |
 |---|---|
 | Key derivation | [Argon2id](https://en.wikipedia.org/wiki/Argon2) — iterations, memory size and parallelism configurable in Settings |
-| Vault encryption | Rijndael AES-256 |
+| Vault encryption | AES-256-GCM with a random salt and nonce |
 | Storage | `%LOCALAPPDATA%\PwM\` on Windows; platform app-data storage on Android and iOS |
 
 ---

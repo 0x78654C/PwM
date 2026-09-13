@@ -1,5 +1,5 @@
 ﻿using PwMLib;
-
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.Json;
 using static PwM.Utils.UI;
@@ -15,6 +15,7 @@ namespace PwM
         private static string s_vaultsDir;
         private static Network network = new Network(GlobalVariables.apiHIBPMain);
         private static readonly string s_helpMessage = $@"PwM Copyright @ 2020-2022 0x078654c
+Version: 1.2.3
 PwM - A simple password manager to store localy the authentification data encrypted for a application using Rijndael AES-256 and Argon2 for password hash.
 Contact: xcoding.dev@gmail.com
 
@@ -192,7 +193,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vaultName));
+            var encryptedData = VaultFile.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vaultName));
             WordColorInLine("Enter master password for ", vaultName, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
@@ -266,7 +267,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
+            var encryptedData = VaultFile.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
@@ -417,7 +418,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
+            var encryptedData = VaultFile.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
@@ -445,7 +446,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
+            var encryptedData = VaultFile.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();
@@ -550,7 +551,7 @@ Password breach check is powered by https://haveibeenpwned.com/
             }
 
             s_tries = 0;
-            var encryptedData = File.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
+            var encryptedData = VaultFile.ReadAllText(VaultFilePath.GetPath(s_vaultsDir, vault));
             WordColorInLine("Enter master password for ", vault, " vault:", ConsoleColor.Cyan);
             var masterPassword = PasswordValidator.GetHiddenConsoleInput().ConvertSecureStringToString();
             Console.WriteLine();

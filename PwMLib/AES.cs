@@ -13,7 +13,7 @@ namespace PwMLib
         private const int SaltSize = 16;
         private const int NonceSize = 12;
         private const int TagSize = 16;
-        private const int MaximumEncodedVaultLength = 128 * 1024 * 1024;
+        private const int MaximumEncodedVaultLength = VaultFile.MaximumEncodedLength;
         private static readonly UTF8Encoding Encoding = new(false, true);
 
         /// <summary>

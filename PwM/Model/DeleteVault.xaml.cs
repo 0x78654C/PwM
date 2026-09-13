@@ -17,6 +17,11 @@ namespace PwM
             notificationLBL.Text = $"Do you want tot delete/remove {vault} vault?";
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
+            Closed += (_, _) =>
+            {
+                SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+                SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+            };
         }
 
         /// <summary>
@@ -26,6 +31,11 @@ namespace PwM
         /// <param name="e"></param>
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.BeginInvoke(new System.Action(() => SystemEvents_PowerModeChanged(sender, e)));
+                return;
+            }
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
@@ -42,6 +52,11 @@ namespace PwM
         /// <param name="e"></param>
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.BeginInvoke(new System.Action(() => SystemEvents_SessionSwitch(sender, e)));
+                return;
+            }
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
                 PwMLib.GlobalVariables.deleteConfirmation = false;

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Win32;
 using PwMLib;
-using System.ComponentModel;
 using System.Runtime.Versioning;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,14 +13,17 @@ namespace PwM
     /// </summary>
     public partial class AddApplications : Window
     {
-        private BackgroundWorker _worker;
-        private string _breaches = "";
-        Network network = new Network(PwMLib.GlobalVariables.apiHIBPMain);
+        private bool _isCheckingPassword;
         public AddApplications()
         {
             InitializeComponent();
             SystemEvents.PowerModeChanged += SystemEvents_PowerModeChanged; // Exit vault on suspend.
             SystemEvents.SessionSwitch += new SessionSwitchEventHandler(SystemEvents_SessionSwitch); // Exit vault on lock screen.
+            Closed += (_, _) =>
+            {
+                SystemEvents.PowerModeChanged -= SystemEvents_PowerModeChanged;
+                SystemEvents.SessionSwitch -= SystemEvents_SessionSwitch;
+            };
         }
 
         /// <summary>
@@ -31,6 +33,11 @@ namespace PwM
         /// <param name="e"></param>
         private void SystemEvents_PowerModeChanged(object sender, PowerModeChangedEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.BeginInvoke(new System.Action(() => SystemEvents_PowerModeChanged(sender, e)));
+                return;
+            }
             switch (e.Mode)
             {
                 case PowerModes.Suspend:
@@ -48,6 +55,11 @@ namespace PwM
         /// <param name="e"></param>
         private void SystemEvents_SessionSwitch(object sender, SessionSwitchEventArgs e)
         {
+            if (!Dispatcher.CheckAccess())
+            {
+                Dispatcher.BeginInvoke(new System.Action(() => SystemEvents_SessionSwitch(sender, e)));
+                return;
+            }
             if (e.Reason == SessionSwitchReason.SessionLock)
             {
                 PwMLib.GlobalVariables.closeAppConfirmation = true;
@@ -60,14 +72,31 @@ namespace PwM
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void addAppBTN_Click(object sender, RoutedEventArgs e)
+        private async void addAppBTN_Click(object sender, RoutedEventArgs e)
         {
-            PwMLib.GlobalVariables.applicationName = appNameTXT.Text;
-            PwMLib.GlobalVariables.accountName = accountNameTXT.Text;
-            PwMLib.GlobalVariables.accountPassword = accPasswordBox.Password;
-            PwMLib.GlobalVariables.closeAppConfirmation = false;
-            Utils.TextPassBoxChanges.ClearTextPassBox(appNameTXT, accountNameTXT, accPasswordBox);
-            this.Close();
+            if (_isCheckingPassword) return;
+            _isCheckingPassword = true;
+            try
+            {
+                addAppBTN.IsEnabled = false;
+                var password = accPasswordBox.Password;
+                if (!await Utils.PasswordBreachCheck.ConfirmAsync(this, password) || accPasswordBox.Password != password)
+                {
+                    addAppBTN.IsEnabled = accPasswordBox.Password.Length > 0;
+                    return;
+                }
+                PwMLib.GlobalVariables.applicationName = appNameTXT.Text;
+                PwMLib.GlobalVariables.accountName = accountNameTXT.Text;
+                PwMLib.GlobalVariables.accountPassword = accPasswordBox.Password;
+                PwMLib.GlobalVariables.closeAppConfirmation = false;
+                Utils.TextPassBoxChanges.ClearTextPassBox(appNameTXT, accountNameTXT, accPasswordBox);
+                this.Close();
+            }
+            finally
+            {
+                _isCheckingPassword = false;
+                addAppBTN.IsEnabled = accPasswordBox.Password.Length > 0;
+            }
         }
 
         /// <summary>
@@ -143,42 +172,7 @@ namespace PwM
         private void accPasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
         {
             Utils.TextPassBoxChanges.TextPassBoxChanged(appNameTXT, accountNameTXT, accPasswordBox, addAppBTN);
-            if (network.PingHost())
-            {
-                _worker = new BackgroundWorker();
-                _worker.DoWork += BreackCheck_BW;
-                _worker.RunWorkerCompleted += BreackCheck_RunWorkerCompleted;
-                _worker.RunWorkerAsync();
-            }
-        }
-
-        /// <summary>
-        /// Set visibility if password breaches are found.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BreackCheck_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            if (_breaches == "0")
-                breachLbl.Visibility = Visibility.Hidden;
-            else
-                breachLbl.Visibility = Visibility.Visible;
-        }
-
-        /// <summary>
-        /// Get password breaches.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void BreackCheck_BW(object sender, DoWorkEventArgs e)
-        {
-            var hibp = new HIBP(PwMLib.GlobalVariables.apiHIBP);
-            if (!string.IsNullOrEmpty(accPasswordBox.Password))
-            {
-                _breaches = hibp.CheckIfPwnd(accPasswordBox.Password).Result;
-            }
-            else
-                _breaches = "0";
+            breachLbl.Visibility = Visibility.Hidden;
         }
 
         /// <summary>

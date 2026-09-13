@@ -18,6 +18,7 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     private readonly List<CredentialEntry> _allCredentials = [];
     private System.Timers.Timer? _autoLockTimer;
     private int _credentialLoadVersion;
+    private CancellationTokenSource? _breachChecks;
 
     public ObservableCollection<CredentialEntry> Credentials { get; } = [];
 
@@ -48,13 +49,20 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
 
     public async Task LoadCredentialsAsync()
     {
+        _vaultSession.Locked -= OnSessionLocked;
+        _vaultSession.Locked += OnSessionLocked;
         var loadVersion = ++_credentialLoadVersion;
+        var sessionVersion = _vaultSession.Version;
+        _breachChecks?.Cancel();
+        _breachChecks?.Dispose();
+        _breachChecks = new CancellationTokenSource();
         Credentials.Clear();
+        foreach (var entry in _allCredentials)
+            entry.Password = string.Empty;
         _allCredentials.Clear();
         if (!_vaultSession.IsUnlocked)
         {
-            IsLocked = true;
-            StopAutoLockTimer();
+            OnSessionLocked(this, EventArgs.Empty);
             return;
         }
 
@@ -74,26 +82,30 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
             entries = openResult.entries;
         }
 
-        if (!ok ||
-            !_vaultSession.IsUnlocked ||
+        if (!ok || loadVersion != _credentialLoadVersion ||
+            !_vaultSession.IsCurrent(sessionVersion) ||
             !string.Equals(VaultName, vaultName, StringComparison.Ordinal))
         {
+            foreach (var entry in entries ?? [])
+                entry.Password = string.Empty;
             IsBusy = false;
             return;
         }
 
         _allCredentials.AddRange(entries.OrderBy(e => e.Application));
+        IsLocked = false;
         ApplyCredentialFilter();
 
         IsBusy = false;
-        IsLocked = false;
         StartAutoLockTimer();
-        _ = CheckBreachesAsync(entries, vaultName, loadVersion);
+        _ = CheckBreachesAsync(entries, vaultName, loadVersion, _breachChecks.Token);
     }
 
     [RelayCommand]
     public async Task DeleteCredentialAsync(CredentialEntry? entry)
     {
+        if (!CanAccess(entry)) return;
+        var sessionVersion = _vaultSession.Version;
         if (entry is null)
         {
             await ShowMissingCredentialErrorAsync();
@@ -105,12 +117,15 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
             "Delete Credential",
             $"Remove '{entry.Account}' from '{entry.Application}'?",
             "Delete", "Cancel");
-        if (!confirmed) return;
+        if (!confirmed || !_vaultSession.IsCurrent(sessionVersion)) return;
 
         IsBusy = true;
+        var vaultName = VaultName;
+        var masterPassword = _vaultSession.MasterPassword;
         var (ok, err) = await Task.Run(() => _vaultService.DeleteCredential(
-            VaultName, _vaultSession.MasterPassword, entry.Application, entry.Account));
+            vaultName, masterPassword, entry.Application, entry.Account));
         IsBusy = false;
+        if (!_vaultSession.IsCurrent(sessionVersion)) return;
         if (!ok)
             await Shell.Current.DisplayAlertAsync("Error", err, "OK");
         else
@@ -120,6 +135,8 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     [RelayCommand]
     public async Task UpdatePasswordAsync(CredentialEntry? entry)
     {
+        if (!CanAccess(entry)) return;
+        var sessionVersion = _vaultSession.Version;
         if (entry is null)
         {
             await ShowMissingCredentialErrorAsync();
@@ -132,12 +149,15 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
             $"New password for '{entry.Account}' @ '{entry.Application}':",
             "New password");
 
-        if (string.IsNullOrEmpty(newPwd)) return;
+        if (string.IsNullOrEmpty(newPwd) || !_vaultSession.IsCurrent(sessionVersion)) return;
 
         IsBusy = true;
+        var vaultName = VaultName;
+        var masterPassword = _vaultSession.MasterPassword;
         var (ok, err) = await Task.Run(() => _vaultService.UpdatePassword(
-            VaultName, _vaultSession.MasterPassword, entry.Application, entry.Account, newPwd));
+            vaultName, masterPassword, entry.Application, entry.Account, newPwd));
         IsBusy = false;
+        if (!_vaultSession.IsCurrent(sessionVersion)) return;
         if (!ok)
             await Shell.Current.DisplayAlertAsync("Error", err, "OK");
         else
@@ -150,6 +170,7 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     [RelayCommand]
     public async Task CopyPasswordAsync(CredentialEntry? entry)
     {
+        if (!CanAccess(entry)) return;
         if (entry is null)
         {
             await ShowMissingCredentialErrorAsync();
@@ -174,6 +195,7 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     [RelayCommand]
     public async Task ShowPasswordAsync(CredentialEntry? entry)
     {
+        if (!CanAccess(entry)) return;
         if (entry is null)
         {
             await ShowMissingCredentialErrorAsync();
@@ -183,7 +205,7 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
         ResetAutoLockTimer();
         try
         {
-            await Shell.Current.DisplayAlertAsync("Password", entry.Password, "OK");
+            await _passwordPromptService.ShowPasswordAsync(entry.Password);
         }
         catch (Exception ex)
         {
@@ -194,6 +216,7 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     [RelayCommand]
     public async Task AddCredentialAsync()
     {
+        if (IsLocked || !_vaultSession.IsUnlocked) return;
         ResetAutoLockTimer();
         await Shell.Current.GoToAsync(nameof(Pages.AddCredentialPage));
     }
@@ -201,19 +224,24 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     [RelayCommand]
     public async Task ChangeMasterPasswordAsync()
     {
+        if (IsLocked || !_vaultSession.IsUnlocked) return;
+        var sessionVersion = _vaultSession.Version;
+        var vaultName = VaultName;
+        var masterPassword = _vaultSession.MasterPassword;
         ResetAutoLockTimer();
         string? newPwd = await _passwordPromptService.ShowAsync(
             "Change Master Password",
             "Enter new master password:",
             "New master password");
 
-        if (string.IsNullOrEmpty(newPwd)) return;
+        if (string.IsNullOrEmpty(newPwd) || !_vaultSession.IsCurrent(sessionVersion)) return;
 
         string? confirmPwd = await _passwordPromptService.ShowAsync(
             "Confirm",
             "Confirm new master password:",
             "Confirm new master password");
 
+        if (!_vaultSession.IsCurrent(sessionVersion)) return;
         if (newPwd != confirmPwd)
         {
             await Shell.Current.DisplayAlertAsync("Error", "Passwords do not match.", "OK");
@@ -222,13 +250,14 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
 
         IsBusy = true;
         var (ok, err) = await Task.Run(
-            () => _vaultService.ChangeMasterPassword(VaultName, _vaultSession.MasterPassword, newPwd));
+            () => _vaultService.ChangeMasterPassword(vaultName, masterPassword, newPwd));
         IsBusy = false;
+        if (!_vaultSession.IsCurrent(sessionVersion)) return;
         if (!ok)
             await Shell.Current.DisplayAlertAsync("Error", err, "OK");
         else
         {
-            _vaultSession.Unlock(VaultName, newPwd);
+            _vaultSession.TryUpdateMasterPassword(sessionVersion, newPwd);
             await Shell.Current.DisplayAlertAsync("Success", "Master password changed.", "OK");
         }
     }
@@ -236,11 +265,27 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     [RelayCommand]
     public async Task LockVaultAsync()
     {
-        StopAutoLockTimer();
         _vaultSession.Lock();
-        IsLocked = true;
-        Credentials.Clear();
         await Shell.Current.GoToAsync("//VaultListPage");
+    }
+
+    private bool CanAccess(CredentialEntry? entry) =>
+        !IsLocked && _vaultSession.IsUnlocked && entry is not null && _allCredentials.Contains(entry);
+
+    private void OnSessionLocked(object? sender, EventArgs e)
+    {
+        _breachChecks?.Cancel();
+        _breachChecks?.Dispose();
+        _breachChecks = null;
+        StopAutoLockTimer();
+        ++_credentialLoadVersion;
+        IsLocked = true;
+        foreach (var entry in _allCredentials)
+            entry.Password = string.Empty;
+        _allCredentials.Clear();
+        Credentials.Clear();
+        SearchText = string.Empty;
+        _vaultSession.Locked -= OnSessionLocked;
     }
 
     private void StartAutoLockTimer()
@@ -266,10 +311,9 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     {
         MainThread.BeginInvokeOnMainThread(async () =>
         {
-            if (IsLocked || !_vaultSession.IsUnlocked)
+            if (!ReferenceEquals(sender, _autoLockTimer) || IsLocked || !_vaultSession.IsUnlocked)
                 return;
 
-            await Shell.Current.DisplayAlertAsync("Auto-locked", "Vault was locked due to inactivity.", "OK");
             await LockVaultAsync();
         });
     }
@@ -292,6 +336,11 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
 
     private void ApplyCredentialFilter()
     {
+        if (IsLocked || !_vaultSession.IsUnlocked)
+        {
+            Credentials.Clear();
+            return;
+        }
         var query = SearchText.Trim();
         var matches = string.IsNullOrEmpty(query)
             ? _allCredentials
@@ -309,11 +358,17 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
     private async Task CheckBreachesAsync(
         IEnumerable<CredentialEntry> entries,
         string vaultName,
-        int loadVersion)
+        int loadVersion,
+        CancellationToken cancellationToken)
     {
         await Task.WhenAll(entries.Select(async entry =>
         {
-            var hasBreach = await _hibpService.IsBreachedAsync(entry.Password);
+            bool? hasBreach;
+            try
+            {
+                hasBreach = await _hibpService.IsBreachedAsync(entry.Password, cancellationToken);
+            }
+            catch (OperationCanceledException) { return; }
             if (loadVersion != _credentialLoadVersion ||
                 !_vaultSession.IsUnlocked ||
                 !string.Equals(VaultName, vaultName, StringComparison.Ordinal))
@@ -323,7 +378,10 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
 
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                entry.HasBreach = hasBreach;
+                if (loadVersion != _credentialLoadVersion || !_vaultSession.IsUnlocked)
+                    return;
+                entry.HasBreach = hasBreach == true;
+                entry.IsBreachCheckUnavailable = hasBreach is null;
                 entry.IsBreachCheckPending = false;
             });
         }));
@@ -334,6 +392,6 @@ public partial class VaultViewModel : BaseViewModel, IDisposable
 
     public void Dispose()
     {
-        StopAutoLockTimer();
+        OnSessionLocked(this, EventArgs.Empty);
     }
 }

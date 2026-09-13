@@ -53,13 +53,13 @@ namespace PwM.Utils
                     Notification.ShowNotificationInfo("red", "Master password must be entered!");
                     return false;
                 }
-                string readVault = File.ReadAllText(pathToVault);
                 string decryptVault;
                 try
                 {
+                    string readVault = VaultFile.ReadAllText(pathToVault);
                     decryptVault = AES.Decrypt(readVault, PasswordValidator.ConvertSecureStringToString(masterPassword));
                 }
-                catch (CryptographicException)
+                catch (Exception exception) when (exception is CryptographicException or IOException or InvalidDataException)
                 {
                     Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                     PwMLib.GlobalVariables.masterPasswordCheck = false;
@@ -129,13 +129,13 @@ namespace PwM.Utils
                     return;
                 }
             }
-            string readVault = File.ReadAllText(pathToVault);
             string decryptVault;
             try
             {
+                string readVault = VaultFile.ReadAllText(pathToVault);
                 decryptVault = AES.Decrypt(readVault, PasswordValidator.ConvertSecureStringToString(masterPassword));
             }
-            catch (CryptographicException)
+            catch (Exception exception) when (exception is CryptographicException or IOException or InvalidDataException)
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 PwMLib.GlobalVariables.masterPasswordCheck = false;
@@ -206,13 +206,13 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
                 return;
             }
-            string readVault = File.ReadAllText(pathToVault);
             string decryptVault;
             try
             {
+                string readVault = VaultFile.ReadAllText(pathToVault);
                 decryptVault = AES.Decrypt(readVault, PasswordValidator.ConvertSecureStringToString(masterPassword));
             }
-            catch (CryptographicException)
+            catch (Exception exception) when (exception is CryptographicException or IOException or InvalidDataException)
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 PwMLib.GlobalVariables.masterPasswordCheck = false;
@@ -310,13 +310,13 @@ namespace PwM.Utils
                 ClearVariables.VariablesClear();
                 return;
             }
-            string readVault = File.ReadAllText(pathToVault);
             string decryptVault;
             try
             {
+                string readVault = VaultFile.ReadAllText(pathToVault);
                 decryptVault = AES.Decrypt(readVault, PasswordValidator.ConvertSecureStringToString(masterPassword));
             }
-            catch (CryptographicException)
+            catch (Exception exception) when (exception is CryptographicException or IOException or InvalidDataException)
             {
                 MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(MainWindow.s_masterPassCheckTimer);
                 PwMLib.GlobalVariables.masterPasswordCheck = false;

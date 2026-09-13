@@ -7,6 +7,9 @@
     <ApplicationIcon>logo_cli.ico</ApplicationIcon>
     <Description>Simple console Password Manger using Argon2 for password hash and AES-256bit for encryption.</Description>
     <BaseOutputPath>..\..\Release\PwM\</BaseOutputPath>
+    <AssemblyVersion>1.2.3</AssemblyVersion>
+    <Version>1.2.3</Version>
+    <FileVersion>1.2.3</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

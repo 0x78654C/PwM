@@ -203,6 +203,17 @@ namespace PwM.Utils
         public static void VaultClose(ListViewItem vaultListView, ListViewItem appListView, ListViewItem settingsListView,
             ListView appList, TabControl tabControl, DispatcherTimer masterPasswordTimer)
         {
+            ClipBoardUtil.ClearClipboard(PwMLib.GlobalVariables.accountPassword);
+            PwMLib.GlobalVariables.accountPassword = string.Empty;
+            PwMLib.GlobalVariables.newAccountPassword = string.Empty;
+            PwMLib.GlobalVariables.masterPasswordCheck = false;
+            PwMLib.GlobalVariables.masterPassword?.Dispose();
+            PwMLib.GlobalVariables.newMasterPassword?.Dispose();
+            PwMLib.GlobalVariables.newMasterPassword = null;
+            AppManagement.vaultSecure?.Dispose();
+            // A revealed password must close when the vault expires, too.
+            foreach (var dialog in System.Windows.Application.Current.Windows.OfType<PopMessage>().ToArray())
+                dialog.Close();
             ListViewSettings.SetListViewColor(vaultListView, false);
             ListViewSettings.SetListViewColor(settingsListView, true);
             appList.Items.Clear();
@@ -214,7 +225,6 @@ namespace PwM.Utils
             PwMLib.GlobalVariables.sharedVault = false;
             AppManagement.vaultSecure = null;
             MasterPasswordTimerStart.MasterPasswordCheck_TimerStop(masterPasswordTimer);
-            GC.Collect();
         }
 
         /// <summary>
@@ -264,13 +274,13 @@ namespace PwM.Utils
                 Notification.ShowNotificationInfo("red", $"Vault {vaultName} does not exist!");
                 return;
             }
-            string readVault = File.ReadAllText(pathToVault);
             string decryptVault;
             try
             {
+                string readVault = VaultFile.ReadAllText(pathToVault);
                 decryptVault = AES.Decrypt(readVault, oldMasterPassword);
             }
-            catch (CryptographicException)
+            catch (Exception exception) when (exception is CryptographicException or IOException or InvalidDataException)
             {
                 Notification.ShowNotificationInfo("red", "Something went wrong. Master password is incorrect or vault issue!");
                 return;

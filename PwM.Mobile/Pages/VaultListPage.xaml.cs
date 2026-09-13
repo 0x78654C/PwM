@@ -17,7 +17,14 @@ public partial class VaultListPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+        _vm.Activate();
         _vm.LoadVaults();
+    }
+
+    protected override void OnDisappearing()
+    {
+        _vm.Deactivate();
+        base.OnDisappearing();
     }
 
     private void OnVaultSearchTextChanged(object? sender, TextChangedEventArgs e)

@@ -60,6 +60,24 @@ public partial class VaultListViewModel : BaseViewModel
         }
     }
 
+    public void Activate()
+    {
+        _vaultSession.Locked -= OnSessionLocked;
+        _vaultSession.Locked += OnSessionLocked;
+    }
+
+    public void Deactivate()
+    {
+        _vaultSession.Locked -= OnSessionLocked;
+        OnSessionLocked(this, EventArgs.Empty);
+    }
+
+    private void OnSessionLocked(object? sender, EventArgs e)
+    {
+        NewMasterPassword = string.Empty;
+        ConfirmMasterPassword = string.Empty;
+    }
+
     [RelayCommand]
     public async Task ExportVaultAsync(VaultInfo? vault)
     {
@@ -99,6 +117,7 @@ public partial class VaultListViewModel : BaseViewModel
             return;
 
         var vaultName = vault.Name;
+        var sessionVersion = _vaultSession.Version;
         var isOpenVault = _vaultSession.IsUnlocked &&
                           string.Equals(vaultName, _vaultSession.VaultName, StringComparison.OrdinalIgnoreCase);
 
@@ -125,11 +144,13 @@ public partial class VaultListViewModel : BaseViewModel
             "New master password");
         if (string.IsNullOrEmpty(newPassword))
             return;
+        if (_vaultSession.Version != sessionVersion) return;
 
         string? confirmation = await _passwordPromptService.ShowAsync(
             "Confirm Master Password",
             "Enter the new master password again:",
             "Confirm new master password");
+        if (_vaultSession.Version != sessionVersion) return;
         if (newPassword != confirmation)
         {
             await Shell.Current.DisplayAlertAsync("Error", "Passwords do not match.", "OK");
@@ -142,7 +163,7 @@ public partial class VaultListViewModel : BaseViewModel
         IsBusy = false;
 
         if (ok && isOpenVault)
-            _vaultSession.Unlock(vaultName, newPassword);
+            _vaultSession.TryUpdateMasterPassword(sessionVersion, newPassword);
 
         await Shell.Current.DisplayAlertAsync(
             ok ? "Success" : "Error",
@@ -297,12 +318,13 @@ public partial class VaultListViewModel : BaseViewModel
             return;
         }
 
+        var sessionVersion = _vaultSession.Version;
         string? password = await _passwordPromptService.ShowAsync(
             "Open Vault",
             $"Enter master password for '{vault.Name}':",
             "Master password");
 
-        if (string.IsNullOrEmpty(password)) return;
+        if (string.IsNullOrEmpty(password) || _vaultSession.Version != sessionVersion) return;
 
         try
         {
@@ -316,7 +338,12 @@ public partial class VaultListViewModel : BaseViewModel
                 return;
             }
 
-            _vaultSession.Unlock(vault.Name, password, entries);
+            if (!_vaultSession.TryUnlock(sessionVersion, vault.Name, password, entries))
+            {
+                foreach (var entry in entries)
+                    entry.Password = string.Empty;
+                return;
+            }
             await Shell.Current.GoToAsync(nameof(Pages.VaultPage));
         }
         catch (Exception ex)
