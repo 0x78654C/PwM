@@ -41,6 +41,7 @@ internal static class Program
             }
             if (args.Length == 1 && args[0] == "--cleanup")
             {
+                CleanupRoot();
                 DeferredCleanup().GetAwaiter().GetResult();
                 CompletedCleanup().GetAwaiter().GetResult();
                 MismatchedRuntimeCleanup().GetAwaiter().GetResult();
@@ -62,6 +63,7 @@ internal static class Program
             Catalog();
             Network().GetAwaiter().GetResult();
             LocalCopy().GetAwaiter().GetResult();
+            CleanupRoot();
             DeferredCleanup().GetAwaiter().GetResult();
             CompletedCleanup().GetAwaiter().GetResult();
             MismatchedRuntimeCleanup().GetAwaiter().GetResult();
@@ -238,6 +240,39 @@ internal static class Program
         Reject(() => UpdateCleanup.RemoveCopy(Path.Combine(Path.GetTempPath(), "PwM-Updates")), "Cleanup refuses the shared updates root");
         UpdateCleanup.RemoveCopy(copy);
         Assert(!Directory.Exists(copy) && File.Exists(Path.Combine(source, "PwM.exe")), "An unlaunched updater copy is cleaned without touching the installation");
+    }
+
+    private static void CleanupRoot()
+    {
+        string originalTmp = Environment.GetEnvironmentVariable("TMP");
+        string originalTemp = Environment.GetEnvironmentVariable("TEMP");
+        string isolatedTemp = Path.Combine(_root, "cleanup-temp");
+        Directory.CreateDirectory(isolatedTemp);
+        try
+        {
+            Environment.SetEnvironmentVariable("TMP", isolatedTemp);
+            Environment.SetEnvironmentVariable("TEMP", isolatedTemp);
+            string root = Path.Combine(Path.GetTempPath(), "PwM-Updates");
+            Assert(Path.GetDirectoryName(root).Equals(isolatedTemp, StringComparison.OrdinalIgnoreCase), "Root cleanup test uses an isolated temp folder");
+            string first = Path.Combine(root, Guid.NewGuid().ToString("N"));
+            string second = Path.Combine(root, Guid.NewGuid().ToString("N"));
+            Directory.CreateDirectory(first);
+            Directory.CreateDirectory(second);
+            File.WriteAllText(Path.Combine(first, "package.zip"), "finished download");
+            File.WriteAllText(Path.Combine(second, "PwM.exe"), "another update session");
+            UpdateCleanup.RemoveCopy(first);
+            Assert(!Directory.Exists(first) && File.Exists(Path.Combine(second, "PwM.exe")), "Cleanup preserves another update session and the shared root");
+            UpdateCleanup.RemoveCopy(second);
+            Assert(!Directory.Exists(root), "The last update session also removes the empty PwM-Updates root");
+            Directory.CreateDirectory(root);
+            UpdateCleanup.RemoveCopy(first);
+            Assert(!Directory.Exists(root), "Cleanup removes an empty root even if the session folder was already deleted");
+        }
+        finally
+        {
+            Environment.SetEnvironmentVariable("TMP", originalTmp);
+            Environment.SetEnvironmentVariable("TEMP", originalTemp);
+        }
     }
 
     private static async Task DeferredCleanup()

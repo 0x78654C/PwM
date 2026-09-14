@@ -35,6 +35,10 @@ internal static class UpdateCleanup
         try { DeleteTree(directory); }
         catch (IOException) { }
         catch (UnauthorizedAccessException) { }
+        // Remove the shared root only when it is empty. Other update sessions keep it in place.
+        try { Directory.Delete(Path.GetDirectoryName(directory), recursive: false); }
+        catch (IOException) { }
+        catch (UnauthorizedAccessException) { }
     }
 
     private static void DeleteTree(string directory)
@@ -107,7 +111,7 @@ internal static class UpdateCleanup
         directory = Path.TrimEndingDirectorySeparator(Path.GetFullPath(directory));
         ValidateDirectory(directory);
         if (ownerId <= 0 || ownerStart <= 0) throw new IOException("Invalid cleanup process identity.");
-        if (!Directory.Exists(directory)) return;
+        if (!Directory.Exists(directory)) { RemoveCopy(directory); return; }
         using var owner = FindProcess(ownerId);
         if (owner != null)
         {
@@ -119,7 +123,7 @@ internal static class UpdateCleanup
                     while (!owner.WaitForExit(500))
                     {
                         // The app's exit observer may already have removed the copy.
-                        if (!Directory.Exists(directory)) return;
+                        if (!Directory.Exists(directory)) { RemoveCopy(directory); return; }
                         // A stuck updater shutdown must not leave a cleanup process running forever.
                         if (waiting.Elapsed >= TimeSpan.FromMinutes(1))
                             throw new IOException("The updater has not exited. Temporary files were left in place.");

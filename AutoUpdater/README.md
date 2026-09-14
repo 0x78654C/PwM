@@ -12,6 +12,8 @@ Staging and successful rollback files are removed from the installation. The bun
 
 The cleanup worker inherits the desktop app's self-contained/runtime settings when publishing. When a legacy ZIP without a cleanup worker leaves an existing framework-dependent worker beside a bundled runtime, the updater launches that worker through its current shared .NET host. This avoids a native .NET startup error dialog keeping the cleanup process alive.
 
+After the last temporary update copy is removed, cleanup also removes the empty `%TEMP%\PwM-Updates` folder. Other update sessions are preserved. Copies left by older failed cleanup attempts are not automatically deleted by a later session.
+
 ## Build a release
 
 On Windows with the .NET 10 SDK:
