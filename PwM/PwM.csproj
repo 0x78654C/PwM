@@ -56,7 +56,8 @@
   <ItemGroup>
     <ProjectReference Include="..\PwMLib\PwMLib.csproj" />
     <ProjectReference Include="..\AutoUpdater\AutoUpdater.csproj" />
-    <ProjectReference Include="..\UpdateCleanup\UpdateCleanup.csproj" />
+    <ProjectReference Include="..\UpdateCleanup\UpdateCleanup.csproj"
+                      AdditionalProperties="PwMCleanupSelfContained=$(SelfContained);PwMCleanupRuntimeIdentifier=$(RuntimeIdentifier)" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Gu.Wpf.Adorners" Version="2.1.1" />

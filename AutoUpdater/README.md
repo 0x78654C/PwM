@@ -8,7 +8,9 @@ After confirmation, PwM copies its runtime to `%TEMP%\PwM-Updates\<unique-id>` a
 
 Files replaced by the package are backed up and restored on caught installation errors. Vaults and registry/AppData settings are preserved. Packages containing `.x` vaults, `PwM.Json` or `lockedUser` are rejected before replacement. The install directory must be writable and other processes using its files must be closed. Cancelling before installation preserves the existing files. A failed rollback retains its `.pwm-update-<unique-id>\backup` directory and reports that path; a power loss during replacement may require manual recovery.
 
-Staging and successful rollback files are removed from the installation. The bundled `PwM.UpdateCleanup.exe` waits for the updater to exit, then deletes its private temporary runtime and downloads, retrying locked files for up to one minute. The running app also cleans an updater copy after abnormal exit. The cleanup worker and its dependencies belong inside the application ZIP.
+Staging and successful rollback files are removed from the installation. The bundled `PwM.UpdateCleanup.exe` waits up to one minute for the updater to exit, then deletes its private temporary runtime and downloads, retrying locked files for up to one minute. It exits immediately after cleanup, or if the folder has already been removed. If the updater remains running past the wait limit, the worker exits and leaves its files in place. The running app also cleans an updater copy after abnormal exit. The cleanup worker and its dependencies belong inside the application ZIP.
+
+The cleanup worker inherits the desktop app's self-contained/runtime settings when publishing. When a legacy ZIP without a cleanup worker leaves an existing framework-dependent worker beside a bundled runtime, the updater launches that worker through its current shared .NET host. This avoids a native .NET startup error dialog keeping the cleanup process alive.
 
 ## Build a release
 

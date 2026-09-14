@@ -39,10 +39,32 @@ internal static class Program
                 Console.WriteLine($"PASS: {_checks} release ZIP checks. Artifacts: {_root}");
                 return 0;
             }
+            if (args.Length == 1 && args[0] == "--cleanup")
+            {
+                DeferredCleanup().GetAwaiter().GetResult();
+                CompletedCleanup().GetAwaiter().GetResult();
+                MismatchedRuntimeCleanup().GetAwaiter().GetResult();
+                Console.WriteLine($"PASS: {_checks} cleanup checks. Artifacts: {_root}");
+                return 0;
+            }
+            if (args.Length == 2 && args[0] == "--cleanup-package")
+            {
+                MismatchedRuntimeCleanup(args[1]).GetAwaiter().GetResult();
+                Console.WriteLine($"PASS: {_checks} legacy release cleanup checks. Artifacts: {_root}");
+                return 0;
+            }
+            if (args.Length == 2 && args[0] == "--cleanup-application")
+            {
+                CompletedCleanup(args[1]).GetAwaiter().GetResult();
+                Console.WriteLine($"PASS: {_checks} installed cleanup checks. Artifacts: {_root}");
+                return 0;
+            }
             Catalog();
             Network().GetAwaiter().GetResult();
             LocalCopy().GetAwaiter().GetResult();
             DeferredCleanup().GetAwaiter().GetResult();
+            CompletedCleanup().GetAwaiter().GetResult();
+            MismatchedRuntimeCleanup().GetAwaiter().GetResult();
             Packages();
             RenderWindow();
             Handoff(cancel: true);
@@ -233,11 +255,11 @@ internal static class Program
         start.ArgumentList.Add("--wait-parent");
         start.ArgumentList.Add(session);
         using var owner = Process.Start(start);
+        using var cleanup = UpdateCleanup.ScheduleAfterExit(copy, owner, AppContext.BaseDirectory);
         try
         {
             using (var locked = new FileStream(executable, FileMode.Open, FileAccess.Read, FileShare.None))
             {
-                UpdateCleanup.ScheduleAfterExit(copy, owner, AppContext.BaseDirectory);
                 await Task.Delay(1500);
                 Assert(!owner.HasExited && File.Exists(zip), "Deferred cleanup preserves every file while the updater is running");
                 exit.Set();
@@ -247,11 +269,100 @@ internal static class Program
             }
             Assert(SpinWait.SpinUntil(() => !Directory.Exists(copy), TimeSpan.FromSeconds(15)),
                 "Cleanup retries after exit and removes runtime files, read-only ZIPs and partial downloads");
+            Assert(cleanup.WaitForExit(5000) && cleanup.ExitCode == 0, "Cleanup process exits successfully after deleting the temporary folder");
         }
         finally
         {
             exit.Set();
             owner.WaitForExit(5000);
+            UpdateCleanup.RemoveCopy(copy);
+        }
+    }
+
+    private static async Task CompletedCleanup(string workerDirectory = null)
+    {
+        workerDirectory ??= AppContext.BaseDirectory;
+        using var owner = Process.GetCurrentProcess();
+        string executable = await LocalUpdater.PrepareAsync(Installation("already-cleaned"), CancellationToken.None);
+        string copy = Path.GetDirectoryName(executable);
+        UpdateCleanup.RemoveCopy(copy);
+        using (var cleanup = UpdateCleanup.ScheduleAfterExit(copy, owner, workerDirectory))
+            Assert(cleanup.WaitForExit(5000) && cleanup.ExitCode == 0,
+                "An already-removed folder does not keep the cleanup process waiting for a live owner");
+
+        executable = await LocalUpdater.PrepareAsync(Installation("cleaned-while-waiting"), CancellationToken.None);
+        copy = Path.GetDirectoryName(executable);
+        using var waiting = UpdateCleanup.ScheduleAfterExit(copy, owner, workerDirectory);
+        try
+        {
+            await Task.Delay(1000);
+            Assert(!waiting.HasExited && Directory.Exists(copy), "Cleanup waits without deleting a live updater's files");
+            UpdateCleanup.RemoveCopy(copy);
+            Assert(waiting.WaitForExit(5000) && waiting.ExitCode == 0,
+                "Cleanup exits when another cleaner removes the folder while its owner is still alive");
+        }
+        finally
+        {
+            UpdateCleanup.RemoveCopy(copy);
+            if (!waiting.WaitForExit(5000)) { waiting.Kill(); waiting.WaitForExit(5000); }
+        }
+    }
+
+    private static async Task MismatchedRuntimeCleanup(string package = null)
+    {
+        string installation = Installation("legacy-runtime");
+        foreach (string extension in new[] { ".exe", ".dll", ".deps.json", ".runtimeconfig.json" })
+            File.Copy(Path.Combine(AppContext.BaseDirectory, "PwM.UpdateCleanup" + extension),
+                Path.Combine(installation, "PwM.UpdateCleanup" + extension));
+        if (package != null)
+        {
+            using var installer = new PackageInstaller(installation);
+            installer.Install(installer.Extract(package, CancellationToken.None), null);
+        }
+        else
+        {
+            string hostfxr = Path.GetFullPath(Path.Combine(System.Runtime.InteropServices.RuntimeEnvironment.GetRuntimeDirectory(),
+                "..", "..", "..", "host", "fxr", Environment.Version.ToString(), "hostfxr.dll"));
+            File.Copy(hostfxr, Path.Combine(installation, "hostfxr.dll"));
+        }
+        string executable = await LocalUpdater.PrepareAsync(Installation("legacy-cleanup-copy"), CancellationToken.None);
+        string copy = Path.GetDirectoryName(executable);
+        string session = "Local\\PwM.CleanupTest." + Guid.NewGuid().ToString("N");
+        using var exit = new EventWaitHandle(false, EventResetMode.ManualReset, session);
+        var parentStart = new ProcessStartInfo(Path.Combine(AppContext.BaseDirectory, "Tests.Updater.exe"))
+        { UseShellExecute = false, CreateNoWindow = true, WindowStyle = ProcessWindowStyle.Hidden };
+        parentStart.ArgumentList.Add("--wait-parent");
+        parentStart.ArgumentList.Add(session);
+        using var parent = Process.Start(parentStart);
+        try
+        {
+            // Reproduce the original failure without allowing the native host to open an error dialog.
+            var direct = new ProcessStartInfo(Path.Combine(installation, "PwM.UpdateCleanup.exe"))
+            { UseShellExecute = false, CreateNoWindow = true, WindowStyle = ProcessWindowStyle.Hidden, RedirectStandardError = true };
+            direct.Environment["DOTNET_DISABLE_GUI_ERRORS"] = "1";
+            foreach (string argument in new[] { copy, parent.Id.ToString(), parent.StartTime.ToUniversalTime().Ticks.ToString() })
+                direct.ArgumentList.Add(argument);
+            using (var failed = Process.Start(direct))
+            {
+                Task<string> error = failed.StandardError.ReadToEndAsync();
+                bool exited = failed.WaitForExit(5000);
+                if (!exited) { failed.Kill(); failed.WaitForExit(5000); }
+                string detail = await error;
+                Assert(exited && failed.ExitCode != 0 && detail.Contains("No frameworks were found"),
+                    "Reproduced the legacy ZIP's framework-dependent cleanup startup failure");
+            }
+            using var cleanup = UpdateCleanup.ScheduleAfterExit(copy, parent, installation);
+            await Task.Delay(500);
+            Assert(!cleanup.HasExited && Directory.Exists(copy), "Cleanup starts successfully beside a bundled runtime and waits for its owner");
+            exit.Set();
+            Assert(parent.WaitForExit(5000), "Legacy cleanup fixture parent exits");
+            Assert(cleanup.WaitForExit(10000) && cleanup.ExitCode == 0, "Cleanup exits successfully with the legacy runtime layout");
+            Assert(!Directory.Exists(copy), "Cleanup removes the private updater copy after the legacy ZIP install");
+        }
+        finally
+        {
+            exit.Set();
+            parent.WaitForExit(5000);
             UpdateCleanup.RemoveCopy(copy);
         }
     }

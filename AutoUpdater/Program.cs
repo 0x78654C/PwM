@@ -31,7 +31,7 @@ public static class UpdaterApplication
                 try
                 {
                     using var current = System.Diagnostics.Process.GetCurrentProcess();
-                    PwM.Updating.UpdateCleanup.ScheduleAfterExit(AppContext.BaseDirectory, current, options.InstallDirectory);
+                    using var cleanup = PwM.Updating.UpdateCleanup.ScheduleAfterExit(AppContext.BaseDirectory, current, options.InstallDirectory);
                 }
                 catch (Exception ex) { System.Diagnostics.Trace.TraceWarning("PwM updater cleanup: {0}", ex); }
             }

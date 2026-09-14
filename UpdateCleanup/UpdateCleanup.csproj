@@ -5,6 +5,9 @@
     <AssemblyName>PwM.UpdateCleanup</AssemblyName>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <!-- Preserve the app's publish-profile settings during project-reference framework negotiation. -->
+    <SelfContained Condition="'$(PwMCleanupSelfContained)' != ''">$(PwMCleanupSelfContained)</SelfContained>
+    <RuntimeIdentifier Condition="'$(PwMCleanupRuntimeIdentifier)' != ''">$(PwMCleanupRuntimeIdentifier)</RuntimeIdentifier>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\PwM\Updating\UpdateCleanup.cs" Link="UpdateCleanup.cs" />
