@@ -163,6 +163,10 @@ See [security review](SECURITY_REVIEW.md) for fixes, validation, and remaining c
 - iOS 15.0 or later
 - Windows or Linux for the CLI
 
+### Desktop updates
+
+PwM automatically checks GitHub for newer Windows x64 releases after startup. Use **⋮ → Check for updates…** to check manually, then **Update & restart** to install. Updates use only `PwM-v<version>_x64_R2R.zip` release assets and preserve vaults and settings. See [updater and release packaging](AutoUpdater/README.md) for build instructions.
+
 ### Build the mobile app
 
 Install the .NET 10 SDK and .NET MAUI workload, then build the desired target:

@@ -598,12 +598,18 @@
                                              Height="36"
                                              Padding="6">
                         <Border BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1" CornerRadius="8" Background="{DynamicResource SurfaceBrush}">
-                            <StackPanel Width="150">
+                            <StackPanel Width="190">
                                 <Button Content="About"
                                         Style="{StaticResource PopupMenuButtonStyle}"
                                         Padding="14,10"
                                         HorizontalContentAlignment="Left"
                                         Click="aboutBTN_Click"/>
+                                <Button Name="checkForUpdatesButton"
+                                        Content="Check for updates…"
+                                        Style="{StaticResource PopupMenuButtonStyle}"
+                                        Padding="14,10"
+                                        HorizontalContentAlignment="Left"
+                                        Click="CheckForUpdates_Click"/>
                                 <Separator Margin="8,0"/>
                                 <Button Content="Exit"
                                         Style="{StaticResource PopupDangerButtonStyle}"

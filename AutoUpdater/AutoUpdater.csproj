@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <AssemblyName>PwM.Updater</AssemblyName>
+    <ApplicationIcon>..\PwM\Resources\logo-modern.ico</ApplicationIcon>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\PwM\Updating\*.cs" Exclude="..\PwM\Updating\UpdateController.cs" Link="Shared\%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

@@ -7,6 +7,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <StartupObject>PwM.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <OutputPath>..\..\Release\PwM\</OutputPath>
@@ -54,6 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\PwMLib\PwMLib.csproj" />
+    <ProjectReference Include="..\AutoUpdater\AutoUpdater.csproj" />
+    <ProjectReference Include="..\UpdateCleanup\UpdateCleanup.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Gu.Wpf.Adorners" Version="2.1.1" />
